@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<com.android.inputmethod.research.FeedbackLayout
+<com.diycircuits.inputmethod.research.FeedbackLayout
      xmlns:android="http://schemas.android.com/apk/res/android"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
@@ -24,8 +24,8 @@
 
     <fragment
           android:id="@+id/research_feedback_fragment"
-          android:name="com.android.inputmethod.research.FeedbackFragment"
+          android:name="com.diycircuits.inputmethod.research.FeedbackFragment"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
     />
-</com.android.inputmethod.research.FeedbackLayout>
+</com.diycircuits.inputmethod.research.FeedbackLayout>

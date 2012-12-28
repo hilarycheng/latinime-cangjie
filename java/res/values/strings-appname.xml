@@ -26,7 +26,7 @@
     <string name="spell_checker_service_name">Android spell checker</string>
 
     <!-- Title for Latin keyboard settings activity / dialog -->
-    <string name="english_ime_settings">Android keyboard settings</string>
+    <string name="english_ime_settings">Android/Cangjie keyboard settings</string>
 
     <!-- Title for the spell checking service settings screen -->
     <string name="android_spell_checker_settings">Spell checking settings</string>

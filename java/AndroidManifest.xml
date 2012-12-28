@@ -16,7 +16,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         coreApp="true"
-        package="com.android.inputmethod.latin">
+        package="com.diycircuits.inputmethod.latin">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
 
@@ -49,14 +49,14 @@
             <meta-data android:name="android.view.textservice.scs" android:resource="@xml/spellchecker" />
         </service>
 
-        <activity android:name="SettingsActivity" android:label="@string/english_ime_settings"
+        <activity android:name="com.diycircuits.inputmethod.latin.SettingsActivity" android:label="@string/english_ime_settings"
                   android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
-        <activity android:name="com.android.inputmethod.latin.spellcheck.SpellCheckerSettingsActivity"
+        <activity android:name="com.diycircuits.inputmethod.latin.spellcheck.SpellCheckerSettingsActivity"
                   android:label="@string/android_spell_checker_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

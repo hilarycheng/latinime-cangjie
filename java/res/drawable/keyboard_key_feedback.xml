@@ -16,7 +16,7 @@
 
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:latin="http://schemas.android.com/apk/res/com.android.inputmethod.latin"
+    xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
     <item latin:state_has_morekeys="true"
           android:drawable="@drawable/keyboard_key_feedback_more_background" />

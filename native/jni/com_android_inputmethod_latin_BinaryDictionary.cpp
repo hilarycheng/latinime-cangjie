@@ -293,7 +293,7 @@ static JNINativeMethod sMethods[] = {
 };
 
 int register_BinaryDictionary(JNIEnv *env) {
-    const char *const kClassPathName = "com/android/inputmethod/latin/BinaryDictionary";
+    const char *const kClassPathName = "com/diycircuits/inputmethod/latin/BinaryDictionary";
     return registerNativeMethods(env, kClassPathName, sMethods,
             sizeof(sMethods) / sizeof(sMethods[0]));
 }

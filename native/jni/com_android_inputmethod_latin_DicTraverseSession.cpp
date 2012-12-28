@@ -56,7 +56,7 @@ static JNINativeMethod sMethods[] = {
 };
 
 int register_DicTraverseSession(JNIEnv *env) {
-    const char *const kClassPathName = "com/android/inputmethod/latin/DicTraverseSession";
+    const char *const kClassPathName = "com/diycircuits/inputmethod/latin/DicTraverseSession";
     return registerNativeMethods(env, kClassPathName, sMethods,
             sizeof(sMethods) / sizeof(sMethods[0]));
 }
