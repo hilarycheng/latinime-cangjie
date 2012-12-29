@@ -1,0 +1,7 @@
+*~
+*class
+bin
+gen
+native/obj/
+native/libs/
+java/libs/armeabi/
