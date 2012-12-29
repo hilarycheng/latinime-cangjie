@@ -44,6 +44,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 
     public static final String PREF_KEYBOARD_LAYOUT = "pref_keyboard_layout_20110916";
 
+    private boolean mIsCangjieMode = false;
+
     static final class KeyboardTheme {
         public final int mThemeId;
         public final int mStyleId;
@@ -224,54 +226,63 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setAlphabetKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setAlphabetManualShiftedKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setAlphabetAutomaticShiftedKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setAlphabetShiftLockedKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setAlphabetShiftLockShiftedKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCK_SHIFTED));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setSymbolsKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setCangjieKeyboard() {
+	mIsCangjieMode = true;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setSymbolsShiftedKeyboard() {
+	mIsCangjieMode = false;
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS_SHIFTED));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void requestUpdatingShiftState() {
+	mIsCangjieMode = false;
         mState.onUpdateShiftState(mLatinIME.getCurrentAutoCapsState());
     }
 
@@ -321,6 +332,10 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
             final TimerProxy timer = keyboardView.getTimerProxy();
             timer.cancelLongPressTimer();
         }
+    }
+
+    public boolean isCangjieMode() {
+	return mIsCangjieMode;
     }
 
     // Implements {@link KeyboardState.SwitchActions}.

@@ -1374,7 +1374,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
                     keyX = Constants.NOT_A_COORDINATE;
                     keyY = Constants.NOT_A_COORDINATE;
                 }
-                handleCharacter(primaryCode, keyX, keyY, spaceState);
+		if (switcher.isCangjieMode()) {
+		    Log.i("Cangjie", "AOSP Keyboard Cangjie " + primaryCode);
+		    handleCharacter(primaryCode, keyX, keyY, spaceState);
+		} else {
+		    handleCharacter(primaryCode, keyX, keyY, spaceState);
+		}
             }
             mExpectingUpdateSelection = true;
             mShouldSwitchToLastSubtype = true;
