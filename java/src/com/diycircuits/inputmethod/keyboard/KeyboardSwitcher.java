@@ -259,6 +259,12 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
+    public void setCangjieKeyboard() {
+        setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+    }
+
+    // Implements {@link KeyboardState.SwitchActions}.
+    @Override
     public void setSymbolsShiftedKeyboard() {
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS_SHIFTED));
     }

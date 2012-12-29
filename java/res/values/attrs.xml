@@ -374,6 +374,7 @@
             <enum name="phone" value="7"  />
             <enum name="phoneSymbols" value="8"  />
             <enum name="number" value="9"  />
+            <enum name="cangjie" value="10"  />
         </attr>
         <!-- This should be aligned with KeyboardId.MODE_* -->
         <attr name="mode" format="enum|string">
@@ -428,6 +429,7 @@
             <enum name="phone" value="7"  />
             <enum name="phoneSymbols" value="8"  />
             <enum name="number" value="9"  />
+            <enum name="cangjie" value="10"  />
         </attr>
         <attr name="elementKeyboard" format="reference"/>
         <!-- Enable proximity characters correction. Disabled by default. -->

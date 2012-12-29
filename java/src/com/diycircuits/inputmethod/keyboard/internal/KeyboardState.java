@@ -47,6 +47,7 @@ public final class KeyboardState {
         public void setAlphabetShiftLockShiftedKeyboard();
         public void setSymbolsKeyboard();
         public void setSymbolsShiftedKeyboard();
+        public void setCangjieKeyboard();
 
         /**
          * Request to call back {@link KeyboardState#onUpdateShiftState(int)}.
@@ -74,6 +75,7 @@ public final class KeyboardState {
     private static final int SWITCH_STATE_SYMBOL = 2;
     private static final int SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL = 3;
     private static final int SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE = 4;
+    private static final int SWITCH_STATE_CANGJIE = 5;
     private int mSwitchState = SWITCH_STATE_ALPHA;
     private String mLayoutSwitchBackSymbols;
 
@@ -82,6 +84,7 @@ public final class KeyboardState {
     private boolean mIsSymbolShifted;
     private boolean mPrevMainKeyboardWasShiftLocked;
     private boolean mPrevSymbolsKeyboardWasShifted;
+    private boolean mIsCangjieMode;
 
     // For handling long press.
     private boolean mLongPressShiftLockFired;
@@ -286,6 +289,7 @@ public final class KeyboardState {
         mSwitchActions.setAlphabetKeyboard();
         mIsAlphabetMode = true;
         mIsSymbolShifted = false;
+	mIsCangjieMode = false;
         mSwitchState = SWITCH_STATE_ALPHA;
         mSwitchActions.requestUpdatingShiftState();
     }
@@ -297,9 +301,21 @@ public final class KeyboardState {
         mSwitchActions.setSymbolsKeyboard();
         mIsAlphabetMode = false;
         mIsSymbolShifted = false;
+	mIsCangjieMode = false;
         // Reset alphabet shift state.
         mAlphabetShiftState.setShiftLocked(false);
         mSwitchState = SWITCH_STATE_SYMBOL_BEGIN;
+    }
+
+    private void setCangjieKeyboard() {
+	Log.d(TAG, "setCangjieKeyboard");
+        mSwitchActions.setCangjieKeyboard();
+        mIsAlphabetMode = false;
+        mIsSymbolShifted = false;
+	mIsCangjieMode = true;
+        // Reset alphabet shift state.
+        mAlphabetShiftState.setShiftLocked(false);
+        mSwitchState = SWITCH_STATE_CANGJIE;
     }
 
     private void setSymbolsShiftedKeyboard() {
@@ -309,6 +325,7 @@ public final class KeyboardState {
         mSwitchActions.setSymbolsShiftedKeyboard();
         mIsAlphabetMode = false;
         mIsSymbolShifted = true;
+	mIsCangjieMode = false;
         // Reset alphabet shift state.
         mAlphabetShiftState.setShiftLocked(false);
         mSwitchState = SWITCH_STATE_SYMBOL_BEGIN;
@@ -322,7 +339,8 @@ public final class KeyboardState {
         if (code == Keyboard.CODE_SHIFT) {
             onPressShift();
         } else if (code == Keyboard.CODE_SWITCH_ALPHA_SYMBOL) {
-            onPressSymbol();
+            // onPressSymbol();
+	    onPressCangjie();
         } else {
             mSwitchActions.cancelDoubleTapTimer();
             mSwitchActions.cancelLongPressTimer();
@@ -357,6 +375,10 @@ public final class KeyboardState {
         } else if (code == Keyboard.CODE_SWITCH_ALPHA_SYMBOL) {
             onReleaseSymbol(withSliding);
         }
+    }
+
+    private void onPressCangjie() {
+	setCangjieKeyboard();
     }
 
     private void onPressSymbol() {
