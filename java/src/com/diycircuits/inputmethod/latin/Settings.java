@@ -214,9 +214,11 @@ public final class Settings extends InputMethodSettingsFragment
             miscSettings.removePreference(gesturePreviewTrail);
             miscSettings.removePreference(gestureFloatingPreviewText);
         } else {
-            final boolean gestureInputEnabledByUser = prefs.getBoolean(PREF_GESTURE_INPUT, true);
-            setPreferenceEnabled(gesturePreviewTrail, gestureInputEnabledByUser);
-            setPreferenceEnabled(gestureFloatingPreviewText, gestureInputEnabledByUser);
+             final boolean gestureInputEnabledByUser = prefs.getBoolean(PREF_GESTURE_INPUT, true);
+             // setPreferenceEnabled(gesturePreviewTrail, gestureInputEnabledByUser);
+             // setPreferenceEnabled(gestureFloatingPreviewText, gestureInputEnabledByUser);
+             setPreferenceEnabled(gesturePreviewTrail, false);
+             setPreferenceEnabled(gestureFloatingPreviewText, false);
         }
 
         mKeypressVibrationDurationSettingsPref =
@@ -289,7 +291,12 @@ public final class Settings extends InputMethodSettingsFragment
                         gestureInputEnabledByUser);
                 setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
                         gestureInputEnabledByUser);
-            }
+            } else {
+                setPreferenceEnabled(findPreference(PREF_GESTURE_PREVIEW_TRAIL),
+                        false);
+                setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
+                        false);
+	    }
         }
         ensureConsistencyOfAutoCorrectionSettings();
         updateVoiceModeSummary();
