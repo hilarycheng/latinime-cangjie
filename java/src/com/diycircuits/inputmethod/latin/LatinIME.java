@@ -77,6 +77,10 @@ import com.diycircuits.inputmethod.latin.define.ProductionFlag;
 import com.diycircuits.inputmethod.latin.suggestions.SuggestionStripView;
 import com.diycircuits.inputmethod.research.ResearchLogger;
 
+import com.diycircuits.cangjie.Cangjie;
+import com.diycircuits.cangjie.CandidateView;
+import com.diycircuits.cangjie.CandidateSelect;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -181,6 +185,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     private final boolean mIsHardwareAcceleratedDrawingEnabled;
 
+    // Cangjie Class
+    private Cangjie mCangjie = null;
+    private CandidateView mCandidateView = null;
+    private CandidateSelect mCandidateSelect = null;
+    private View mCandidateContainer = null;
+    
     public final UIHandler mHandler = new UIHandler(this);
 
     public static final class UIHandler extends StaticInnerHandlerWrapper<LatinIME> {
@@ -389,6 +399,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
         super.onCreate();
 
+	// Cangjie Table Initialize
+	mCangjie = new Cangjie(this);
+
         mImm = InputMethodManagerCompatWrapper.getInstance();
         mHandler.onCreate();
         DEBUG = LatinImeLogger.sDBG;
@@ -581,6 +594,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         mKeyPreviewBackingView = view.findViewById(R.id.key_preview_backing);
         mSuggestionsContainer = view.findViewById(R.id.suggestions_container);
         mSuggestionStripView = (SuggestionStripView)view.findViewById(R.id.suggestion_strip_view);
+
+	// Cangjie View
+	mCandidateView      = (CandidateView)   view.findViewById(R.id.candidateView);
+	mCandidateSelect    = (CandidateSelect) view.findViewById(R.id.match_view);
+	mCandidateContainer = view.findViewById(R.id.candidate_container);
+	mCangjie.setCandidateSelect(mCandidateSelect);
+
         if (mSuggestionStripView != null)
             mSuggestionStripView.setListener(this, view);
         if (LatinImeLogger.sVISUALDEBUG) {
@@ -1322,6 +1342,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             mExpectingUpdateSelection = true;
             mShouldSwitchToLastSubtype = true;
             LatinImeLogger.logOnDelete(x, y);
+	    if (switcher.isCangjieMode() && mCangjie != null) mCangjie.deleteLastCode();
             break;
         case Keyboard.CODE_SHIFT:
         case Keyboard.CODE_SWITCH_ALPHA_SYMBOL:
@@ -1376,7 +1397,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
                 }
 		if (switcher.isCangjieMode()) {
 		    Log.i("Cangjie", "AOSP Keyboard Cangjie " + primaryCode);
-		    handleCharacter(primaryCode, keyX, keyY, spaceState);
+		    // handleCharacter(primaryCode, keyX, keyY, spaceState);
+		    if (mCangjie != null) mCangjie.handleCharacter(primaryCode);
 		} else {
 		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		}
@@ -1397,6 +1419,18 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         if (ProductionFlag.IS_EXPERIMENTAL) {
             ResearchLogger.latinIME_onCodeInput(primaryCode, x, y);
         }
+	Log.i("Cangjie", "Cangjie Mode Change " + switcher.isCangjieMode());
+	if (switcher.isCangjieMode()) {
+	    mCandidateView.bringToFront();
+	    mCandidateView.invalidate();
+	    mSuggestionsContainer.invalidate();
+	    mCandidateContainer.invalidate();
+	} else {
+	    mSuggestionsContainer.bringToFront();
+	    mSuggestionsContainer.invalidate();
+	    mCandidateView.invalidate();
+	    mCandidateContainer.invalidate();
+	}
     }
 
     // Called from PointerTracker through the KeyboardActionListener interface

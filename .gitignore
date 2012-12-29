@@ -5,3 +5,5 @@ gen
 native/obj/
 native/libs/
 java/libs/armeabi/
+cangjie_native/libs/
+cangjie_native/obj/
