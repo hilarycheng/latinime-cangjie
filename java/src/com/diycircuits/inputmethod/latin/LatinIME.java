@@ -1331,7 +1331,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             onSettingsKeyPressed();
             break;
         case Keyboard.CODE_SHORTCUT:
-            mSubtypeSwitcher.switchToShortcutIME(this);
+	    mSubtypeSwitcher.switchToShortcutIME(this);
             break;
         case Keyboard.CODE_ACTION_ENTER:
             performEditorAction(getActionId(switcher.getKeyboard()));
@@ -1343,7 +1343,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             performEditorAction(EditorInfo.IME_ACTION_PREVIOUS);
             break;
         case Keyboard.CODE_LANGUAGE_SWITCH:
-            handleLanguageSwitchKey();
+	    // Change to Use Code Shortcut for Cangjie Switching
+            // handleLanguageSwitchKey();
             break;
         case Keyboard.CODE_RESEARCH:
             if (ProductionFlag.IS_EXPERIMENTAL) {

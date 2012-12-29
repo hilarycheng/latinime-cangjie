@@ -339,8 +339,9 @@ public final class KeyboardState {
         if (code == Keyboard.CODE_SHIFT) {
             onPressShift();
         } else if (code == Keyboard.CODE_SWITCH_ALPHA_SYMBOL) {
-            // onPressSymbol();
-	    onPressCangjie();
+            onPressSymbol();
+        } else if (code == Keyboard.CODE_LANGUAGE_SWITCH) {
+            onPressCangjie();
         } else {
             mSwitchActions.cancelDoubleTapTimer();
             mSwitchActions.cancelLongPressTimer();
