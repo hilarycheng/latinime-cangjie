@@ -121,12 +121,12 @@ public class Cangjie implements CandidateListener {
 	return 0;
     }
     
-    public void handleCharacter(int primaryCode) {
-	if (mCodeCount >= 5) return;
+    public boolean handleCharacter(int primaryCode) {
+	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
-	if (code == 0) return;
+	if (code == 0) return false;
 	mCodeInput[mCodeCount++] = code;
-	matchCangjie();
+	return matchCangjie();
     }
     
     public void deleteLastCode() {

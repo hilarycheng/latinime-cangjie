@@ -356,16 +356,17 @@ public final class SettingsValues {
     }
 
     public boolean isLanguageSwitchKeyEnabled(final Context context) {
-        if (!mShowsLanguageSwitchKey) {
-            return false;
-        }
-        if (mIncludesOtherImesInLanguageSwitchList) {
-            return ImfUtils.hasMultipleEnabledIMEsOrSubtypes(
-                    context, /* include aux subtypes */false);
-        } else {
-            return ImfUtils.hasMultipleEnabledSubtypesInThisIme(
-                    context, /* include aux subtypes */false);
-        }
+        // if (!mShowsLanguageSwitchKey) {
+        //     return false;
+        // }
+        // if (mIncludesOtherImesInLanguageSwitchList) {
+        //     return ImfUtils.hasMultipleEnabledIMEsOrSubtypes(
+        //             context, /* include aux subtypes */false);
+        // } else {
+        //     return ImfUtils.hasMultipleEnabledSubtypesInThisIme(
+        //             context, /* include aux subtypes */false);
+        // }
+	return true;
     }
 
     public static boolean isFullscreenModeAllowed(final Resources res) {
