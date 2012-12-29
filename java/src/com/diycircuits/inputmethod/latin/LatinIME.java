@@ -80,6 +80,7 @@ import com.diycircuits.inputmethod.research.ResearchLogger;
 import com.diycircuits.cangjie.Cangjie;
 import com.diycircuits.cangjie.CandidateView;
 import com.diycircuits.cangjie.CandidateSelect;
+import com.diycircuits.cangjie.CandidateSelect.CandidateListener;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -91,7 +92,7 @@ import java.util.Locale;
  */
 public final class LatinIME extends InputMethodService implements KeyboardActionListener,
         SuggestionStripView.Listener, TargetApplicationGetter.OnTargetApplicationKnownListener,
-        Suggest.SuggestInitializationListener {
+        Suggest.SuggestInitializationListener, CandidateListener {
     private static final String TAG = LatinIME.class.getSimpleName();
     private static final boolean TRACE = false;
     private static boolean DEBUG;
@@ -600,6 +601,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	mCandidateSelect    = (CandidateSelect) view.findViewById(R.id.match_view);
 	mCandidateContainer = view.findViewById(R.id.candidate_container);
 	mCangjie.setCandidateSelect(mCandidateSelect);
+	mCangjie.setCandidateListener(this);
 
         if (mSuggestionStripView != null)
             mSuggestionStripView.setListener(this, view);
@@ -1396,9 +1398,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
                     keyY = Constants.NOT_A_COORDINATE;
                 }
 		if (switcher.isCangjieMode()) {
-		    Log.i("Cangjie", "AOSP Keyboard Cangjie " + primaryCode);
-		    // handleCharacter(primaryCode, keyX, keyY, spaceState);
-		    if (mCangjie != null) mCangjie.handleCharacter(primaryCode);
+		    handleCharacter(primaryCode, keyX, keyY, spaceState);
+		    if (mCangjie != null) {
+			final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+			mCandidateView.setReferenceSize(mainKeyboardView.getWidth(), mainKeyboardView.getHeight());
+			mCangjie.handleCharacter(primaryCode);
+		    }
 		} else {
 		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		}
@@ -1419,7 +1424,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         if (ProductionFlag.IS_EXPERIMENTAL) {
             ResearchLogger.latinIME_onCodeInput(primaryCode, x, y);
         }
-	Log.i("Cangjie", "Cangjie Mode Change " + switcher.isCangjieMode());
+
 	if (switcher.isCangjieMode()) {
 	    mCandidateView.bringToFront();
 	    mCandidateView.invalidate();
@@ -1433,6 +1438,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	}
     }
 
+    // Cangjie Candidate Selected
+    public void characterSelected(char c, int idx) {
+	sendKeyCodePoint(c);
+	mConnection.setComposingText("", 1);
+        mWordComposer.reset();
+    }
+    
     // Called from PointerTracker through the KeyboardActionListener interface
     @Override
     public void onTextInput(final CharSequence rawText) {

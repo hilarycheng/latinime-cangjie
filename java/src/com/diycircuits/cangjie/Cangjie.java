@@ -10,8 +10,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
+import com.diycircuits.cangjie.CandidateSelect.CandidateListener;
 
-public class Cangjie {
+public class Cangjie implements CandidateListener {
 
     public final static int QUICK   = 0;
     public final static int CANGJIE = 1;
@@ -24,6 +25,7 @@ public class Cangjie {
     private int  mTotalMatch = 0;
     private TableLoader mTable = new TableLoader();
     private CandidateSelect mSelect = null;
+    private CandidateListener mListener = null;
 
     public Cangjie(Context context) {
 	mContext = context;
@@ -46,8 +48,24 @@ public class Cangjie {
 
     public void setCandidateSelect(CandidateSelect select) {
 	mSelect = select;
+	mSelect.setCandidateListener(this);
+    }
+
+    public void setCandidateListener(CandidateListener listen) {
+	mListener = listen;
     }
     
+    public void characterSelected(char c, int idx) {
+	mTable.reset();
+	for (int count = 0; count < mCodeInput.length; count++) {
+	    mCodeInput[count] = 0;
+	}
+	mCodeCount = 0;
+	mSelect.updateMatch(null, 0);
+	mSelect.closePopup();
+	if (mListener != null) mListener.characterSelected(c, idx);
+    }
+
     private void loadCangjieKey() {
 	try {
 	    InputStream is = mContext.getResources().openRawResource(R.raw.cj_key);
@@ -102,8 +120,6 @@ public class Cangjie {
 
     private boolean matchCangjie() {
 	boolean res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
-
-	Log.i("Cangjie", "Try Match Cangjie " + res);
 
 	if (res) {
 	    mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);

@@ -49,6 +49,11 @@ public class CandidateView extends LinearLayout {
 	mSelect.setParentWidth(mWidth);
     }
 
+    public void setReferenceSize(int w, int h) {
+	mWidth = w;
+	mHeight = h;
+    }
+    
     @Override
     protected void onFinishInflate() {
 	super.onFinishInflate();
