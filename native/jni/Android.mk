@@ -95,6 +95,8 @@ endif # FLAG_DO_PROFILE
 LOCAL_MODULE := libjni_latinime
 LOCAL_MODULE_TAGS := optional
 
+LOCAL_LDLIBS    := -lm -llog 
+
 LOCAL_SDK_VERSION := 14
 LOCAL_NDK_STL_VARIANT := stlport_static
 
