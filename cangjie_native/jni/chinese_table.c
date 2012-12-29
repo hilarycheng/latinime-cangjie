@@ -68,6 +68,11 @@ jchar Java_com_diycircuits_cangjie_TableLoader_passCharArray(JNIEnv* env, jobjec
   return 0;
 }
 
+jint Java_com_diycircuits_cangjie_TableLoader_getMaxKey(JNIEnv* env, jobject thiz)
+{
+  return input_method[mCurrentIm]->maxKey();
+}
+
 void Java_com_diycircuits_cangjie_TableLoader_setInputMethod(JNIEnv* env, jobject thiz, jint im)
 {
   mCurrentIm = im;

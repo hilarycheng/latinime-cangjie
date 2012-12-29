@@ -49,6 +49,10 @@ public class Cangjie implements CandidateListener {
     public boolean hasMatch() {
 	return mTable.totalMatch() > 0;
     }
+
+    public boolean isFull() {
+	return mCodeCount >= mTable.getMaxKey();
+    }
     
     public void setCandidateSelect(CandidateSelect select) {
 	mSelect = select;

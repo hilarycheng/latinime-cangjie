@@ -19,6 +19,7 @@ public class TableLoader {
     public native void setPath(byte[] path);
     public native void initialize();
     public native char getChar();
+    public native int getMaxKey();
     public native char passCharArray(char[] array);
     public native int  updateFrequencyQuick(char ch);
     public native void enableHongKongChar(boolean hk);

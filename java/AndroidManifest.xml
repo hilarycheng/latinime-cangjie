@@ -15,7 +15,8 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        coreApp="true"
+        android:versionCode="22"
+        android:versionName="0.8"
         package="com.diycircuits.inputmethod.latin">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
@@ -26,7 +27,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application android:label="@string/aosp_android_keyboard_ime_name"
-            android:icon="@mipmap/ic_ime_settings"
+            android:icon="@drawable/ic_launcher"
             android:backupAgent="BackupAgent"
             android:killAfterRestore="false"
             android:supportsRtl="true">
