@@ -1377,7 +1377,11 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         default:
             mSpaceState = SPACE_STATE_NONE;
             if (mCurrentSettings.isWordSeparator(primaryCode)) {
-                didAutoCorrect = handleSeparator(primaryCode, x, y, spaceState);
+		if (mCangjie.hasMatch() && primaryCode == 32) { // Send Key for White Space
+		    mCangjie.sendFirstCharacter();
+		} else {
+		    didAutoCorrect = handleSeparator(primaryCode, x, y, spaceState);
+		}
             } else {
                 if (SPACE_STATE_PHANTOM == spaceState) {
                     if (ProductionFlag.IS_INTERNAL) {
@@ -1398,12 +1402,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
                     keyY = Constants.NOT_A_COORDINATE;
                 }
 		if (switcher.isCangjieMode()) {
-		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		    if (mCangjie != null) {
 			final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
 			mCandidateView.setReferenceSize(mainKeyboardView.getWidth(), mainKeyboardView.getHeight());
 			mCangjie.handleCharacter(primaryCode);
 		    }
+		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		} else {
 		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		}
@@ -1431,6 +1435,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    mSuggestionsContainer.invalidate();
 	    mCandidateContainer.invalidate();
 	} else {
+	    if (mCangjie.hasMatch()) mCangjie.resetState();
 	    mSuggestionsContainer.bringToFront();
 	    mSuggestionsContainer.invalidate();
 	    mCandidateView.invalidate();
@@ -1440,9 +1445,11 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     // Cangjie Candidate Selected
     public void characterSelected(char c, int idx) {
+        mConnection.beginBatchEdit();
 	sendKeyCodePoint(c);
 	mConnection.setComposingText("", 1);
-        mWordComposer.reset();
+	resetComposingState(true);
+        mConnection.endBatchEdit();
     }
     
     // Called from PointerTracker through the KeyboardActionListener interface
@@ -1797,6 +1804,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             // have touch coordinates for it.
             resetComposingState(false /* alsoResetLastComposedWord */);
         }
+        final KeyboardSwitcher switcher = mKeyboardSwitcher;
+	isComposingWord = switcher.isCangjieMode();
         if (isComposingWord) {
             final int keyX, keyY;
             if (KeyboardActionListener.Adapter.isInvalidCoordinate(x)

@@ -46,6 +46,10 @@ public class Cangjie implements CandidateListener {
 	loadCangjieKey();
     }
 
+    public boolean hasMatch() {
+	return mTable.totalMatch() > 0;
+    }
+    
     public void setCandidateSelect(CandidateSelect select) {
 	mSelect = select;
 	mSelect.setCandidateListener(this);
@@ -54,8 +58,24 @@ public class Cangjie implements CandidateListener {
     public void setCandidateListener(CandidateListener listen) {
 	mListener = listen;
     }
+
+    public void sendFirstCharacter() {
+	if (mListener != null && mTable.totalMatch() > 0) {
+	    mListener.characterSelected(mTable.getMatchChar(0), 0);
+	}
+	resetState();
+    }
+
+    public char getFirstCharacter() {
+	return mTable.getMatchChar(0);
+    }
     
     public void characterSelected(char c, int idx) {
+	if (mListener != null) mListener.characterSelected(c, idx);
+	resetState();
+    }
+
+    public void resetState() {
 	mTable.reset();
 	for (int count = 0; count < mCodeInput.length; count++) {
 	    mCodeInput[count] = 0;
@@ -63,9 +83,8 @@ public class Cangjie implements CandidateListener {
 	mCodeCount = 0;
 	mSelect.updateMatch(null, 0);
 	mSelect.closePopup();
-	if (mListener != null) mListener.characterSelected(c, idx);
     }
-
+    
     private void loadCangjieKey() {
 	try {
 	    InputStream is = mContext.getResources().openRawResource(R.raw.cj_key);
