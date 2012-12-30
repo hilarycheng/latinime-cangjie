@@ -618,11 +618,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
+	mCangjie.resetState();
         mHandler.onStartInput(editorInfo, restarting);
     }
 
     @Override
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
+	mCangjie.resetState();
         mHandler.onStartInputView(editorInfo, restarting);
     }
 
@@ -645,12 +647,14 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private void onStartInputInternal(final EditorInfo editorInfo, final boolean restarting) {
+	mCangjie.resetState();
         super.onStartInput(editorInfo, restarting);
     }
 
     @SuppressWarnings("deprecation")
     private void onStartInputViewInternal(final EditorInfo editorInfo, final boolean restarting) {
         super.onStartInputView(editorInfo, restarting);
+	mCangjie.resetState();
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
         final MainKeyboardView mainKeyboardView = switcher.getMainKeyboardView();
 
@@ -808,6 +812,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private void onFinishInputInternal() {
         super.onFinishInput();
 
+	mCangjie.saveMatch();
+	
         LatinImeLogger.commit();
         if (ProductionFlag.IS_EXPERIMENTAL) {
             ResearchLogger.getInstance().latinIME_onFinishInputInternal();
@@ -820,6 +826,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private void onFinishInputViewInternal(final boolean finishingInput) {
+	mCangjie.saveMatch();
+	
         super.onFinishInputView(finishingInput);
         mKeyboardSwitcher.onFinishInputView();
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();

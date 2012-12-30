@@ -4,6 +4,7 @@ import com.diycircuits.inputmethod.latin.R;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
+import android.preference.PreferenceManager;
 
 import java.util.HashMap;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ public class Cangjie implements CandidateListener {
     private char mCodeMap[]   = new char[26 * 2];
     private char mMatchChar[] = new char[21529];
     private int  mTotalMatch = 0;
+    private int  mMode = CANGJIE;
     private TableLoader mTable = new TableLoader();
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
@@ -73,8 +75,13 @@ public class Cangjie implements CandidateListener {
     public char getFirstCharacter() {
 	return mTable.getMatchChar(0);
     }
+
+    public void saveMatch() {
+	mTable.saveMatch();
+    }
     
     public void characterSelected(char c, int idx) {
+	if (mMode == QUICK) mTable.updateFrequencyQuick(c);
 	if (mListener != null) mListener.characterSelected(c, idx);
 	resetState();
     }
@@ -85,8 +92,18 @@ public class Cangjie implements CandidateListener {
 	    mCodeInput[count] = 0;
 	}
 	mCodeCount = 0;
-	mSelect.updateMatch(null, 0);
-	mSelect.closePopup();
+	if (mSelect != null) {
+	    mSelect.updateMatch(null, 0);
+	    mSelect.closePopup();
+	}
+	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
+	if (value.compareTo("1") == 0) {
+	    mTable.setInputMethod(TableLoader.QUICK);
+	    mMode = QUICK;
+	} else {
+	    mTable.setInputMethod(TableLoader.CANGJIE);
+	    mMode = CANGJIE;
+	}
     }
     
     private void loadCangjieKey() {
@@ -125,8 +142,14 @@ public class Cangjie implements CandidateListener {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
 	if (code == 0) return false;
-	mCodeInput[mCodeCount++] = code;
-	return matchCangjie();
+	mCodeInput[mCodeCount] = code;
+
+	if (matchCangjie()) {
+	    mCodeCount++;
+	    return true;
+	}
+
+	return false;
     }
     
     public void deleteLastCode() {

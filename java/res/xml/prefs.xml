@@ -21,6 +21,13 @@
     <PreferenceCategory
         android:title="@string/general_category"
         android:key="general_settings">
+        <ListPreference
+            android:key="cangjie_mode"
+            android:title="@string/cangjie_mode"
+            android:persistent="true"
+    	    android:defaultValue="0"
+	    android:entries="@array/listArray"
+	    android:entryValues="@array/listValues" />
         <CheckBoxPreference
             android:key="auto_cap"
             android:title="@string/auto_cap"
