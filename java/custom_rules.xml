@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="custom_rules">
+  <!--
       <target name="-package-resources" depends="-crunch">
-        <!-- only package resources if *not* a library project -->
         <do-only-if-not-library elseText="Library project: do not package resources..." >
             <aapt executable="${aapt}"
                     command="package"
@@ -24,10 +24,9 @@
                     ignoreAssets="${aapt.ignore.assets}">
                 <res path="${out.res.absolute.dir}" />
                 <res path="${resource.absolute.dir}" />
-                <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
-                <!-- <nocompress extension="xml" /> forces no compression on specific file extensions in assets and res/raw -->
                 <nocompress extension="dict" />
             </aapt>
         </do-only-if-not-library>
     </target>
+    -->
 </project>
