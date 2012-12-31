@@ -28,6 +28,7 @@ public class Cangjie implements CandidateListener {
     private TableLoader mTable = new TableLoader();
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
+    private StringBuffer mCangjieCode = new StringBuffer();
 
     public Cangjie(Context context) {
 	mContext = context;
@@ -87,6 +88,7 @@ public class Cangjie implements CandidateListener {
     }
 
     public void resetState() {
+	mCangjieCode.setLength(0);
 	mTable.reset();
 	for (int count = 0; count < mCodeInput.length; count++) {
 	    mCodeInput[count] = 0;
@@ -143,8 +145,8 @@ public class Cangjie implements CandidateListener {
 	char code = convertPrimaryCode(primaryCode);
 	if (code == 0) return false;
 	mCodeInput[mCodeCount] = code;
-
 	if (matchCangjie()) {
+	    mCangjieCode.append((char) primaryCode);
 	    mCodeCount++;
 	    return true;
 	}
@@ -155,6 +157,9 @@ public class Cangjie implements CandidateListener {
     public void deleteLastCode() {
 	if (mCodeCount <= 0) return;
 	mCodeInput[--mCodeCount] = 0;
+	if (mCangjieCode.length() > 0) {
+	    mCangjieCode.setLength(mCangjieCode.length() - 1);
+	}
 
 	if (mCodeCount == 0) {
 	    mTable.reset();
@@ -164,6 +169,10 @@ public class Cangjie implements CandidateListener {
 	}
     }
 
+    public String getCangjieCode() {
+	return mCangjieCode.toString();
+    }
+    
     private boolean matchCangjie() {
 	boolean res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
 

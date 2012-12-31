@@ -191,6 +191,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private CandidateView mCandidateView = null;
     private CandidateSelect mCandidateSelect = null;
     private View mCandidateContainer = null;
+    private StringBuffer mLastSuggestionEngOnly = new StringBuffer();
     
     public final UIHandler mHandler = new UIHandler(this);
 
@@ -619,12 +620,14 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
 	mCangjie.resetState();
+	mLastSuggestionEngOnly.setLength(0);
         mHandler.onStartInput(editorInfo, restarting);
     }
 
     @Override
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
 	mCangjie.resetState();
+	mLastSuggestionEngOnly.setLength(0);
         mHandler.onStartInputView(editorInfo, restarting);
     }
 
@@ -648,6 +651,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     private void onStartInputInternal(final EditorInfo editorInfo, final boolean restarting) {
 	mCangjie.resetState();
+	mLastSuggestionEngOnly.setLength(0);
         super.onStartInput(editorInfo, restarting);
     }
 
@@ -655,6 +659,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private void onStartInputViewInternal(final EditorInfo editorInfo, final boolean restarting) {
         super.onStartInputView(editorInfo, restarting);
 	mCangjie.resetState();
+	mLastSuggestionEngOnly.setLength(0);
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
         final MainKeyboardView mainKeyboardView = switcher.getMainKeyboardView();
 
@@ -1386,7 +1391,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             mSpaceState = SPACE_STATE_NONE;
             if (mCurrentSettings.isWordSeparator(primaryCode)) {
 		if (mCangjie.hasMatch() && primaryCode == 32) { // Send Key for White Space
-		    mCangjie.sendFirstCharacter();
+		     mCangjie.sendFirstCharacter();
 		} else {
 		    didAutoCorrect = handleSeparator(primaryCode, x, y, spaceState);
 		}
@@ -1456,11 +1461,21 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     // Cangjie Candidate Selected
     public void characterSelected(char c, int idx) {
+	String composer = mWordComposer.getTypedWord();
+	if (composer != null && composer.endsWith(mCangjie.getCangjieCode())) {
+	    composer = composer.substring(0, composer.length() - mCangjie.getCangjieCode().length());
+	} else {
+	    composer = "";
+	}
+	composer = composer + c;
         mConnection.beginBatchEdit();
-	sendKeyCodePoint(c);
-	mConnection.setComposingText("", 1);
+	// mConnection.setComposingText(composer, 1);
+	// sendKeyCodePoint(c);
+	mConnection.commitText(composer, 1);
 	resetComposingState(true);
         mConnection.endBatchEdit();
+	// mSpaceState = SPACE_STATE_PHANTOM;
+	mEnteredText = null;
     }
     
     // Called from PointerTracker through the KeyboardActionListener interface
@@ -1816,7 +1831,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             resetComposingState(false /* alsoResetLastComposedWord */);
         }
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
-	isComposingWord = switcher.isCangjieMode();
+	if (switcher.isCangjieMode()) {
+	    isComposingWord = true;
+        }
         if (isComposingWord) {
             final int keyX, keyY;
             if (KeyboardActionListener.Adapter.isInvalidCoordinate(x)
@@ -2272,10 +2289,28 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private void restartSuggestionsOnWordBeforeCursor(final CharSequence word) {
-        mWordComposer.setComposingWord(word, mKeyboardSwitcher.getKeyboard());
-        final int length = word.length();
+        int length = word.length();
+	mLastSuggestionEngOnly.setLength(0);
+	if (length > 0) {
+	    int count = length - 1;
+	    length = 0;
+	    do {
+		char letter = word.charAt(count);
+		boolean english = (letter >= 'a' && letter <= 'z') ||
+		    (letter >= 'A' && letter <= 'Z');
+		if (english) {
+		    mLastSuggestionEngOnly.insert(0, letter);
+		    count--;
+		    length++;
+		} else
+		    break;
+	    } while (count >= 0);
+	    mWordComposer.setComposingWord(mLastSuggestionEngOnly, mKeyboardSwitcher.getKeyboard());
+	} else {
+	    mWordComposer.setComposingWord(word, mKeyboardSwitcher.getKeyboard());
+	}
         mConnection.deleteSurroundingText(length, 0);
-        mConnection.setComposingText(word, 1);
+        mConnection.setComposingText(mLastSuggestionEngOnly, 1);
         mHandler.postUpdateSuggestionStrip();
     }
 
