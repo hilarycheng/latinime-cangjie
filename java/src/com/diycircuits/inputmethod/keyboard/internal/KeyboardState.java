@@ -379,7 +379,11 @@ public final class KeyboardState {
     }
 
     private void onPressCangjie() {
-	setCangjieKeyboard();
+        if (mSwitchState == SWITCH_STATE_CANGJIE) {
+	    setAlphabetKeyboard();
+	} else {
+	    setCangjieKeyboard();
+	}
     }
 
     private void onPressSymbol() {
