@@ -150,6 +150,7 @@ public class Cangjie implements CandidateListener {
 	    mCodeCount++;
 	    return true;
 	}
+	mCodeInput[mCodeCount] = 0;
 
 	return false;
     }
