@@ -239,7 +239,7 @@ public final class KeyboardState {
         if (DEBUG_ACTION) {
             Log.d(TAG, "toggleAlphabetAndSymbols: " + this);
         }
-        if (mIsAlphabetMode) {
+        if (mIsAlphabetMode || mIsCangjieMode) {
             mPrevMainKeyboardWasShiftLocked = mAlphabetShiftState.isShiftLocked();
             if (mPrevSymbolsKeyboardWasShifted) {
                 setSymbolsShiftedKeyboard();

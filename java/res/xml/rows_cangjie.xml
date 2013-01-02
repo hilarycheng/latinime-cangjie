@@ -40,7 +40,7 @@
         latin:keyWidth="10%p"
     >
         <Key
-            latin:keyStyle="shiftKeyStyle"
+            latin:keyStyle="toMoreSymbolKeyStyle"
             latin:keyWidth="15%p"
             latin:visualInsetsRight="1%p" />
         <include
