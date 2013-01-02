@@ -1017,6 +1017,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     private void setSuggestionStripShownInternal(final boolean shown,
             final boolean needsInputViewShown) {
+
+	if (true) return;
+	
         // TODO: Modify this if we support suggestions with hard keyboard
         if (onEvaluateInputViewShown() && mSuggestionsContainer != null) {
             final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
