@@ -195,14 +195,14 @@ public final class Settings extends InputMethodSettingsFragment
         setPreferenceEnabled(findPreference(PREF_INCLUDE_OTHER_IMES_IN_LANGUAGE_SWITCH_LIST),
                 SettingsValues.showsLanguageSwitchKey(prefs));
 
-        final PreferenceScreen dictionaryLink =
-                (PreferenceScreen) findPreference(PREF_CONFIGURE_DICTIONARIES_KEY);
-        final Intent intent = dictionaryLink.getIntent();
+        // final PreferenceScreen dictionaryLink =
+        //         (PreferenceScreen) findPreference(PREF_CONFIGURE_DICTIONARIES_KEY);
+        // final Intent intent = dictionaryLink.getIntent();
 
-        final int number = context.getPackageManager().queryIntentActivities(intent, 0).size();
-        if (0 >= number) {
-            textCorrectionGroup.removePreference(dictionaryLink);
-        }
+        // final int number = context.getPackageManager().queryIntentActivities(intent, 0).size();
+        // if (0 >= number) {
+        //     textCorrectionGroup.removePreference(dictionaryLink);
+        // }
 
         final boolean gestureInputEnabledByBuildConfig = res.getBoolean(
                 R.bool.config_gesture_input_enabled_by_build_config);

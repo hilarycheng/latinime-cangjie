@@ -60,6 +60,7 @@
     <PreferenceCategory
         android:title="@string/correction_category"
         android:key="correction_settings">
+      <!--
         <PreferenceScreen
             android:key="configure_dictionaries_key"
             android:title="@string/configure_dictionaries_title">
@@ -68,6 +69,7 @@
               android:targetPackage="@string/dictionary_pack_package_name"
               android:targetClass="@string/dictionary_pack_settings_activity" />
         </PreferenceScreen>
+	-->
         <ListPreference
             android:key="auto_correction_threshold"
             android:title="@string/auto_correction"
