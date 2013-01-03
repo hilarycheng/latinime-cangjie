@@ -262,7 +262,7 @@ public final class Settings extends InputMethodSettingsFragment
         }
         updateShowCorrectionSuggestionsSummary();
         updateKeyPreviewPopupDelaySummary();
-        updateCustomInputStylesSummary();
+        // updateCustomInputStylesSummary();
     }
 
     @Override
@@ -312,21 +312,21 @@ public final class Settings extends InputMethodSettingsFragment
                         mShowCorrectionSuggestionsPreference.getValue())]);
     }
 
-    private void updateCustomInputStylesSummary() {
-        final PreferenceScreen customInputStyles =
-                (PreferenceScreen)findPreference(PREF_CUSTOM_INPUT_STYLES);
-        final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-        final Resources res = getResources();
-        final String prefSubtype = SettingsValues.getPrefAdditionalSubtypes(prefs, res);
-        final InputMethodSubtype[] subtypes =
-                AdditionalSubtype.createAdditionalSubtypesArray(prefSubtype);
-        final StringBuilder styles = new StringBuilder();
-        for (final InputMethodSubtype subtype : subtypes) {
-            if (styles.length() > 0) styles.append(", ");
-            styles.append(SubtypeLocale.getSubtypeDisplayName(subtype, res));
-        }
-        customInputStyles.setSummary(styles);
-    }
+    // private void updateCustomInputStylesSummary() {
+    //     final PreferenceScreen customInputStyles =
+    //             (PreferenceScreen)findPreference(PREF_CUSTOM_INPUT_STYLES);
+    //     final SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+    //     final Resources res = getResources();
+    //     final String prefSubtype = SettingsValues.getPrefAdditionalSubtypes(prefs, res);
+    //     final InputMethodSubtype[] subtypes =
+    //             AdditionalSubtype.createAdditionalSubtypesArray(prefSubtype);
+    //     final StringBuilder styles = new StringBuilder();
+    //     for (final InputMethodSubtype subtype : subtypes) {
+    //         if (styles.length() > 0) styles.append(", ");
+    //         styles.append(SubtypeLocale.getSubtypeDisplayName(subtype, res));
+    //     }
+    //     customInputStyles.setSummary(styles);
+    // }
 
     private void updateKeyPreviewPopupDelaySummary() {
         final ListPreference lp = mKeyPreviewPopupDismissDelay;
