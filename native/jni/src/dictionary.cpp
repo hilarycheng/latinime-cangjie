@@ -66,7 +66,7 @@ int Dictionary::getSuggestions(ProximityInfo *proximityInfo, void *traverseSessi
         int *frequencies, int *spaceIndices, int *outputTypes) const {
     int result = 0;
     if (isGesture) {
-      LOGE("Get Suggestions Gesture");
+      // LOGE("Get Suggestions Gesture");
         DicTraverseWrapper::initDicTraverseSession(
                 traverseSession, this, prevWordChars, prevWordLength);
         result = mGestureDecoder->getSuggestions(proximityInfo, traverseSession,
@@ -77,7 +77,7 @@ int Dictionary::getSuggestions(ProximityInfo *proximityInfo, void *traverseSessi
         }
         return result;
     } else {
-      LOGE("Get Suggestions Dictionray");
+      // LOGE("Get Suggestions Dictionray");
         std::map<int, int> bigramMap;
         uint8_t bigramFilter[BIGRAM_FILTER_BYTE_SIZE];
         mBigramDictionary->fillBigramAddressToFrequencyMapAndFilter(prevWordChars,
