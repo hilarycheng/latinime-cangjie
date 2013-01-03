@@ -87,6 +87,7 @@
             android:entries="@array/prefs_suggestion_visibilities"
             android:defaultValue="@string/prefs_suggestion_visibility_default_value" />
     </PreferenceCategory>
+    <!--
     <PreferenceCategory
         android:title="@string/gesture_typing_category"
         android:key="gesture_typing_settings">
@@ -108,6 +109,7 @@
             android:persistent="true"
             android:defaultValue="true" />
     </PreferenceCategory>
+    -->
     <PreferenceCategory
         android:title="@string/misc_category"
         android:key="misc_settings">

@@ -68,14 +68,14 @@ public final class Settings extends InputMethodSettingsFragment
     public static final String PREF_KEY_PREVIEW_POPUP_DISMISS_DELAY =
             "pref_key_preview_popup_dismiss_delay";
     public static final String PREF_BIGRAM_PREDICTIONS = "next_word_prediction";
-    public static final String PREF_GESTURE_INPUT = "gesture_input";
+    // public static final String PREF_GESTURE_INPUT = "gesture_input";
     public static final String PREF_VIBRATION_DURATION_SETTINGS =
             "pref_vibration_duration_settings";
     public static final String PREF_KEYPRESS_SOUND_VOLUME =
             "pref_keypress_sound_volume";
-    public static final String PREF_GESTURE_PREVIEW_TRAIL = "pref_gesture_preview_trail";
-    public static final String PREF_GESTURE_FLOATING_PREVIEW_TEXT =
-            "pref_gesture_floating_preview_text";
+    // public static final String PREF_GESTURE_PREVIEW_TRAIL = "pref_gesture_preview_trail";
+    // public static final String PREF_GESTURE_FLOATING_PREVIEW_TEXT =
+    //         "pref_gesture_floating_preview_text";
 
     public static final String PREF_INPUT_LANGUAGE = "input_language";
     public static final String PREF_SELECTED_LANGUAGES = "selected_languages";
@@ -204,22 +204,22 @@ public final class Settings extends InputMethodSettingsFragment
         //     textCorrectionGroup.removePreference(dictionaryLink);
         // }
 
-        final boolean gestureInputEnabledByBuildConfig = res.getBoolean(
-                R.bool.config_gesture_input_enabled_by_build_config);
-        final Preference gesturePreviewTrail = findPreference(PREF_GESTURE_PREVIEW_TRAIL);
-        final Preference gestureFloatingPreviewText = findPreference(
-                PREF_GESTURE_FLOATING_PREVIEW_TEXT);
-        if (!gestureInputEnabledByBuildConfig) {
-            miscSettings.removePreference(findPreference(PREF_GESTURE_INPUT));
-            miscSettings.removePreference(gesturePreviewTrail);
-            miscSettings.removePreference(gestureFloatingPreviewText);
-        } else {
-             final boolean gestureInputEnabledByUser = prefs.getBoolean(PREF_GESTURE_INPUT, true);
-             // setPreferenceEnabled(gesturePreviewTrail, gestureInputEnabledByUser);
-             // setPreferenceEnabled(gestureFloatingPreviewText, gestureInputEnabledByUser);
-             setPreferenceEnabled(gesturePreviewTrail, false);
-             setPreferenceEnabled(gestureFloatingPreviewText, false);
-        }
+        // final boolean gestureInputEnabledByBuildConfig = res.getBoolean(
+        //         R.bool.config_gesture_input_enabled_by_build_config);
+        // final Preference gesturePreviewTrail = findPreference(PREF_GESTURE_PREVIEW_TRAIL);
+        // final Preference gestureFloatingPreviewText = findPreference(
+        //         PREF_GESTURE_FLOATING_PREVIEW_TEXT);
+        // if (!gestureInputEnabledByBuildConfig) {
+        //     miscSettings.removePreference(findPreference(PREF_GESTURE_INPUT));
+        //     miscSettings.removePreference(gesturePreviewTrail);
+        //     miscSettings.removePreference(gestureFloatingPreviewText);
+        // } else {
+        //      final boolean gestureInputEnabledByUser = prefs.getBoolean(PREF_GESTURE_INPUT, true);
+        //      // setPreferenceEnabled(gesturePreviewTrail, gestureInputEnabledByUser);
+        //      // setPreferenceEnabled(gestureFloatingPreviewText, gestureInputEnabledByUser);
+        //      setPreferenceEnabled(gesturePreviewTrail, false);
+        //      setPreferenceEnabled(gestureFloatingPreviewText, false);
+        // }
 
         mKeypressVibrationDurationSettingsPref =
                 (PreferenceScreen) findPreference(PREF_VIBRATION_DURATION_SETTINGS);
@@ -281,22 +281,22 @@ public final class Settings extends InputMethodSettingsFragment
         } else if (key.equals(PREF_SHOW_LANGUAGE_SWITCH_KEY)) {
             setPreferenceEnabled(findPreference(PREF_INCLUDE_OTHER_IMES_IN_LANGUAGE_SWITCH_LIST),
                     SettingsValues.showsLanguageSwitchKey(prefs));
-        } else if (key.equals(PREF_GESTURE_INPUT)) {
-            final boolean gestureInputEnabledByConfig = getResources().getBoolean(
-                    R.bool.config_gesture_input_enabled_by_build_config);
-            if (gestureInputEnabledByConfig) {
-                final boolean gestureInputEnabledByUser = prefs.getBoolean(
-                        PREF_GESTURE_INPUT, true);
-                setPreferenceEnabled(findPreference(PREF_GESTURE_PREVIEW_TRAIL),
-                        gestureInputEnabledByUser);
-                setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
-                        gestureInputEnabledByUser);
-            } else {
-                setPreferenceEnabled(findPreference(PREF_GESTURE_PREVIEW_TRAIL),
-                        false);
-                setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
-                        false);
-	    }
+        // } else if (key.equals(PREF_GESTURE_INPUT)) {
+        //     final boolean gestureInputEnabledByConfig = getResources().getBoolean(
+        //             R.bool.config_gesture_input_enabled_by_build_config);
+        //     if (gestureInputEnabledByConfig) {
+        //         final boolean gestureInputEnabledByUser = prefs.getBoolean(
+        //                 PREF_GESTURE_INPUT, true);
+        //         setPreferenceEnabled(findPreference(PREF_GESTURE_PREVIEW_TRAIL),
+        //                 gestureInputEnabledByUser);
+        //         setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
+        //                 gestureInputEnabledByUser);
+        //     } else {
+        //         setPreferenceEnabled(findPreference(PREF_GESTURE_PREVIEW_TRAIL),
+        //                 false);
+        //         setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
+        //                 false);
+	//     }
         }
         ensureConsistencyOfAutoCorrectionSettings();
         updateVoiceModeSummary();

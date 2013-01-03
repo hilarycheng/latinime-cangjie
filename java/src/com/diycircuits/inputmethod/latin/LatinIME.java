@@ -788,9 +788,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         mainKeyboardView.setMainDictionaryAvailability(mIsMainDictionaryAvailable);
         mainKeyboardView.setKeyPreviewPopupEnabled(mCurrentSettings.mKeyPreviewPopupOn,
                 mCurrentSettings.mKeyPreviewPopupDismissDelay);
-        mainKeyboardView.setGestureHandlingEnabledByUser(mCurrentSettings.mGestureInputEnabled);
-        mainKeyboardView.setGesturePreviewMode(mCurrentSettings.mGesturePreviewTrailEnabled,
-                mCurrentSettings.mGestureFloatingPreviewTextEnabled);
+        // mainKeyboardView.setGestureHandlingEnabledByUser(mCurrentSettings.mGestureInputEnabled);
+        // mainKeyboardView.setGesturePreviewMode(mCurrentSettings.mGesturePreviewTrailEnabled,
+        //         mCurrentSettings.mGestureFloatingPreviewTextEnabled);
 
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime");
     }

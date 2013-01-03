@@ -83,9 +83,9 @@ public final class SettingsValues {
     @SuppressWarnings("unused") // TODO: Use this
     private final float mKeypressSoundVolumeRawValue;
     private final InputMethodSubtype[] mAdditionalSubtypes;
-    public final boolean mGestureInputEnabled;
-    public final boolean mGesturePreviewTrailEnabled;
-    public final boolean mGestureFloatingPreviewTextEnabled;
+    // public final boolean mGestureInputEnabled;
+    // public final boolean mGesturePreviewTrailEnabled;
+    // public final boolean mGestureFloatingPreviewTextEnabled;
 
     // From the input box
     private final InputAttributes mInputAttributes;
@@ -172,13 +172,13 @@ public final class SettingsValues {
         mVoiceKeyOnMain = mVoiceMode != null && mVoiceMode.equals(voiceModeMain);
         mAdditionalSubtypes = AdditionalSubtype.createAdditionalSubtypesArray(
                 getPrefAdditionalSubtypes(prefs, res));
-        final boolean gestureInputEnabledByBuildConfig = res.getBoolean(
-                R.bool.config_gesture_input_enabled_by_build_config);
-        mGestureInputEnabled = gestureInputEnabledByBuildConfig
-                && prefs.getBoolean(Settings.PREF_GESTURE_INPUT, true);
-        mGesturePreviewTrailEnabled = prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, true);
-        mGestureFloatingPreviewTextEnabled = prefs.getBoolean(
-                Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT, true);
+        // final boolean gestureInputEnabledByBuildConfig = res.getBoolean(
+        //         R.bool.config_gesture_input_enabled_by_build_config);
+        // mGestureInputEnabled = gestureInputEnabledByBuildConfig
+        //         && prefs.getBoolean(Settings.PREF_GESTURE_INPUT, true);
+        // mGesturePreviewTrailEnabled = prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, true);
+        // mGestureFloatingPreviewTextEnabled = prefs.getBoolean(
+        //         Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT, true);
         mCorrectionEnabled = mAutoCorrectEnabled && !mInputAttributes.mInputTypeNoAutoCorrect;
         mSuggestionVisibility = createSuggestionVisibility(res);
     }
