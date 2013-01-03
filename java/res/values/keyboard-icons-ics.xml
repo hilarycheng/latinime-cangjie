@@ -34,6 +34,7 @@
         <item name="iconShortcutKeyDisabled">@drawable/sym_keyboard_voice_off_holo</item>
         <item name="iconTabKeyPreview">@drawable/sym_keyboard_feedback_tab</item>
         <item name="iconLanguageSwitchKey">@drawable/sym_keyboard_language_switch</item>
+        <item name="iconLanguageSwitchEnglishKey">@drawable/sym_keyboard_language_switch_english</item>
         <item name="iconZwnjKey">@drawable/sym_keyboard_zwnj_holo</item>
         <item name="iconZwjKey">@drawable/sym_keyboard_zwj_holo</item>
     </style>

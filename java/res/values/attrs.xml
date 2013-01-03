@@ -213,6 +213,7 @@
         <attr name="iconShortcutKeyDisabled" format="reference" />
         <attr name="iconTabKeyPreview" format="reference" />
         <attr name="iconLanguageSwitchKey" format="reference" />
+        <attr name="iconLanguageSwitchEnglishKey" format="reference" />
         <attr name="iconZwnjKey" format="reference" />
         <attr name="iconZwjKey" format="reference" />
     </declare-styleable>

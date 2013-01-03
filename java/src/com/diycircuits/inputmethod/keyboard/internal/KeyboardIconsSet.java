@@ -54,6 +54,7 @@ public final class KeyboardIconsSet {
         "shortcut_key_disabled",        R.styleable.Keyboard_iconShortcutKeyDisabled,
         "tab_key_preview",              R.styleable.Keyboard_iconTabKeyPreview,
         "language_switch_key",          R.styleable.Keyboard_iconLanguageSwitchKey,
+        "language_switch_english_key",  R.styleable.Keyboard_iconLanguageSwitchEnglishKey,
         "zwnj_key",                     R.styleable.Keyboard_iconZwnjKey,
         "zwj_key",                      R.styleable.Keyboard_iconZwjKey,
     };
