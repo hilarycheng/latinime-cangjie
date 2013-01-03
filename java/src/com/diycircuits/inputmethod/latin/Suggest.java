@@ -56,7 +56,7 @@ public final class Suggest {
     private static final boolean DBG = LatinImeLogger.sDBG;
 
     private Dictionary mMainDictionary;
-    private ContactsBinaryDictionary mContactsDict;
+    // private ContactsBinaryDictionary mContactsDict;
     private final ConcurrentHashMap<String, Dictionary> mDictionaries =
             CollectionUtils.newConcurrentHashMap();
 
@@ -130,9 +130,9 @@ public final class Suggest {
         return mMainDictionary;
     }
 
-    public ContactsBinaryDictionary getContactsDictionary() {
-        return mContactsDict;
-    }
+    // public ContactsBinaryDictionary getContactsDictionary() {
+    //     return mContactsDict;
+    // }
 
     public ConcurrentHashMap<String, Dictionary> getUnigramDictionaries() {
         return mDictionaries;
@@ -151,10 +151,10 @@ public final class Suggest {
      * the contacts dictionary by passing null to this method. In this case no contacts dictionary
      * won't be used.
      */
-    public void setContactsDictionary(ContactsBinaryDictionary contactsDictionary) {
-        mContactsDict = contactsDictionary;
-        addOrReplaceDictionary(mDictionaries, Dictionary.TYPE_CONTACTS, contactsDictionary);
-    }
+    // public void setContactsDictionary(ContactsBinaryDictionary contactsDictionary) {
+    //     mContactsDict = contactsDictionary;
+    //     addOrReplaceDictionary(mDictionaries, Dictionary.TYPE_CONTACTS, contactsDictionary);
+    // }
 
     public void setUserHistoryDictionary(UserHistoryDictionary userHistoryDictionary) {
         addOrReplaceDictionary(mDictionaries, Dictionary.TYPE_USER_HISTORY, userHistoryDictionary);

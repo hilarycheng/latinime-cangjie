@@ -26,14 +26,14 @@ import android.view.textservice.SuggestionsInfo;
 import com.diycircuits.inputmethod.keyboard.ProximityInfo;
 import com.diycircuits.inputmethod.latin.BinaryDictionary;
 import com.diycircuits.inputmethod.latin.CollectionUtils;
-import com.diycircuits.inputmethod.latin.ContactsBinaryDictionary;
+// import com.diycircuits.inputmethod.latin.ContactsBinaryDictionary;
 import com.diycircuits.inputmethod.latin.Dictionary;
 import com.diycircuits.inputmethod.latin.DictionaryCollection;
 import com.diycircuits.inputmethod.latin.DictionaryFactory;
 import com.diycircuits.inputmethod.latin.LocaleUtils;
 import com.diycircuits.inputmethod.latin.R;
 import com.diycircuits.inputmethod.latin.StringUtils;
-import com.diycircuits.inputmethod.latin.SynchronouslyLoadedContactsBinaryDictionary;
+// import com.diycircuits.inputmethod.latin.SynchronouslyLoadedContactsBinaryDictionary;
 import com.diycircuits.inputmethod.latin.SynchronouslyLoadedUserBinaryDictionary;
 import com.diycircuits.inputmethod.latin.UserBinaryDictionary;
 
@@ -56,7 +56,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
     private static final boolean DBG = false;
     private static final int POOL_SIZE = 2;
 
-    public static final String PREF_USE_CONTACTS_KEY = "pref_spellcheck_use_contacts";
+    // public static final String PREF_USE_CONTACTS_KEY = "pref_spellcheck_use_contacts";
 
     public static final int CAPITALIZE_NONE = 0; // No caps, or mixed case
     public static final int CAPITALIZE_FIRST = 1; // First only
@@ -66,15 +66,15 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
     private Map<String, DictionaryPool> mDictionaryPools = CollectionUtils.newSynchronizedTreeMap();
     private Map<String, UserBinaryDictionary> mUserDictionaries =
             CollectionUtils.newSynchronizedTreeMap();
-    private ContactsBinaryDictionary mContactsDictionary;
+    // private ContactsBinaryDictionary mContactsDictionary;
 
     // The threshold for a candidate to be offered as a suggestion.
     private float mSuggestionThreshold;
     // The threshold for a suggestion to be considered "recommended".
     private float mRecommendedThreshold;
     // Whether to use the contacts dictionary
-    private boolean mUseContactsDictionary;
-    private final Object mUseContactsLock = new Object();
+    // private boolean mUseContactsDictionary;
+    // private final Object mUseContactsLock = new Object();
 
     private final HashSet<WeakReference<DictionaryCollection>> mDictionaryCollectionsList =
             CollectionUtils.newHashSet();
@@ -116,7 +116,7 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
                 Float.parseFloat(getString(R.string.spellchecker_recommended_threshold_value));
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
-        onSharedPreferenceChanged(prefs, PREF_USE_CONTACTS_KEY);
+        // onSharedPreferenceChanged(prefs, PREF_USE_CONTACTS_KEY);
     }
 
     public static int getScriptFromLocale(final Locale locale) {
@@ -130,54 +130,54 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-        if (!PREF_USE_CONTACTS_KEY.equals(key)) return;
-        synchronized(mUseContactsLock) {
-            mUseContactsDictionary = prefs.getBoolean(PREF_USE_CONTACTS_KEY, true);
-            if (mUseContactsDictionary) {
-                startUsingContactsDictionaryLocked();
-            } else {
-                stopUsingContactsDictionaryLocked();
-            }
-        }
+        // if (!PREF_USE_CONTACTS_KEY.equals(key)) return;
+        // synchronized(mUseContactsLock) {
+        //     mUseContactsDictionary = prefs.getBoolean(PREF_USE_CONTACTS_KEY, true);
+        //     if (mUseContactsDictionary) {
+        //         startUsingContactsDictionaryLocked();
+        //     } else {
+        //         stopUsingContactsDictionaryLocked();
+        //     }
+        // }
     }
 
-    private void startUsingContactsDictionaryLocked() {
-        if (null == mContactsDictionary) {
-            // TODO: use the right locale for each session
-            mContactsDictionary =
-                    new SynchronouslyLoadedContactsBinaryDictionary(this, Locale.getDefault());
-        }
-        final Iterator<WeakReference<DictionaryCollection>> iterator =
-                mDictionaryCollectionsList.iterator();
-        while (iterator.hasNext()) {
-            final WeakReference<DictionaryCollection> dictRef = iterator.next();
-            final DictionaryCollection dict = dictRef.get();
-            if (null == dict) {
-                iterator.remove();
-            } else {
-                dict.addDictionary(mContactsDictionary);
-            }
-        }
-    }
+    // private void startUsingContactsDictionaryLocked() {
+    //     if (null == mContactsDictionary) {
+    //         // TODO: use the right locale for each session
+    //         mContactsDictionary =
+    //                 new SynchronouslyLoadedContactsBinaryDictionary(this, Locale.getDefault());
+    //     }
+    //     final Iterator<WeakReference<DictionaryCollection>> iterator =
+    //             mDictionaryCollectionsList.iterator();
+    //     while (iterator.hasNext()) {
+    //         final WeakReference<DictionaryCollection> dictRef = iterator.next();
+    //         final DictionaryCollection dict = dictRef.get();
+    //         if (null == dict) {
+    //             iterator.remove();
+    //         } else {
+    //             dict.addDictionary(mContactsDictionary);
+    //         }
+    //     }
+    // }
 
-    private void stopUsingContactsDictionaryLocked() {
-        if (null == mContactsDictionary) return;
-        final Dictionary contactsDict = mContactsDictionary;
-        // TODO: revert to the concrete type when USE_BINARY_CONTACTS_DICTIONARY is no longer needed
-        mContactsDictionary = null;
-        final Iterator<WeakReference<DictionaryCollection>> iterator =
-                mDictionaryCollectionsList.iterator();
-        while (iterator.hasNext()) {
-            final WeakReference<DictionaryCollection> dictRef = iterator.next();
-            final DictionaryCollection dict = dictRef.get();
-            if (null == dict) {
-                iterator.remove();
-            } else {
-                dict.removeDictionary(contactsDict);
-            }
-        }
-        contactsDict.close();
-    }
+    // private void stopUsingContactsDictionaryLocked() {
+    //     if (null == mContactsDictionary) return;
+    //     final Dictionary contactsDict = mContactsDictionary;
+    //     // TODO: revert to the concrete type when USE_BINARY_CONTACTS_DICTIONARY is no longer needed
+    //     mContactsDictionary = null;
+    //     final Iterator<WeakReference<DictionaryCollection>> iterator =
+    //             mDictionaryCollectionsList.iterator();
+    //     while (iterator.hasNext()) {
+    //         final WeakReference<DictionaryCollection> dictRef = iterator.next();
+    //         final DictionaryCollection dict = dictRef.get();
+    //         if (null == dict) {
+    //             iterator.remove();
+    //         } else {
+    //             dict.removeDictionary(contactsDict);
+    //         }
+    //     }
+    //     contactsDict.close();
+    // }
 
     @Override
     public Session createSession() {
@@ -371,18 +371,18 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
                 for (Dictionary dict : oldUserDictionaries.values()) {
                     dict.close();
                 }
-                synchronized (mUseContactsLock) {
-                    if (null != mContactsDictionary) {
-                        // The synchronously loaded contacts dictionary should have been in one
-                        // or several pools, but it is shielded against multiple closing and it's
-                        // safe to call it several times.
-                        final ContactsBinaryDictionary dictToClose = mContactsDictionary;
-                        // TODO: revert to the concrete type when USE_BINARY_CONTACTS_DICTIONARY
-                        // is no longer needed
-                        mContactsDictionary = null;
-                        dictToClose.close();
-                    }
-                }
+                // synchronized (mUseContactsLock) {
+                //     if (null != mContactsDictionary) {
+                //         // The synchronously loaded contacts dictionary should have been in one
+                //         // or several pools, but it is shielded against multiple closing and it's
+                //         // safe to call it several times.
+                //         final ContactsBinaryDictionary dictToClose = mContactsDictionary;
+                //         // TODO: revert to the concrete type when USE_BINARY_CONTACTS_DICTIONARY
+                //         // is no longer needed
+                //         mContactsDictionary = null;
+                //         dictToClose.close();
+                //     }
+                // }
             }
         }.start();
     }
@@ -414,20 +414,20 @@ public final class AndroidSpellCheckerService extends SpellCheckerService
             mUserDictionaries.put(localeStr, userDictionary);
         }
         dictionaryCollection.addDictionary(userDictionary);
-        synchronized (mUseContactsLock) {
-            if (mUseContactsDictionary) {
-                if (null == mContactsDictionary) {
-                    // TODO: use the right locale. We can't do it right now because the
-                    // spell checker is reusing the contacts dictionary across sessions
-                    // without regard for their locale, so we need to fix that first.
-                    mContactsDictionary = new SynchronouslyLoadedContactsBinaryDictionary(this,
-                            Locale.getDefault());
-                }
-            }
-            dictionaryCollection.addDictionary(mContactsDictionary);
-            mDictionaryCollectionsList.add(
-                    new WeakReference<DictionaryCollection>(dictionaryCollection));
-        }
+        // synchronized (mUseContactsLock) {
+        //     if (mUseContactsDictionary) {
+        //         if (null == mContactsDictionary) {
+        //             // TODO: use the right locale. We can't do it right now because the
+        //             // spell checker is reusing the contacts dictionary across sessions
+        //             // without regard for their locale, so we need to fix that first.
+        //             mContactsDictionary = new SynchronouslyLoadedContactsBinaryDictionary(this,
+        //                     Locale.getDefault());
+        //         }
+        //     }
+        //     dictionaryCollection.addDictionary(mContactsDictionary);
+        //     mDictionaryCollectionsList.add(
+        //             new WeakReference<DictionaryCollection>(dictionaryCollection));
+        // }
         return new DictAndProximity(dictionaryCollection, proximityInfo);
     }
 

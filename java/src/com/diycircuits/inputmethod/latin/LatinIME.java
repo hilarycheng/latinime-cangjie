@@ -454,7 +454,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         };
         mCurrentSettings = job.runInLocale(mResources, mSubtypeSwitcher.getCurrentSubtypeLocale());
         mFeedbackManager = new AudioAndHapticFeedbackManager(this, mCurrentSettings);
-        resetContactsDictionary(null == mSuggest ? null : mSuggest.getContactsDictionary());
+        // resetContactsDictionary(null == mSuggest ? null : mSuggest.getContactsDictionary());
     }
 
     // Note that this method is called from a non-UI thread.
@@ -471,13 +471,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         final Locale subtypeLocale = mSubtypeSwitcher.getCurrentSubtypeLocale();
         final String localeStr = subtypeLocale.toString();
 
-        final ContactsBinaryDictionary oldContactsDictionary;
-        if (mSuggest != null) {
-            oldContactsDictionary = mSuggest.getContactsDictionary();
-            mSuggest.close();
-        } else {
-            oldContactsDictionary = null;
-        }
+        // final ContactsBinaryDictionary oldContactsDictionary;
+        // if (mSuggest != null) {
+        //     oldContactsDictionary = mSuggest.getContactsDictionary();
+        //     mSuggest.close();
+        // } else {
+        //     oldContactsDictionary = null;
+        // }
         mSuggest = new Suggest(this /* Context */, subtypeLocale,
                 this /* SuggestInitializationListener */);
         if (mCurrentSettings.mCorrectionEnabled) {
@@ -493,7 +493,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         mIsUserDictionaryAvailable = mUserDictionary.isEnabled();
         mSuggest.setUserDictionary(mUserDictionary);
 
-        resetContactsDictionary(oldContactsDictionary);
+        // resetContactsDictionary(oldContactsDictionary);
 
         // Note that the calling sequence of onCreate() and onCurrentInputMethodSubtypeChanged()
         // is not guaranteed. It may even be called at the same time on a different thread.
@@ -502,46 +502,46 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         mSuggest.setUserHistoryDictionary(mUserHistoryDictionary);
     }
 
-    /**
-     * Resets the contacts dictionary in mSuggest according to the user settings.
-     *
-     * This method takes an optional contacts dictionary to use when the locale hasn't changed
-     * since the contacts dictionary can be opened or closed as necessary depending on the settings.
-     *
-     * @param oldContactsDictionary an optional dictionary to use, or null
-     */
-    private void resetContactsDictionary(final ContactsBinaryDictionary oldContactsDictionary) {
-        final boolean shouldSetDictionary = (null != mSuggest && mCurrentSettings.mUseContactsDict);
+    // /**
+    //  * Resets the contacts dictionary in mSuggest according to the user settings.
+    //  *
+    //  * This method takes an optional contacts dictionary to use when the locale hasn't changed
+    //  * since the contacts dictionary can be opened or closed as necessary depending on the settings.
+    //  *
+    //  * @param oldContactsDictionary an optional dictionary to use, or null
+    //  */
+    // private void resetContactsDictionary(final ContactsBinaryDictionary oldContactsDictionary) {
+    //     final boolean shouldSetDictionary = (null != mSuggest && mCurrentSettings.mUseContactsDict);
 
-        final ContactsBinaryDictionary dictionaryToUse;
-        if (!shouldSetDictionary) {
-            // Make sure the dictionary is closed. If it is already closed, this is a no-op,
-            // so it's safe to call it anyways.
-            if (null != oldContactsDictionary) oldContactsDictionary.close();
-            dictionaryToUse = null;
-        } else {
-            final Locale locale = mSubtypeSwitcher.getCurrentSubtypeLocale();
-            if (null != oldContactsDictionary) {
-                if (!oldContactsDictionary.mLocale.equals(locale)) {
-                    // If the locale has changed then recreate the contacts dictionary. This
-                    // allows locale dependent rules for handling bigram name predictions.
-                    oldContactsDictionary.close();
-                    dictionaryToUse = new ContactsBinaryDictionary(this, locale);
-                } else {
-                    // Make sure the old contacts dictionary is opened. If it is already open,
-                    // this is a no-op, so it's safe to call it anyways.
-                    oldContactsDictionary.reopen(this);
-                    dictionaryToUse = oldContactsDictionary;
-                }
-            } else {
-                dictionaryToUse = new ContactsBinaryDictionary(this, locale);
-            }
-        }
+    //     final ContactsBinaryDictionary dictionaryToUse;
+    //     if (!shouldSetDictionary) {
+    //         // Make sure the dictionary is closed. If it is already closed, this is a no-op,
+    //         // so it's safe to call it anyways.
+    //         if (null != oldContactsDictionary) oldContactsDictionary.close();
+    //         dictionaryToUse = null;
+    //     } else {
+    //         final Locale locale = mSubtypeSwitcher.getCurrentSubtypeLocale();
+    //         if (null != oldContactsDictionary) {
+    //             if (!oldContactsDictionary.mLocale.equals(locale)) {
+    //                 // If the locale has changed then recreate the contacts dictionary. This
+    //                 // allows locale dependent rules for handling bigram name predictions.
+    //                 oldContactsDictionary.close();
+    //                 dictionaryToUse = new ContactsBinaryDictionary(this, locale);
+    //             } else {
+    //                 // Make sure the old contacts dictionary is opened. If it is already open,
+    //                 // this is a no-op, so it's safe to call it anyways.
+    //                 oldContactsDictionary.reopen(this);
+    //                 dictionaryToUse = oldContactsDictionary;
+    //             }
+    //         } else {
+    //             dictionaryToUse = new ContactsBinaryDictionary(this, locale);
+    //         }
+    //     }
 
-        if (null != mSuggest) {
-            mSuggest.setContactsDictionary(dictionaryToUse);
-        }
-    }
+    //     if (null != mSuggest) {
+    //         mSuggest.setContactsDictionary(dictionaryToUse);
+    //     }
+    // }
 
     /* package private */ void resetSuggestMainDict() {
         final Locale subtypeLocale = mSubtypeSwitcher.getCurrentSubtypeLocale();
