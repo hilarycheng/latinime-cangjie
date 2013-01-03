@@ -23,8 +23,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.inputmethodservice.InputMethodService;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+// import android.net.ConnectivityManager;
+// import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
@@ -45,7 +45,7 @@ public final class SubtypeSwitcher {
     private static final SubtypeSwitcher sInstance = new SubtypeSwitcher();
     private /* final */ InputMethodManager mImm;
     private /* final */ Resources mResources;
-    private /* final */ ConnectivityManager mConnectivityManager;
+    // private /* final */ ConnectivityManager mConnectivityManager;
 
     /*-----------------------------------------------------------*/
     // Variants which should be changed only by reload functions.
@@ -58,7 +58,7 @@ public final class SubtypeSwitcher {
     private Locale mCurrentSystemLocale;
     /*-----------------------------------------------------------*/
 
-    private boolean mIsNetworkConnected;
+    // private boolean mIsNetworkConnected;
 
     static final class NeedsToDisplayLanguage {
         private int mEnabledSubtypeCount;
@@ -94,8 +94,8 @@ public final class SubtypeSwitcher {
     private void initialize(final Context service) {
         mResources = service.getResources();
         mImm = ImfUtils.getInputMethodManager(service);
-        mConnectivityManager = (ConnectivityManager) service.getSystemService(
-                Context.CONNECTIVITY_SERVICE);
+        // mConnectivityManager = (ConnectivityManager) service.getSystemService(
+        //         Context.CONNECTIVITY_SERVICE);
         mCurrentSystemLocale = mResources.getConfiguration().locale;
         mNoLanguageSubtype = ImfUtils.findSubtypeByLocaleAndKeyboardLayoutSet(
                 service, SubtypeLocale.NO_LANGUAGE, SubtypeLocale.QWERTY);
@@ -104,8 +104,8 @@ public final class SubtypeSwitcher {
             throw new RuntimeException("Can't find no lanugage with QWERTY subtype");
         }
 
-        final NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-        mIsNetworkConnected = (info != null && info.isConnected());
+        // final NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+        // mIsNetworkConnected = (info != null && info.isConnected());
     }
 
     // Update all parameters stored in SubtypeSwitcher.
@@ -253,19 +253,19 @@ public final class SubtypeSwitcher {
             return false;
         if (mShortcutSubtype == null)
             return true;
-        if (mShortcutSubtype.containsExtraValueKey(REQ_NETWORK_CONNECTIVITY)) {
-            return mIsNetworkConnected;
-        }
+        // if (mShortcutSubtype.containsExtraValueKey(REQ_NETWORK_CONNECTIVITY)) {
+        //     return mIsNetworkConnected;
+        // }
         return true;
     }
 
-    public void onNetworkStateChanged(final Intent intent) {
-        final boolean noConnection = intent.getBooleanExtra(
-                ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-        mIsNetworkConnected = !noConnection;
+    // public void onNetworkStateChanged(final Intent intent) {
+    //     final boolean noConnection = intent.getBooleanExtra(
+    //             ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+    //     mIsNetworkConnected = !noConnection;
 
-        KeyboardSwitcher.getInstance().onNetworkStateChanged();
-    }
+    //     KeyboardSwitcher.getInstance().onNetworkStateChanged();
+    // }
 
     //////////////////////////////////
     // Subtype Switching functions //

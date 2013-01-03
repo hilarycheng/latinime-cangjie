@@ -34,7 +34,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.inputmethodservice.InputMethodService;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
+// import android.net.ConnectivityManager;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -422,7 +422,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         // Register to receive ringer mode change and network state change.
         // Also receive installation and removal of a dictionary pack.
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        // filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(AudioManager.RINGER_MODE_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
 
@@ -2431,9 +2431,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
-            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                mSubtypeSwitcher.onNetworkStateChanged(intent);
-            } else if (action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
+            // if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+            //     mSubtypeSwitcher.onNetworkStateChanged(intent);
+            // } else if (action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
+            if (action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
                 mFeedbackManager.onRingerModeChanged();
             }
         }
