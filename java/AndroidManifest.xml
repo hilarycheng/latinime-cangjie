@@ -63,11 +63,13 @@
             </intent-filter>
         </activity>
 
+	<!--
         <activity android:name="DebugSettingsActivity" android:label="@string/english_ime_debug_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+	-->
 
         <receiver android:name="SuggestionSpanPickedNotificationReceiver" android:enabled="true">
             <intent-filter>

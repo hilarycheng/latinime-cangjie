@@ -66,7 +66,7 @@ import com.diycircuits.inputmethod.latin.StaticInnerHandlerWrapper;
 import com.diycircuits.inputmethod.latin.SuggestedWords;
 import com.diycircuits.inputmethod.latin.Utils;
 import com.diycircuits.inputmethod.latin.define.ProductionFlag;
-import com.diycircuits.inputmethod.research.ResearchLogger;
+// import com.diycircuits.inputmethod.research.ResearchLogger;
 
 import java.util.ArrayList;
 
@@ -670,9 +670,9 @@ public final class SuggestionStripView extends RelativeLayout implements OnClick
         clear();
         mSuggestedWords = suggestedWords;
         mParams.layout(mSuggestedWords, mSuggestionsStrip, this, getWidth());
-        if (ProductionFlag.IS_EXPERIMENTAL) {
-            ResearchLogger.suggestionStripView_setSuggestions(mSuggestedWords);
-        }
+        // if (ProductionFlag.IS_EXPERIMENTAL) {
+        //     ResearchLogger.suggestionStripView_setSuggestions(mSuggestedWords);
+        // }
     }
 
     public int setMoreSuggestionsHeight(int remainingHeight) {

@@ -26,7 +26,7 @@ import com.diycircuits.inputmethod.latin.LatinImeLogger;
 import com.diycircuits.inputmethod.latin.R;
 import com.diycircuits.inputmethod.latin.ResourceUtils;
 import com.diycircuits.inputmethod.latin.define.ProductionFlag;
-import com.diycircuits.inputmethod.research.ResearchLogger;
+// import com.diycircuits.inputmethod.research.ResearchLogger;
 
 public final class SuddenJumpingTouchEventHandler {
     private static final String TAG = SuddenJumpingTouchEventHandler.class.getSimpleName();
@@ -145,9 +145,9 @@ public final class SuddenJumpingTouchEventHandler {
         if (handleSuddenJumping(me)) {
             if (DEBUG_MODE)
                 Log.w(TAG, "onTouchEvent: ignore sudden jump " + me);
-            if (ProductionFlag.IS_EXPERIMENTAL) {
-                ResearchLogger.suddenJumpingTouchEventHandler_onTouchEvent(me);
-            }
+            // if (ProductionFlag.IS_EXPERIMENTAL) {
+            //     ResearchLogger.suddenJumpingTouchEventHandler_onTouchEvent(me);
+            // }
             return true;
         }
         return mView.processMotionEvent(me);

@@ -29,7 +29,7 @@ import com.diycircuits.inputmethod.accessibility.AccessibleKeyboardViewProxy;
 import com.diycircuits.inputmethod.keyboard.KeyboardLayoutSet.KeyboardLayoutSetException;
 import com.diycircuits.inputmethod.keyboard.PointerTracker.TimerProxy;
 import com.diycircuits.inputmethod.keyboard.internal.KeyboardState;
-import com.diycircuits.inputmethod.latin.DebugSettings;
+// import com.diycircuits.inputmethod.latin.DebugSettings;
 import com.diycircuits.inputmethod.latin.ImfUtils;
 import com.diycircuits.inputmethod.latin.InputView;
 import com.diycircuits.inputmethod.latin.LatinIME;
@@ -108,8 +108,9 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         mSubtypeSwitcher = SubtypeSwitcher.getInstance();
         mState = new KeyboardState(this);
         setContextThemeWrapper(latinIme, getKeyboardTheme(latinIme, prefs));
-        mForceNonDistinctMultitouch = prefs.getBoolean(
-                DebugSettings.FORCE_NON_DISTINCT_MULTITOUCH_KEY, false);
+        mForceNonDistinctMultitouch = false;
+        // mForceNonDistinctMultitouch = prefs.getBoolean(
+        //         DebugSettings.FORCE_NON_DISTINCT_MULTITOUCH_KEY, false);
     }
 
     private static KeyboardTheme getKeyboardTheme(Context context, SharedPreferences prefs) {

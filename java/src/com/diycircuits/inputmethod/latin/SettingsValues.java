@@ -70,7 +70,7 @@ public final class SettingsValues {
     private final String mAutoCorrectionThresholdRawValue;
     public final String mShowSuggestionsSetting;
     @SuppressWarnings("unused") // TODO: Use this
-    private final boolean mUsabilityStudyMode;
+    // private final boolean mUsabilityStudyMode;
     public final boolean mIncludesOtherImesInLanguageSwitchList;
     public final boolean mShowsLanguageSwitchKey;
     @SuppressWarnings("unused") // TODO: Use this
@@ -148,7 +148,7 @@ public final class SettingsValues {
                 res.getString(R.string.auto_correction_threshold_mode_index_modest));
         mShowSuggestionsSetting = prefs.getString(Settings.PREF_SHOW_SUGGESTIONS_SETTING,
                 res.getString(R.string.prefs_suggestion_visibility_default_value));
-        mUsabilityStudyMode = getUsabilityStudyMode(prefs);
+        // mUsabilityStudyMode = getUsabilityStudyMode(prefs);
         mIncludesOtherImesInLanguageSwitchList = prefs.getBoolean(
                 Settings.PREF_INCLUDE_OTHER_IMES_IN_LANGUAGE_SWITCH_LIST, false);
         mShowsLanguageSwitchKey = showsLanguageSwitchKey(prefs);
@@ -410,11 +410,11 @@ public final class SettingsValues {
                 res, R.array.keypress_vibration_durations, "-1"));
     }
 
-    // Likewise
-    public static boolean getUsabilityStudyMode(final SharedPreferences prefs) {
-        // TODO: use mUsabilityStudyMode instead of reading it again here
-        return prefs.getBoolean(DebugSettings.PREF_USABILITY_STUDY_MODE, true);
-    }
+    // // Likewise
+    // public static boolean getUsabilityStudyMode(final SharedPreferences prefs) {
+    //     // TODO: use mUsabilityStudyMode instead of reading it again here
+    //     return prefs.getBoolean(DebugSettings.PREF_USABILITY_STUDY_MODE, true);
+    // }
 
     public static long getLastUserHistoryWriteTime(final SharedPreferences prefs,
             final String locale) {

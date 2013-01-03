@@ -89,7 +89,7 @@ public final class Settings extends InputMethodSettingsFragment
     private ListPreference mKeyPreviewPopupDismissDelay;
     // Use bigrams to predict the next word when there is no input for it yet
     private CheckBoxPreference mBigramPrediction;
-    private Preference mDebugSettingsPreference;
+    // private Preference mDebugSettingsPreference;
 
     private TextView mKeypressVibrationDurationSettingsTextView;
     private TextView mKeypressSoundVolumeSettingsTextView;
@@ -139,17 +139,17 @@ public final class Settings extends InputMethodSettingsFragment
         final PreferenceGroup miscSettings =
                 (PreferenceGroup) findPreference(PREF_MISC_SETTINGS);
 
-        mDebugSettingsPreference = findPreference(PREF_DEBUG_SETTINGS);
-        if (mDebugSettingsPreference != null) {
-            if (ProductionFlag.IS_INTERNAL) {
-                final Intent debugSettingsIntent = new Intent(Intent.ACTION_MAIN);
-                debugSettingsIntent.setClassName(
-                        context.getPackageName(), DebugSettingsActivity.class.getName());
-                mDebugSettingsPreference.setIntent(debugSettingsIntent);
-            } else {
-                miscSettings.removePreference(mDebugSettingsPreference);
-            }
-        }
+        // mDebugSettingsPreference = findPreference(PREF_DEBUG_SETTINGS);
+        // if (mDebugSettingsPreference != null) {
+        //     if (ProductionFlag.IS_INTERNAL) {
+        //         final Intent debugSettingsIntent = new Intent(Intent.ACTION_MAIN);
+        //         debugSettingsIntent.setClassName(
+        //                 context.getPackageName(), DebugSettingsActivity.class.getName());
+        //         mDebugSettingsPreference.setIntent(debugSettingsIntent);
+        //     } else {
+        //         miscSettings.removePreference(mDebugSettingsPreference);
+        //     }
+        // }
 
         final boolean showVoiceKeyOption = res.getBoolean(
                 R.bool.config_enable_show_voice_key_option);

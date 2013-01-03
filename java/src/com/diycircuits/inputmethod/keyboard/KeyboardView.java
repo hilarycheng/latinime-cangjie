@@ -50,7 +50,6 @@ import com.diycircuits.inputmethod.latin.R;
 import com.diycircuits.inputmethod.latin.StaticInnerHandlerWrapper;
 import com.diycircuits.inputmethod.latin.StringUtils;
 import com.diycircuits.inputmethod.latin.define.ProductionFlag;
-import com.diycircuits.inputmethod.research.ResearchLogger;
 
 import java.util.HashSet;
 
@@ -453,12 +452,12 @@ public class KeyboardView extends View implements PointerTracker.DrawingProxy {
             canvas.drawRect(0, 0, width, height, paint);
         }
 
-        // ResearchLogging indicator.
-        // TODO: Reimplement using a keyboard background image specific to the ResearchLogger,
-        // and remove this call.
-        if (ProductionFlag.IS_EXPERIMENTAL) {
-            ResearchLogger.getInstance().paintIndicator(this, paint, canvas, width, height);
-        }
+        // // ResearchLogging indicator.
+        // // TODO: Reimplement using a keyboard background image specific to the ResearchLogger,
+        // // and remove this call.
+        // if (ProductionFlag.IS_EXPERIMENTAL) {
+        //     ResearchLogger.getInstance().paintIndicator(this, paint, canvas, width, height);
+        // }
 
         mInvalidatedKeys.clear();
         mInvalidateAllKeys = false;
