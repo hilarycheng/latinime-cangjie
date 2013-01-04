@@ -2,10 +2,12 @@
 <resources>
   <string-array name="listArray">
     <item>倉頡</item>
+    <item>倉頡(香港字)</item>
     <item>速成</item>
   </string-array>
   <string-array name="listValues">
     <item>0</item>
+    <item>2</item>
     <item>1</item>
   </string-array>
 </resources>
