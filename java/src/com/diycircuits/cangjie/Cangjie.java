@@ -105,7 +105,7 @@ public class Cangjie implements CandidateListener {
 	} else if (value.compareTo("2") == 0) {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(true);
-	    mMode = QUICK;
+	    mMode = CANGJIE;
 	} else {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(false);
