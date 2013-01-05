@@ -65,28 +65,31 @@ int Dictionary::getSuggestions(ProximityInfo *proximityInfo, void *traverseSessi
         bool useFullEditDistance, unsigned short *outWords,
         int *frequencies, int *spaceIndices, int *outputTypes) const {
     int result = 0;
-    if (isGesture) {
-      // LOGE("Get Suggestions Gesture");
-        DicTraverseWrapper::initDicTraverseSession(
-                traverseSession, this, prevWordChars, prevWordLength);
-        result = mGestureDecoder->getSuggestions(proximityInfo, traverseSession,
-                xcoordinates, ycoordinates, times, pointerIds, codes, codesSize, commitPoint,
-                outWords, frequencies, spaceIndices, outputTypes);
-        if (DEBUG_DICT) {
-            DUMP_RESULT(outWords, frequencies, 18 /* MAX_WORDS */, MAX_WORD_LENGTH_INTERNAL);
-        }
-        return result;
-    } else {
-      // LOGE("Get Suggestions Dictionray");
+    // if (isGesture) {
+    //   // LOGE("Get Suggestions Gesture");
+    //     DicTraverseWrapper::initDicTraverseSession(
+    //             traverseSession, this, prevWordChars, prevWordLength);
+    //     result = mGestureDecoder->getSuggestions(proximityInfo, traverseSession,
+    //             xcoordinates, ycoordinates, times, pointerIds, codes, codesSize, commitPoint,
+    //             outWords, frequencies, spaceIndices, outputTypes);
+    //     if (DEBUG_DICT) {
+    //         DUMP_RESULT(outWords, frequencies, 18 /* MAX_WORDS */, MAX_WORD_LENGTH_INTERNAL);
+    //     }
+    //     return result;
+    // } else {
+        LOGE("Get Suggestions Dictionray 0");
         std::map<int, int> bigramMap;
         uint8_t bigramFilter[BIGRAM_FILTER_BYTE_SIZE];
+        LOGE("Get Suggestions Dictionray 1");
         mBigramDictionary->fillBigramAddressToFrequencyMapAndFilter(prevWordChars,
                 prevWordLength, &bigramMap, bigramFilter);
+        LOGE("Get Suggestions Dictionray 2");
         result = mUnigramDictionary->getSuggestions(proximityInfo, xcoordinates,
                 ycoordinates, codes, codesSize, &bigramMap, bigramFilter,
                 useFullEditDistance, outWords, frequencies, outputTypes);
+        LOGE("Get Suggestions Dictionray 3");
         return result;
-    }
+    // }
 }
 
 int Dictionary::getBigrams(const int32_t *word, int length, int *codes, int codesSize,

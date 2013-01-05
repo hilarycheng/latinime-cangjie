@@ -19,6 +19,7 @@
 
 #define LOG_TAG "LatinIME: unigram_dictionary.cpp"
 
+#include <android/log.h>
 #include "binary_format.h"
 #include "char_utils.h"
 #include "defines.h"
@@ -29,6 +30,7 @@
 #include "words_priority_queue.h"
 #include "words_priority_queue_pool.h"
 
+#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 namespace latinime {
 
 const UnigramDictionary::digraph_t UnigramDictionary::GERMAN_UMLAUT_DIGRAPHS[] =
@@ -43,7 +45,7 @@ const UnigramDictionary::digraph_t UnigramDictionary::FRENCH_LIGATURES_DIGRAPHS[
 // TODO: check the header
 UnigramDictionary::UnigramDictionary(const uint8_t *const streamStart, int typedLetterMultiplier,
         int fullWordMultiplier, int maxWordLength, int maxWords, const unsigned int flags)
-    : DICT_ROOT(streamStart), MAX_WORD_LENGTH(maxWordLength), MAX_WORDS(maxWords),
+    : DICT_ROOT(streamStart), MAX_WORD_LENGTH(maxWordLength), MAX_WORDS(18),
     TYPED_LETTER_MULTIPLIER(typedLetterMultiplier), FULL_WORD_MULTIPLIER(fullWordMultiplier),
       // TODO : remove this variable.
     ROOT_POS(0),
@@ -179,31 +181,41 @@ int UnigramDictionary::getSuggestions(ProximityInfo *proximityInfo, const int *x
     WordsPriorityQueuePool queuePool(MAX_WORDS, SUB_QUEUE_MAX_WORDS, MAX_WORD_LENGTH);
     queuePool.clearAll();
     Correction masterCorrection;
+    LOGE("Unigram Diagram 0");
     masterCorrection.resetCorrection();
+    LOGE("Unigram Diagram 1");
     if (BinaryFormat::REQUIRES_GERMAN_UMLAUT_PROCESSING & FLAGS)
     { // Incrementally tune the word and try all possibilities
+    LOGE("Unigram Diagram 2");
         int codesBuffer[getCodesBufferSize(codes, codesSize)];
         int xCoordinatesBuffer[codesSize];
         int yCoordinatesBuffer[codesSize];
+    LOGE("Unigram Diagram 3");
         getWordWithDigraphSuggestionsRec(proximityInfo, xcoordinates, ycoordinates, codesBuffer,
                 xCoordinatesBuffer, yCoordinatesBuffer, codesSize, bigramMap, bigramFilter,
                 useFullEditDistance, codes, codesSize, 0, codesBuffer, &masterCorrection,
                 &queuePool, GERMAN_UMLAUT_DIGRAPHS,
                 sizeof(GERMAN_UMLAUT_DIGRAPHS) / sizeof(GERMAN_UMLAUT_DIGRAPHS[0]));
+    LOGE("Unigram Diagram 4");
     } else if (BinaryFormat::REQUIRES_FRENCH_LIGATURES_PROCESSING & FLAGS) {
         int codesBuffer[getCodesBufferSize(codes, codesSize)];
         int xCoordinatesBuffer[codesSize];
         int yCoordinatesBuffer[codesSize];
+    LOGE("Unigram Diagram 5");
         getWordWithDigraphSuggestionsRec(proximityInfo, xcoordinates, ycoordinates, codesBuffer,
                 xCoordinatesBuffer, yCoordinatesBuffer, codesSize, bigramMap, bigramFilter,
                 useFullEditDistance, codes, codesSize, 0, codesBuffer, &masterCorrection,
                 &queuePool, FRENCH_LIGATURES_DIGRAPHS,
                 sizeof(FRENCH_LIGATURES_DIGRAPHS) / sizeof(FRENCH_LIGATURES_DIGRAPHS[0]));
+    LOGE("Unigram Diagram 6");
     } else { // Normal processing
+    LOGE("Unigram Diagram 7");
         getWordSuggestions(proximityInfo, xcoordinates, ycoordinates, codes, codesSize,
                 bigramMap, bigramFilter, useFullEditDistance, &masterCorrection, &queuePool);
+    LOGE("Unigram Diagram 8");
     }
 
+    LOGE("Unigram Diagram 9");
     PROF_START(20);
     if (DEBUG_DICT) {
         float ns = queuePool.getMasterQueue()->getHighestNormalizedScore(
@@ -211,10 +223,12 @@ int UnigramDictionary::getSuggestions(ProximityInfo *proximityInfo, const int *x
         ns += 0;
         AKLOGI("Max normalized score = %f", ns);
     }
+    LOGE("Unigram Diagram 10");
     const int suggestedWordsCount =
             queuePool.getMasterQueue()->outputSuggestions(masterCorrection.getPrimaryInputWord(),
                     codesSize, frequencies, outWords, outputTypes);
 
+    LOGE("Unigram Diagram 11");
     if (DEBUG_DICT) {
         float ns = queuePool.getMasterQueue()->getHighestNormalizedScore(
                 masterCorrection.getPrimaryInputWord(), codesSize, 0, 0, 0);
@@ -231,6 +245,7 @@ int UnigramDictionary::getSuggestions(ProximityInfo *proximityInfo, const int *x
     }
     PROF_END(20);
     PROF_CLOSE;
+    LOGE("Unigram Diagram 12");
     return suggestedWordsCount;
 }
 
@@ -309,9 +324,13 @@ void UnigramDictionary::initSuggestions(ProximityInfo *proximityInfo, const int 
         AKLOGI("initSuggest");
         DUMP_WORD_INT(codes, inputSize);
     }
+    // LOGE("init suggestion 0");
     correction->initInputParams(proximityInfo, codes, inputSize, xCoordinates, yCoordinates);
+    // LOGE("init suggestion 1");
     const int maxDepth = min(inputSize * MAX_DEPTH_MULTIPLIER, MAX_WORD_LENGTH);
+    // LOGE("init suggestion 2 %d", maxDepth);
     correction->initCorrection(proximityInfo, inputSize, maxDepth);
+    // LOGE("init suggestion 3");
 }
 
 static const char SPACE = ' ';
@@ -321,9 +340,14 @@ void UnigramDictionary::getOneWordSuggestions(ProximityInfo *proximityInfo,
         const std::map<int, int> *bigramMap, const uint8_t *bigramFilter,
         const bool useFullEditDistance, const int inputSize,
         Correction *correction, WordsPriorityQueuePool *queuePool) const {
+  int count;
+  LOGE("Get One Word Suggestion 0 : %d %d", *xcoordinates, *ycoordinates);
     initSuggestions(proximityInfo, xcoordinates, ycoordinates, codes, inputSize, correction);
     getSuggestionCandidates(useFullEditDistance, inputSize, bigramMap, bigramFilter, correction,
             queuePool, true /* doAutoCompletion */, DEFAULT_MAX_ERRORS, FIRST_WORD_INDEX);
+  for (count = 0; count < inputSize; count++) {
+    LOGE("Get One Word Suggestion C : %d, %d => %d", xcoordinates[count], ycoordinates[count], codes[count]);
+  }
 }
 
 void UnigramDictionary::getSuggestionCandidates(const bool useFullEditDistance,
@@ -353,6 +377,7 @@ void UnigramDictionary::getSuggestionCandidates(const bool useFullEditDistance,
 
     // Depth first search
     while (outputIndex >= 0) {
+      // LOGE("Get Suggestion Candidate : %d", outputIndex);
         if (correction->initProcessState(outputIndex)) {
             int siblingPos = correction->getTreeSiblingPos(outputIndex);
             int firstChildPos;

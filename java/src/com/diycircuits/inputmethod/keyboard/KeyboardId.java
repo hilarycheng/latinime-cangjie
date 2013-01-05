@@ -142,7 +142,7 @@ public final class KeyboardId {
     }
 
     public boolean isAlphabetKeyboard() {
-        return mElementId < ELEMENT_SYMBOLS;
+        return mElementId < ELEMENT_SYMBOLS || mElementId == ELEMENT_CANGJIE;
     }
 
     public boolean navigateNext() {

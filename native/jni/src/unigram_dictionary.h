@@ -124,6 +124,7 @@ class UnigramDictionary {
 
     static const digraph_t GERMAN_UMLAUT_DIGRAPHS[];
     static const digraph_t FRENCH_LIGATURES_DIGRAPHS[];
+    
 };
 } // namespace latinime
 #endif // LATINIME_UNIGRAM_DICTIONARY_H
