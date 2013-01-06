@@ -22,6 +22,14 @@
         android:title="@string/general_category"
         android:key="general_settings">
         <ListPreference
+            android:key="language_mode"
+            android:title="@string/language_mode"
+            android:summary="@string/language_mode_summary"
+            android:persistent="true"
+    	    android:defaultValue="0"
+	    android:entries="@array/langArray"
+	    android:entryValues="@array/langValues" />
+        <ListPreference
             android:key="cangjie_mode"
             android:title="@string/cangjie_mode"
             android:persistent="true"

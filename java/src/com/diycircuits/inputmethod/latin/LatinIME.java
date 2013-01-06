@@ -798,8 +798,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         // mainKeyboardView.setGestureHandlingEnabledByUser(true);
         // mainKeyboardView.setGesturePreviewMode(true, true);
 
-	String value = PreferenceManager.getDefaultSharedPreferences(this).getString("cangjie_mode", "0");
-	mKeyboardSwitcher.setPreferredLanguage((value.compareTo("-1") == 0));
+	String value = PreferenceManager.getDefaultSharedPreferences(this).getString("language_mode", "0");
+	mKeyboardSwitcher.setPreferredLanguage((value.compareTo("0") == 0));
 	mCangjie.resetState();
 
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime");

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string-array name="listArray">
+  <string-array name="langArray">
     <item>英文</item>
+    <item>中文</item>
+  </string-array>
+  <string-array name="langValues">
+    <item>0</item>
+    <item>1</item>
+  </string-array>
+  <string-array name="listArray">
     <item>倉頡</item>
     <item>倉頡(香港字)</item>
     <item>速成</item>
   </string-array>
   <string-array name="listValues">
-    <item>-1</item>
     <item>0</item>
     <item>2</item>
     <item>1</item>
