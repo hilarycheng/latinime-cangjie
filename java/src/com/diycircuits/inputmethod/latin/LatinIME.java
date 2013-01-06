@@ -633,11 +633,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void onFinishInputView(final boolean finishingInput) {
+	mKeyboardSwitcher.saveKeyboardState();
         mHandler.onFinishInputView(finishingInput);
     }
 
     @Override
     public void onFinishInput() {
+	mKeyboardSwitcher.saveKeyboardState();
         mHandler.onFinishInput();
     }
 
