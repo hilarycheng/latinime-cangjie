@@ -94,6 +94,7 @@ public final class KeyboardState {
     private boolean mIsInDoubleTapShiftKey;
 
     private final SavedKeyboardState mSavedKeyboardState = new SavedKeyboardState();
+    private boolean mLastState = false;
 
     static final class SavedKeyboardState {
         public boolean mIsValid;
@@ -155,14 +156,16 @@ public final class KeyboardState {
         state.mIsValid = true;
         if (DEBUG_EVENT) {
             Log.d(TAG, "onSaveKeyboardState: saved=" + state + " " + this);
-        }
+	}
     }
 
     private void onRestoreKeyboardState() {
         final SavedKeyboardState state = mSavedKeyboardState;
         if (DEBUG_EVENT) {
             Log.d(TAG, "onRestoreKeyboardState: saved=" + state + " " + this);
-        }
+	}
+
+        mLastState = state.mIsValid;
         if (!state.mIsValid || state.mIsAlphabetMode) {
             setAlphabetKeyboard();
 	} else if (state.mIsCangjieMode) {
@@ -267,6 +270,18 @@ public final class KeyboardState {
             }
             mPrevMainKeyboardWasShiftLocked = false;
         }
+    }
+
+    public void setPreferredLanguage(boolean isEnglish) {
+        final SavedKeyboardState state = mSavedKeyboardState;
+	Log.d(TAG, "setPreferredLanguage: saved=" + state + " " + this + " " + mSavedKeyboardState + " " + this);
+	if (!mLastState) {
+	    if (isEnglish) {
+		setAlphabetKeyboard();
+	    } else {
+		setCangjieKeyboard();
+	    }
+	}
     }
 
     // TODO: Remove this method. Come up with a more comprehensive way to reset the keyboard layout

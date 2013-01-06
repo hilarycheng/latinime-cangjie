@@ -163,6 +163,12 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         }
     }
 
+    public void setPreferredLanguage(boolean isEnglish) {
+        if (getKeyboard() != null) {
+	    mState.setPreferredLanguage(isEnglish);
+	}
+    }
+
     public void onFinishInputView() {
         mIsAutoCorrectionActive = false;
     }
