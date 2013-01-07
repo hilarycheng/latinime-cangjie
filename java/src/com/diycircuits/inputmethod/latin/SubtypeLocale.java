@@ -91,6 +91,7 @@ public final class SubtypeLocale {
             final int noLanguageResId = res.getIdentifier(
                     noLanguageResName, null, RESOURCE_PACKAGE_NAME);
             final String key = getNoLanguageLayoutKey(layoutName);
+	    Log.i("Cangjie", "Key 0 " + key);
             sKeyboardLayoutToNameIdsMap.put(key, noLanguageResId);
         }
 
@@ -103,6 +104,7 @@ public final class SubtypeLocale {
             sExceptionalDisplayNamesMap.put(localeString, exceptionalDisplayNames[i]);
             final String resourceName = SUBTYPE_NAME_RESOURCE_WITH_LAYOUT_PREFIX + localeString;
             final int resId = res.getIdentifier(resourceName, null, RESOURCE_PACKAGE_NAME);
+	    Log.i("Cangjie", "Key 1 " + resourceName);
             sExceptionalLocaleToWithLayoutNameIdsMap.put(localeString, resId);
         }
 
@@ -111,6 +113,7 @@ public final class SubtypeLocale {
         for (int i = 0; i < keyboardLayoutSetMap.length; i += 2) {
             final String key = keyboardLayoutSetMap[i];
             final String keyboardLayoutSet = keyboardLayoutSetMap[i + 1];
+	    Log.i("Cangjie", "Key 2 " + key);
             sLocaleAndExtraValueToKeyboardLayoutSetMap.put(key, keyboardLayoutSet);
         }
 
