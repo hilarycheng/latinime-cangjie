@@ -294,6 +294,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    if (listener != null && c != 0 && mSelectIndex == idx) {
 		listener.characterSelected(c, idx);
 	    }
+	case MotionEvent.ACTION_CANCEL:
 	    mSelectIndex = -1;
 	    invalidate();
 	    break;
