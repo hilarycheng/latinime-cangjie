@@ -35,6 +35,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     private PopupWindow mPopup = null;
     private Handler mHandler = null;
     private Rect mRect = new Rect();
+    private int mSelectIndex = -1;
 
     private CandidateAdapter mAdapter = null;
     private View mPopupView = null;
@@ -242,7 +243,16 @@ public class CandidateSelect extends View implements Handler.Callback {
 	if (match != null) {
 	    int start = offset + (spacing / 2), index = charOffset;
 	    while (start < width && index < total) {
-		canvas.drawText(match, index, 1, start, topOffset, paint);
+		if (mSelectIndex == index) {
+		    int x = start - (spacing / 2);
+		    paint.setColor(0xff33B5E5);
+		    canvas.drawRect(x, 0, x + textWidth + spacing, height, paint);
+		    paint.setColor(0xff282828);
+		    canvas.drawText(match, index, 1, start, topOffset, paint);
+		    paint.setColor(0xff33B5E5);
+		} else {
+		    canvas.drawText(match, index, 1, start, topOffset, paint);
+		}
 		start = start + (int) textWidth + spacing;
 		index++;
 	    }
@@ -277,9 +287,15 @@ public class CandidateSelect extends View implements Handler.Callback {
 	switch (action) {
 	case MotionEvent.ACTION_DOWN:
 	case MotionEvent.ACTION_MOVE:
+	    mSelectIndex = idx;
+	    invalidate();
 	    break;
 	case MotionEvent.ACTION_UP:
-	    if (listener != null && c != 0) listener.characterSelected(c, idx);
+	    if (listener != null && c != 0 && mSelectIndex == idx) {
+		listener.characterSelected(c, idx);
+	    }
+	    mSelectIndex = -1;
+	    invalidate();
 	    break;
 	}
 
