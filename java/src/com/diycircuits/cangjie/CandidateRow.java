@@ -173,12 +173,14 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    if (mSelectIndex >= 0) {
 		spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
 
-		mSelectPaint.setColor(0x00000000);
-		canvas.drawColor(0x00000000);
-		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, mSelectPaint);
+		mPaint.setColor(0xff282828);
+		canvas.drawText(mMatch, mOffset + mSelectIndex, 1, spacing + (cspacing / 2), topOffset, mPaint);
 
-		mSelectPaint.setColor(0xff282828);
-		canvas.drawText(mMatch, mOffset + mSelectIndex, 1, spacing + (cspacing / 2), topOffset, mSelectPaint);
+		mPaint.setShadowLayer(0, 0, 0, 0);
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mPaint.setColor(0x00000000);
+		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, mPaint);
+
 	    }
 	}
     }
