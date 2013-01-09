@@ -160,7 +160,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	mPaint.setColor(0x00000000);
 	mPaint.setShadowLayer(2, 0, -1, 0xff1f1f1f); 
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
-	mPaint.setColor(0xffffffff);
+	mPaint.setColor(0xff33B5E5);
+	//	mPaint.setColor(0xffffffff);
 	mPaint.setShadowLayer(2, 0, 0, 0xff1f1f1f); 
 	if (mMatch != null) {
 	    int spacing = mLeftOffset + (cspacing / 2);
@@ -173,14 +174,15 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    if (mSelectIndex >= 0) {
 		spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
 
-		mPaint.setColor(0xff282828);
-		canvas.drawText(mMatch, mOffset + mSelectIndex, 1, spacing + (cspacing / 2), topOffset, mPaint);
-
-		mPaint.setShadowLayer(0, 0, 0, 0);
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mPaint.setColor(0x00000000);
+		canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, Region.Op.REPLACE);
+		mPaint.setColor(0xff33B5E5);
 		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, mPaint);
 
+		mPaint.setColor(0xffffffff);
+		canvas.drawText(mMatch, mOffset + mSelectIndex, 1, spacing + (cspacing / 2), topOffset, mPaint);
+
+		canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
+		mPaint.setColor(0xffffffff);
 	    }
 	}
     }
