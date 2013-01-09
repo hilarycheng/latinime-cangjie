@@ -101,7 +101,6 @@ public final class Suggest {
     public void resetMainDict(final Context context, final Locale locale,
             final SuggestInitializationListener listener) {
         mMainDictionary = null;
-	Log.i("Cangjie", "Reset Main Dict 0 " + hasMainDictionary());
         if (listener != null) {
             listener.onUpdateMainDictionaryAvailability(hasMainDictionary());
         }
@@ -112,7 +111,6 @@ public final class Suggest {
                         DictionaryFactory.createMainDictionaryFromManager(context, locale);
                 addOrReplaceDictionary(mDictionaries, Dictionary.TYPE_MAIN, newMainDict);
                 mMainDictionary = newMainDict;
-		Log.i("Cangjie", "Reset Main Dict 1 " + hasMainDictionary());
                 if (listener != null) {
                     listener.onUpdateMainDictionaryAvailability(hasMainDictionary());
                 }

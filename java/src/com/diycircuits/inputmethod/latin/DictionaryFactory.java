@@ -53,20 +53,15 @@ public final class DictionaryFactory {
                     createBinaryDictionary(context, locale));
         }
 
-	Log.i("Cangjie", "createMainDictionaryFromManager 0 ");
         final LinkedList<Dictionary> dictList = CollectionUtils.newLinkedList();
         final ArrayList<AssetFileAddress> assetFileList =
                 BinaryDictionaryGetter.getDictionaryFiles(locale, context);
-	Log.i("Cangjie", "createMainDictionaryFromManager 1 ");
         if (null != assetFileList) {
             for (final AssetFileAddress f : assetFileList) {
-	Log.i("Cangjie", "createMainDictionaryFromManager 2 ");
                 final BinaryDictionary binaryDictionary =
                         new BinaryDictionary(context, f.mFilename, f.mOffset, f.mLength,
                                 useFullEditDistance, locale, Dictionary.TYPE_MAIN);
-	Log.i("Cangjie", "createMainDictionaryFromManager 3");
                 if (binaryDictionary.isValidDictionary()) {
-	Log.i("Cangjie", "createMainDictionaryFromManager 4");
                     dictList.add(binaryDictionary);
                 }
             }
