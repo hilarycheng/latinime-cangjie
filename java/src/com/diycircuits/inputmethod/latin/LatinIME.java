@@ -1341,6 +1341,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     // Implementation of {@link KeyboardActionListener}.
     @Override
     public void onCodeInput(final int primaryCode, final int x, final int y) {
+
         final long when = SystemClock.uptimeMillis();
         if (primaryCode != Keyboard.CODE_DELETE || when > mLastKeyTime + QUICK_PRESS) {
             mDeleteCount = 0;
@@ -1427,7 +1428,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
                     keyX = Constants.NOT_A_COORDINATE;
                     keyY = Constants.NOT_A_COORDINATE;
                 }
-		if (switcher.isCangjieMode()) {
+
+		if (mKeyboardSwitcher.getMainKeyboardView() != null &&
+		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard() != null &&
+		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId != null &&
+		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE &&
+		    switcher.isCangjieMode()) {
 		    if (!mCangjie.isFull()) {
 			boolean result = true;
 			if (mCangjie != null) {
