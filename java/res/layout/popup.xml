@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_margin="0dp"
+    android:background="@drawable/btn_keyboard_key_light_pressed_holo"
     android:orientation="vertical" >
 
   <ListView
@@ -10,6 +11,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"
+      android:background="#ff3c3c3c"
       android:clickable="true" />
   
   <com.diycircuits.cangjie.CloseButton

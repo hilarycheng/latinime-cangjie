@@ -15,7 +15,6 @@ import android.os.Message;
 public class CandidateRow extends View implements View.OnClickListener, View.OnTouchListener {
 
     private static Paint mPaint = null;
-    private static Paint mSelectPaint = null;
     private static Rect mRect = new Rect();
     private static int cspacing = 0;
     private static int mLeftOffset = 0;
@@ -33,7 +32,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int mLastX = -1;
     private int mLastY = -1;
     private int mSelectIndex = -1;
-    
+
     public CandidateRow(Context context, AttributeSet attrs) {
 	super(context, attrs);
 
@@ -55,12 +54,6 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    mPaint.setStrokeWidth(0);
     	    mPaint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
 	}
-	if (mSelectPaint == null) {
-	    mSelectPaint = new Paint();
-	    mSelectPaint.setColor(Color.BLACK);
-	    mSelectPaint.setAntiAlias(true);
-	    mSelectPaint.setTextSize(mFontSize);
-	}
     }
 
     public void setHandler(Handler handler) {
@@ -73,7 +66,6 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	synchronized(mPaint) {
 	    if (mPaint.getTextSize() != mFontSize) {
 		mPaint.setTextSize(mFontSize);
-		mSelectPaint.setTextSize(mFontSize);
 		mPaint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
 	    }
 	}
@@ -111,12 +103,12 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     	if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
 	    mLastX = -1;
 	    mLastY = -1;
-    	    int pos = (int) event.getX() - mLeftOffset;
+	    int pos = (int) event.getX() - mLeftOffset;
 
-    	    pos = pos / (mTextWidth + cspacing);
-    	    if ((int) event.getX() < mLeftOffset + mTextWidth + cspacing) {
-    		pos = 0;
-    	    }
+	    pos = pos / (mTextWidth + cspacing);
+	    if ((int) event.getX() < mLeftOffset + mTextWidth + cspacing) {
+		pos = 0;
+	    }
 
 	    mSelectIndex = pos;
 	    invalidate();
@@ -157,12 +149,11 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	
 	if (cspacing == 0) calculateSpacingAndOffset();
 
-	mPaint.setColor(0x00000000);
-	mPaint.setShadowLayer(2, 0, -1, 0xff1f1f1f); 
+	mPaint.setColor(0xff3c3c3c);
+	canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
+	mPaint.setColor(0xff282828);
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
 	mPaint.setColor(0xff33B5E5);
-	//	mPaint.setColor(0xffffffff);
-	mPaint.setShadowLayer(2, 0, 0, 0xff1f1f1f); 
 	if (mMatch != null) {
 	    int spacing = mLeftOffset + (cspacing / 2);
 	    int topOffset = (mRect.height() - mRect.bottom);
