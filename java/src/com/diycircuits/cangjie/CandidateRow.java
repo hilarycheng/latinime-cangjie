@@ -32,6 +32,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int mLastX = -1;
     private int mLastY = -1;
     private int mSelectIndex = -1;
+    private TableLoader mTable = null;
 
     public CandidateRow(Context context, AttributeSet attrs) {
 	super(context, attrs);
@@ -79,6 +80,14 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	mAllTotal = alltotal;
     }
     
+    public void setMatch(TableLoader table, int offset, int total, int alltotal) {
+	mTable = table;
+	mOffset = offset;
+	mTotal  = total;
+	if (mAllTotal != alltotal) cspacing = 0;
+	mAllTotal = alltotal;
+    }
+    
     @Override
     public void onClick(View v) {
 	if (mLastX != -1 && mLastY != -1) {
@@ -91,7 +100,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     	    }
 	    
     	    if ((mOffset + pos) < mAllTotal) {
-    		Message msg = mHandler.obtainMessage(CandidateSelect.CHARACTER, mMatch[mOffset + pos], mOffset + pos);
+    		Message msg = mHandler.obtainMessage(CandidateSelect.CHARACTER, mTable.getMatchChar(mOffset + pos), mOffset + pos);
     		mHandler.sendMessage(msg);
     	    }
 	}
@@ -153,13 +162,18 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
 	mPaint.setColor(0xff282828);
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
-	mPaint.setColor(0xeeeeeeee);
-	if (mMatch != null) {
+	mPaint.setColor(0xffeeeeee);
+	if (mTable != null) {
+	    char c[] = new char[1];
 	    int spacing = mLeftOffset + (cspacing / 2);
 	    int topOffset = (mRect.height() - mRect.bottom);
 	    topOffset = topOffset + ((mHeight - mRect.height()) / 2);
 	    for (int count = mOffset; count < mOffset + mTotal; count++) {
-		if (mSelectIndex != (count - mOffset)) canvas.drawText(mMatch, count, 1, spacing, topOffset, mPaint);
+		c[0] = mTable.getMatchChar(count);
+		int color = 0xffeeeeee;
+		if (mTable.getFrequency(count) > 0) color = 0xffff9000;
+		mPaint.setColor(color);
+		if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
 		spacing += cspacing + mTextWidth;
 	    }
 	    if (mSelectIndex >= 0) {
@@ -169,8 +183,11 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		mPaint.setColor(0xff33B5E5);
 		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, mPaint);
 
-		mPaint.setColor(0xffffffff);
-		canvas.drawText(mMatch, mOffset + mSelectIndex, 1, spacing + (cspacing / 2), topOffset, mPaint);
+		int color = 0xffffffff;
+		if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = 0xffff9000;
+		mPaint.setColor(color);
+		c[0] = mTable.getMatchChar(mOffset + mSelectIndex);
+		canvas.drawText(c, 0, 1, spacing + (cspacing / 2), topOffset, mPaint);
 
 		canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
 		mPaint.setColor(0xffffffff);
