@@ -160,6 +160,11 @@ jchar quick_getMatchChar(int index)
   return quick[quick_index[index]][2];
 }
 
+jint quick_getFrequency(int index)
+{
+  return quick_frequency[quick_index[index]];
+}
+
 void quick_reset(void)
 {
   quick_func.mTotalMatch = 0;
@@ -203,6 +208,7 @@ struct _input_method quick_func =
   .updateFrequency = quick_updateFrequency,
   .clearFrequency  = quick_clearFrequency,
   .getMatchChar    = quick_getMatchChar,
+  .getFrequency    = quick_getFrequency,
   .reset           = quick_reset,
   .saveMatch       = quick_saveMatch
 };

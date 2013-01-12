@@ -82,7 +82,10 @@ public class Cangjie implements CandidateListener {
     }
     
     public void characterSelected(char c, int idx) {
-	if (mMode == QUICK) mTable.updateFrequencyQuick(c);
+	if (mMode == QUICK) {
+	    Log.i("Cangjie", "Character Select Update Frequency " + c + " " + idx);
+	    mTable.updateFrequencyQuick(c);
+	}
 	if (mListener != null) mListener.characterSelected(c, idx);
 	resetState();
     }
@@ -95,7 +98,8 @@ public class Cangjie implements CandidateListener {
 	}
 	mCodeCount = 0;
 	if (mSelect != null) {
-	    mSelect.updateMatch(null, 0);
+	    // mSelect.updateMatch(null, 0);
+	    mSelect.updateTable(null);
 	    mSelect.closePopup();
 	}
 	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
@@ -169,7 +173,8 @@ public class Cangjie implements CandidateListener {
 
 	if (mCodeCount == 0) {
 	    mTable.reset();
-	    mSelect.updateMatch(null, 0);
+	    // mSelect.updateMatch(null, 0);
+	    mSelect.updateTable(null);
 	} else { 
 	    matchCangjie();
 	}
@@ -184,10 +189,11 @@ public class Cangjie implements CandidateListener {
 
 	if (res) {
 	    mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
-	    for (int count = 0; count < mTable.totalMatch(); count++) {
-		mMatchChar[count] = mTable.getMatchChar(count);
-	    }
-	    mSelect.updateMatch(mMatchChar, mTable.totalMatch());
+	    // for (int count = 0; count < mTable.totalMatch(); count++) {
+	    // 	mMatchChar[count] = mTable.getMatchChar(count);
+	    // }
+	    // mSelect.updateMatch(mMatchChar, mTable.totalMatch());
+	    mSelect.updateTable(mTable);
 	}
 	
 	return res;

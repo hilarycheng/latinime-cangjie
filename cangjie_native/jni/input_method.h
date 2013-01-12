@@ -23,6 +23,7 @@ struct _input_method {
   void  (*clearFrequency)(void);
   void  (*reset)(void);
   jchar (*getMatchChar)(int index);
+  jint  (*getFrequency)(int index);
   void  (*saveMatch)(void);
   char  mPath[1024];
   char  mBuffer[8];

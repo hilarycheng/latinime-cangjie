@@ -36,6 +36,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     private Handler mHandler = null;
     private Rect mRect = new Rect();
     private int mSelectIndex = -1;
+    private TableLoader mTable = null;
 
     private CandidateAdapter mAdapter = null;
     private View mPopupView = null;
@@ -235,23 +236,30 @@ public class CandidateSelect extends View implements Handler.Callback {
 	if (canvas == null) {
 	    return;
 	}
-
+	char c[] = new char[1];
 	paint.setColor(0xff282828);
 	canvas.drawRect(0, 0, width, height - 0, paint);
 	paint.setColor(0xff33B5E5);
 	
-	if (match != null) {
+	if (mTable != null) {
 	    int start = offset + (spacing / 2), index = charOffset;
 	    while (start < width && index < total) {
 		if (mSelectIndex == index) {
 		    int x = start - (spacing / 2);
 		    paint.setColor(0xff33B5E5);
 		    canvas.drawRect(x, 0, x + textWidth + spacing, height, paint);
-		    paint.setColor(0xff282828);
-		    canvas.drawText(match, index, 1, start, topOffset, paint);
+		    c[0] = mTable.getMatchChar(index);
+		    int color = 0xff282828;
+		    if (mTable.getFrequency(index) > 0) color = 0xffff9000;
+		    paint.setColor(color);
+		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		    paint.setColor(0xff33B5E5);
 		} else {
-		    canvas.drawText(match, index, 1, start, topOffset, paint);
+		    c[0] = mTable.getMatchChar(index);
+		    int color = 0xff33B5E5;
+		    if (mTable.getFrequency(index) > 0) color = 0xffff9000;
+		    paint.setColor(color);
+		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		}
 		start = start + (int) textWidth + spacing;
 		index++;
@@ -272,12 +280,12 @@ public class CandidateSelect extends View implements Handler.Callback {
 	for (int count = charOffset; count < total; count++) {
 	    if (count == charOffset) {
 		if (select < (left + (int) textWidth + spacing)) {
-		    c = match[count];
+		    c = mTable.getMatchChar(count);
 		    idx = count;
 		    break;
 		}
 	    } else if (select > left && select < (left + (int) textWidth + spacing)) {
-		c = match[count];
+		c = mTable.getMatchChar(count);
 		idx = count;
 		break;
 	    }
@@ -304,7 +312,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
 
     public void showNextPage() {
-	if (match == null) return;
+	if (match == null || mTable == null) return;
 	if (total > 1 && charOffset < (total - 1)) {
 	    charOffset++;
 	    invalidate();
@@ -312,13 +320,20 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
     
     public void showPrevPage() {
-	if (match == null) return;
+	if (match == null || mTable == null) return;
 	if (charOffset > 0) {
 	    charOffset--;
 	    invalidate();
 	}
     }
     
+    public void updateTable(TableLoader loader) {
+	mTable = loader;
+	if (loader == null) total = 0; else total = loader.totalMatch();
+        charOffset = 0;
+	invalidate();
+    }
+
     public void updateMatch(char[] _match, int _total) {
 	match = _match;
 	total = _total;

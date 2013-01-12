@@ -104,6 +104,11 @@ jchar Java_com_diycircuits_cangjie_TableLoader_getMatchChar(JNIEnv* env, jobject
   return input_method[mCurrentIm]->getMatchChar(index);
 }
  
+jint Java_com_diycircuits_cangjie_TableLoader_getFrequency(JNIEnv* env, jobject thiz, jint index)
+{
+  return input_method[mCurrentIm]->getFrequency(index);
+}
+ 
 jint Java_com_diycircuits_cangjie_TableLoader_updateFrequencyQuick(JNIEnv* env, jobject thiz, jchar ch)
 {
   return input_method[mCurrentIm]->updateFrequency(ch);

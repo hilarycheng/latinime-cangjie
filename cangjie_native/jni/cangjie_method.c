@@ -189,6 +189,11 @@ jchar cangjie_getMatchChar(int index)
   return cangjie[cangjie_index[index]][5];
 }
 
+jint cangjie_getFrequency(int index)
+{
+  return 0;
+}
+
 void cangjie_reset(void)
 {
   cangjie_func.mTotalMatch = 0;
@@ -221,6 +226,7 @@ struct _input_method cangjie_func =
   .updateFrequency = cangjie_updateFrequency,
   .clearFrequency  = cangjie_clearFrequency,
   .getMatchChar    = cangjie_getMatchChar,
+  .getFrequency    = cangjie_getFrequency,
   .reset           = cangjie_reset,
   .saveMatch       = cangjie_saveMatch
 };
