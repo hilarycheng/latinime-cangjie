@@ -35,7 +35,9 @@ public class CloseButton extends View {
 	mPaint.setStrokeWidth(0);
 	//mPaint.setColor(0x00000000);
 
+	Log.i("Cangjie", "Close Button On Draw 0 " + mDraw.getClass().getName());
 	if (mDraw instanceof BitmapDrawable) {
+	Log.i("Cangjie", "Close Button On Draw 1");
 	    mBitmap = ((BitmapDrawable) mDraw).getBitmap();
 	}
     }
@@ -54,10 +56,15 @@ public class CloseButton extends View {
     protected void onDraw(Canvas canvas) {
 	if (canvas == null) return;
 
-	mPaint.setColor(0x00000000);
+	mPaint.setColor(0xff076898);
 	canvas.drawRect(0, 0, getWidth(), mHeight, mPaint);
 	int center = (getWidth() - mDraw.getIntrinsicWidth()) / 2;
-	if (mBitmap != null) canvas.drawBitmap(mBitmap, center, 0, mPaint);
+	Log.i("Cangjie", "Close Button On Draw 2");
+	if (mBitmap != null) {
+	    Log.i("Cangjie", "Close Button " + center + " " + mBitmap.getWidth());
+	    canvas.clipRect(center, 0, center + mBitmap.getWidth(), mHeight, Region.Op.REPLACE);
+	    canvas.drawBitmap(mBitmap, center, 0, mPaint);
+	}
 
     }
     

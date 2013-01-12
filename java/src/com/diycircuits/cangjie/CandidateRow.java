@@ -129,6 +129,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    invalidate();
     	}
 	
+	Log.i("Cangjie", "OnTouch " + event.getX() + " " + event.getY() + " " + mSelectIndex);
+	
 	return false;
     }
 
@@ -176,12 +178,12 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
 		spacing += cspacing + mTextWidth;
 	    }
-	    if (mSelectIndex >= 0) {
+	    if (mSelectIndex >= 0 && mSelectIndex < mTotal) {
 		spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
 
-		canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, Region.Op.REPLACE);
+		canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, Region.Op.REPLACE);
 		mPaint.setColor(0xff33B5E5);
-		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, mHeight - 1, mPaint);
+		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, mPaint);
 
 		int color = 0xffffffff;
 		if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = 0xffff9000;
