@@ -29,7 +29,7 @@
     <application android:label="@string/aosp_android_keyboard_ime_name"
             android:icon="@drawable/ic_launcher"
             android:backupAgent="BackupAgent"
-	    android:debuggable="true"
+	    android:debuggable="false"
             android:killAfterRestore="false">
 
         <service android:name="LatinIME"
