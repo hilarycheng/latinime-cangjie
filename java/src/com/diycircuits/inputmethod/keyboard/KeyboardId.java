@@ -55,6 +55,7 @@ public final class KeyboardId {
     public static final int ELEMENT_PHONE_SYMBOLS = 8;
     public static final int ELEMENT_NUMBER = 9;
     public static final int ELEMENT_CANGJIE = 10;
+    public static final int ELEMENT_QUICK = 11;
 
     public static final int FORM_FACTOR_PHONE = 0;
     public static final int FORM_FACTOR_TABLET7 = 1;
@@ -142,7 +143,7 @@ public final class KeyboardId {
     }
 
     public boolean isAlphabetKeyboard() {
-        return mElementId < ELEMENT_SYMBOLS || mElementId == ELEMENT_CANGJIE;
+        return mElementId < ELEMENT_SYMBOLS || (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK);
     }
 
     public boolean navigateNext() {
@@ -232,6 +233,7 @@ public final class KeyboardId {
         case ELEMENT_PHONE_SYMBOLS: return "phoneSymbols";
         case ELEMENT_NUMBER: return "number";
         case ELEMENT_CANGJIE: return "cangjie";
+        case ELEMENT_QUICK: return "quick";
         default: return null;
         }
     }

@@ -19,6 +19,7 @@ package com.diycircuits.inputmethod.keyboard;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -276,7 +277,12 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     @Override
     public void setCangjieKeyboard() {
 	mIsCangjieMode = true;
-        setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+	String value = PreferenceManager.getDefaultSharedPreferences(mThemeContext).getString("cangjie_mode", "0");
+	if (value.compareTo("1") == 0) {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK));
+	} else {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+	}
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
