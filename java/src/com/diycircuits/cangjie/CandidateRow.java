@@ -153,7 +153,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
 	mPaint.setColor(0xff282828);
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
-	mPaint.setColor(0xff33B5E5);
+	mPaint.setColor(0xeeeeeeee);
 	if (mMatch != null) {
 	    int spacing = mLeftOffset + (cspacing / 2);
 	    int topOffset = (mRect.height() - mRect.bottom);
