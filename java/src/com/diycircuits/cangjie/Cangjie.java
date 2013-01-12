@@ -21,7 +21,7 @@ public class Cangjie implements CandidateListener {
     private Context mContext = null;
     private char mCodeInput[] = new char[5];
     private int  mCodeCount = 0;
-    private char mCodeMap[]   = new char[26 * 2];
+    private char mCodeMap[]   = new char[27 * 2];
     private char mMatchChar[] = new char[21529];
     private int  mTotalMatch = 0;
     private int  mMode = CANGJIE;
@@ -152,6 +152,7 @@ public class Cangjie implements CandidateListener {
     public boolean handleCharacter(int primaryCode) {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
+	Log.i("Cangjie", "handleCharacter " + primaryCode + " " + code);
 	if (code == 0) return false;
 	mCodeInput[mCodeCount] = code;
 	if (matchCangjie()) {

@@ -127,6 +127,8 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
   src[2] = key2;
   src[3] = key3;
   src[4] = key4;
+
+  LOGE("Try Match Word : %08X", key0);
   
   for (count0 = 0; count0 < total; count0++) {
     if (cangjie[count0][0] != src[0]) { // First code does not matched, skip it
