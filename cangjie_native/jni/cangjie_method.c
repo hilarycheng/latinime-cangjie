@@ -105,11 +105,12 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
     if (memcmp(cangjie[count0], src, firstlen * sizeof(jchar)) == 0) {
       state = 1;
       firstmatch++;
-      if (secondlen == 0) {
+      if (secondlen == 0 && (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
 	ismatch = 1;
       } else {
 	if (firstlen + secondlen <= cangjie[count0][7]) {
-	  if (memcmp(&cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen * sizeof(jchar)) == 0) {
+	  if (memcmp(&cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen * sizeof(jchar)) == 0 &&
+	      (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
 	    ismatch = 1;
 	  }
 	} else {
