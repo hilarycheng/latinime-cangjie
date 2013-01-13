@@ -99,10 +99,11 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
   if (secondlen > 0)
     secondlen--;
 
-  found = 0;
+  found = 0; state = 0;
   for (count0 = 0; count0 < total; count0++) {
     ismatch = 0;
     if (memcmp(cangjie[count0], src, firstlen * sizeof(jchar)) == 0) {
+      state = 1;
       firstmatch++;
       if (secondlen == 0) {
 	ismatch = 1;
@@ -133,6 +134,8 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 	     cangjie[count0][3],
 	     cangjie[count0][4]);
       }
+    } else if (state == 1) {
+      break;
     }
   }
 
