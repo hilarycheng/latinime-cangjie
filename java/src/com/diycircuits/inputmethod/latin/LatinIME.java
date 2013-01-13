@@ -1432,7 +1432,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 		if (mKeyboardSwitcher.getMainKeyboardView() != null &&
 		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard() != null &&
 		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId != null &&
-		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE &&
+		    (mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE ||
+		     mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK) &&
 		    switcher.isCangjieMode()) {
 		    if (!mCangjie.isFull()) {
 			boolean result = true;
