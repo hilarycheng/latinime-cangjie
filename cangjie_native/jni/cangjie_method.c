@@ -109,7 +109,6 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 	ismatch = 1;
       } else {
 	if (firstlen + secondlen <= cangjie[count0][7]) {
-	  LOGE("Compare : %d %d %d", cangjie[count0][7], secondlen, firstlen + 1);
 	  if (memcmp(&cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen * sizeof(jchar)) == 0) {
 	    ismatch = 1;
 	  }
@@ -121,18 +120,18 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 	if (updateindex != 0)
 	  cangjie_index[loop] = count0;
 	loop++;
-	LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x",
-	     firstlen,
-	     src[0],
-	     src[1],
-	     src[2],
-	     src[3],
-	     src[4],
-	     cangjie[count0][0],
-	     cangjie[count0][1],
-	     cangjie[count0][2],
-	     cangjie[count0][3],
-	     cangjie[count0][4]);
+	/* LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x", */
+	/*      firstlen, */
+	/*      src[0], */
+	/*      src[1], */
+	/*      src[2], */
+	/*      src[3], */
+	/*      src[4], */
+	/*      cangjie[count0][0], */
+	/*      cangjie[count0][1], */
+	/*      cangjie[count0][2], */
+	/*      cangjie[count0][3], */
+	/*      cangjie[count0][4]); */
       }
     } else if (state == 1) {
       break;
