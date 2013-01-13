@@ -45,108 +45,15 @@ int cangjie_maxKey(void)
   return 5;
 }
 
-void cangjie_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
+jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4, int updateindex)
 {
   jchar src[6];
   int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
-  int count = 0;
   int loop  = 0;
-  int i = 0;
-  int j = 0;
   int found = 0;
-  int offset = 0;
-  int match = 0;
-  int count0 = 0, count1 = 0;
-
-  src[0] = key0;
-  src[1] = key1;
-  src[2] = key2;
-  src[3] = key3;
-  src[4] = key4;
-  src[5] = 0;
-  
-  found = 0;
-  for (count0 = 0; count0 < 5; count0++) {
-    if (src[count0] == '*') found++;
-  }
-
-  if (found > 1)
-    return;
-
-  for (count0 = 0; count0 < 5; count0++) {
-    if (src[count0] == '*' && src[count0 + 1] == 0) {
-      src[count0] = 0;
-      break;
-    }
-  }
-
-  found = 0;
-  for (count = 0; count < sizeof(cangjie_index) / sizeof(jint); count++) {
-    cangjie_index[count] = 0;
-  }
-
-  for (count0 = 0; count0 < total; count0++) {
-    if (cangjie[count0][0] != src[0]) { // First code does not matched, skip it
-      if (found == 1)
-	break;
-      continue;
-    }
-
-    match = 1;
-    for (count1 = 1; count1 < 5; count1++) {
-      if (src[count1] == 0)
-	break;
-      if (cangjie[count0][count1] == src[count1] && (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0))
-	match = 1;
-      else {
-	match = 0;
-	break;
-      }
-    }
-    /* LOGE("Cangjie : %02x %02x %02x %02x %02x, %02x %02x %02x %02x %02x, Match %d\n", */
-    /* 	 cangjie[count0][0], */
-    /* 	 cangjie[count0][1], */
-    /* 	 cangjie[count0][2], */
-    /* 	 cangjie[count0][3], */
-    /* 	 cangjie[count0][4], */
-    /* 	 key0, */
-    /* 	 key1, */
-    /* 	 key2, */
-    /* 	 key3, */
-    /* 	 key4, */
-    /* 	 match); */
-    if (match != 0) {
-      cangjie_index[loop] = count0;
-      loop++;
-    }
-
-    found = 1;
-  }
-
-  cangjie_func.mTotalMatch = loop;
-}
-
-int cmp(jchar *s, jchar *d, int n) {
-  int c = 0, l = 0;
-  for (c = 0; c < n; c++) {
-    if (s[c] != d[c]) l++;
-  }
-  return l;
-}
-
-jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
-{
-  jchar src[6];
-  int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
-  int count = 0;
-  int loop  = 0;
-  int i = 0;
-  int j = 0;
-  int found = 0;
-  int offset = 0;
-  int match = 0;
+  int ismatch = 0;
   int count0 = 0, count1 = 0, state = 0;
-  int firstlen = 0, secondlen = 0;
+  int firstlen = 0, secondlen = 0, firstmatch = 0;
 
   src[0] = key0;
   src[1] = key1;
@@ -155,7 +62,6 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
   src[4] = key4;
   src[5] = 0;
 
-  LOGE("Try Match Word : %08X", key0);
   found = 0;
   for (count0 = 0; count0 < 5; count0++) {
     if (src[count0] == '*') found++;
@@ -163,6 +69,12 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
 
   if (found > 1)
     return 0;
+
+  if (updateindex != 0) {
+    for (count0 = 0; count0 < sizeof(cangjie_index) / sizeof(jint); count0++) {
+      cangjie_index[count0] = 0;
+    }
+  }
 
   // Clear End Star Match
   for (count0 = 0; count0 < 5; count0++) {
@@ -184,17 +96,20 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
       secondlen++;
   }
 
-  if (secondlen > 0) secondlen--;
+  if (secondlen > 0)
+    secondlen--;
+
   found = 0;
   for (count0 = 0; count0 < total; count0++) {
-    int ismatch = 0;
+    ismatch = 0;
     if (memcmp(cangjie[count0], src, firstlen * sizeof(jchar)) == 0) {
+      firstmatch++;
       if (secondlen == 0) {
 	ismatch = 1;
       } else {
 	if (firstlen + secondlen <= cangjie[count0][7]) {
-	  if (memcmp(cangjie[count0] + cangjie[count0][7] - secondlen, src + firstlen + 1, secondlen * sizeof(jchar)) == 0) {
-	  LOGE("WildCard : %d %d", firstlen, secondlen);
+	  LOGE("Compare : %d %d %d", cangjie[count0][7], secondlen, firstlen + 1);
+	  if (memcmp(&cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen * sizeof(jchar)) == 0) {
 	    ismatch = 1;
 	  }
 	} else {
@@ -202,6 +117,8 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
 	}
       }
       if (ismatch) {
+	if (updateindex != 0)
+	  cangjie_index[loop] = count0;
 	loop++;
 	LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x",
 	     firstlen,
@@ -218,50 +135,32 @@ jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jc
       }
     }
   }
+
+  if (updateindex != 0)
+    cangjie_func.mTotalMatch = loop;
+
+  if (firstmatch > 0 && secondlen > 0 && updateindex == 0)
+    return 1;
   
-  /* found = 0; */
-  /* for (count0 = 0; count0 < total; count0++) { */
-  /*   if (cangjie[count0][0] != src[0]) { // First code does not matched, skip it */
-  /*     if (found == 1) */
-  /* 	break; */
-  /*     continue; */
-  /*   } */
-
-  /*   match = 1; */
-  /*   for (count1 = 1; count1 < 5; count1++) { */
-  /*     if (src[count1] == 0) */
-  /* 	break; */
-  /*     if (src[count1] == '*') */
-  /* 	state = 1; */
-  /*     if (state == 0) { */
-  /* 	if (cangjie[count0][count1] == src[count1] && (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) { */
-  /* 	  match = 1; */
-  /* 	} else { */
-  /* 	  match = 0; */
-  /* 	  break; */
-  /* 	} */
-  /*     } else { */
-  /* 	int laststart = count + 1; */
-  /* 	int lastend = count1 + 1; */
-  /* 	int count2 = 0, count3 = 0; */
-  /* 	while (lastend < 6 && src[lastend] != 0) lastend++; */
-  /* 	for (count3 = count1 + 1; count3 < 5; count3++) { */
-  /* 	  for (count2 = laststart; count2 < lastend; count2++) { */
-  /* 	    int index0 = count3 + (count2 - laststart); */
-  /* 	    if (index0 >= 5) continue; */
-  /* 	    LOGE("Index : %02X %02X", cangjie[count0][count3], src[count2]); */
-  /* 	  } */
-  /* 	} */
-  /*     } */
-  /*   } */
-  /*   if (match != 0) { */
-  /*     loop++; */
-  /*   } */
-
-  /*   found = 1; */
-  /* } */
-
   return (loop > 0) ? 1 : 0;
+}
+
+void cangjie_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
+{
+  cangjie_searching(key0, key1, key2, key3, key4, 1);
+}
+
+int cmp(jchar *s, jchar *d, int n) {
+  int c = 0, l = 0;
+  for (c = 0; c < n; c++) {
+    if (s[c] != d[c]) l++;
+  }
+  return l;
+}
+
+jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
+{
+  return cangjie_searching(key0, key1, key2, key3, key4, 0);
 }
 
 int cangjie_totalMatch(void)
