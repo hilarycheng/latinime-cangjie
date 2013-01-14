@@ -109,7 +109,7 @@ jint Java_com_diycircuits_cangjie_TableLoader_getFrequency(JNIEnv* env, jobject 
   return input_method[mCurrentIm]->getFrequency(index);
 }
  
-jint Java_com_diycircuits_cangjie_TableLoader_updateFrequencyQuick(JNIEnv* env, jobject thiz, jchar ch)
+jint Java_com_diycircuits_cangjie_TableLoader_updateFrequency(JNIEnv* env, jobject thiz, jchar ch)
 {
   return input_method[mCurrentIm]->updateFrequency(ch);
 }

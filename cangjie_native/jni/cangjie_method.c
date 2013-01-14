@@ -14,6 +14,7 @@ void cangjie_init(char *path)
 {
   int clear = 0;
   int count = 0;
+  char key[8];
 
   cangjie_func.mSaved = 0;
   strncpy(cangjie_func.mPath,           path, sizeof(cangjie_func.mPath));
@@ -23,14 +24,18 @@ void cangjie_init(char *path)
     cangjie_index[count] = -1;
   }
 
+  memset(key, 0, 8);
+  strcpy(key, "CANGJ0");
+
+  clear = 1;
   FILE *file = fopen(cangjie_func.mPath, "r");
   if (file != 0) {
-    int read = fread(cangjie_frequency, 1, sizeof(cangjie_frequency), file);
-    fclose(file);
-    if (read != sizeof(cangjie_frequency))
-      clear = 1;
-  } else {
-    clear = 1;
+    int read = fread(cangjie_func.mBuffer, 1, sizeof(cangjie_func.mBuffer), file);
+    if (memcmp(cangjie_func.mBuffer, key, 8) == 0) {
+      int read = fread(cangjie_frequency, 1, sizeof(cangjie_frequency), file);
+      fclose(file);
+      if (read == sizeof(cangjie_frequency)) clear = 0;
+    }
   }
    
   if (clear != 0) {
@@ -54,6 +59,7 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
   int ismatch = 0;
   int count0 = 0, count1 = 0, state = 0;
   int firstlen = 0, secondlen = 0, firstmatch = 0;
+  int i = 0;
 
   src[0] = key0;
   src[1] = key1;
@@ -139,8 +145,24 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
     }
   }
 
-  if (updateindex != 0)
+  if (updateindex != 0) {
     cangjie_func.mTotalMatch = loop;
+    if (loop > 0) {
+      int swap = 1;
+      while (swap) {
+	swap = 0;
+	for (i = 0; i < loop - 1; i++) {
+	  if (cangjie_frequency[cangjie_index[i]] < cangjie_frequency[cangjie_index[i + 1]] &&
+	      cangjie[cangjie_index[i]][7] <= cangjie[cangjie_index[i + 1]][7]) {
+	    int temp = cangjie_index[i];
+	    cangjie_index[i] = cangjie_index[i + 1];
+	    cangjie_index[i + 1] = temp;
+	    swap = 1;
+	  }
+	}
+      }
+    }
+  }
 
   if (firstmatch > 0 && secondlen > 0 && updateindex == 0)
     return 1;
@@ -173,9 +195,18 @@ int cangjie_totalMatch(void)
 
 int cangjie_updateFrequency(jchar ch)
 {
-  int index = 0;
+  int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
+  int count = 0;
 
-  return cangjie_frequency[index];
+  for (count = 0; count < total; count++) {
+    if (cangjie[count][5] == ch) {
+      cangjie_frequency[count]++;
+      cangjie_func.mSaved = 1;
+      return cangjie_frequency[count];
+    }
+  }
+
+  return 0;
 }
 
 void cangjie_clearFrequency(void)
@@ -201,7 +232,7 @@ jchar cangjie_getMatchChar(int index)
 
 jint cangjie_getFrequency(int index)
 {
-  return 0;
+  return cangjie_frequency[cangjie_index[index]];
 }
 
 void cangjie_reset(void)
@@ -211,8 +242,13 @@ void cangjie_reset(void)
 
 void cangjie_saveMatch(void)
 {
+  char key[8];
+
   if (cangjie_func.mSaved == 0) return;
   cangjie_func.mSaved = 0;
+
+  memset(key, 0, 8);
+  strcpy(key, "CANGJ0");
   FILE *file = fopen(cangjie_func.mPath, "w");
   if (file != NULL) {
     fwrite(cangjie_frequency, 1, sizeof(cangjie_frequency), file);

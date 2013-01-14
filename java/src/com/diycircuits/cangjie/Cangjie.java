@@ -82,10 +82,10 @@ public class Cangjie implements CandidateListener {
     }
     
     public void characterSelected(char c, int idx) {
-	if (mMode == QUICK) {
-	    Log.i("Cangjie", "Character Select Update Frequency " + c + " " + idx);
-	    mTable.updateFrequencyQuick(c);
-	}
+	// if (mMode == QUICK) {
+	//     Log.i("Cangjie", "Character Select Update Frequency " + c + " " + idx);
+	mTable.updateFrequency(c);
+	// }
 	if (mListener != null) mListener.characterSelected(c, idx);
 	resetState();
     }
