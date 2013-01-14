@@ -1338,6 +1338,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         }
     }
 
+    private boolean isCangjieMode() {
+        final KeyboardSwitcher switcher = mKeyboardSwitcher;
+	return (mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE ||
+		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK) &&
+	    switcher.isCangjieMode();
+    }
+    
     // Implementation of {@link KeyboardActionListener}.
     @Override
     public void onCodeInput(final int primaryCode, final int x, final int y) {
@@ -1371,7 +1378,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             mExpectingUpdateSelection = true;
             mShouldSwitchToLastSubtype = true;
             LatinImeLogger.logOnDelete(x, y);
-	    if (switcher.isCangjieMode() && mCangjie != null) mCangjie.deleteLastCode();
+	    if (isCangjieMode() && mCangjie != null) mCangjie.deleteLastCode();
             break;
         case Keyboard.CODE_SHIFT:
         case Keyboard.CODE_SWITCH_ALPHA_SYMBOL:
@@ -1432,9 +1439,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 		if (mKeyboardSwitcher.getMainKeyboardView() != null &&
 		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard() != null &&
 		    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId != null &&
-		    (mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE ||
-		     mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK) &&
-		    switcher.isCangjieMode()) {
+		    isCangjieMode()) {
 		    if (!mCangjie.isFull()) {
 			boolean result = true;
 			if (mCangjie != null) {
@@ -1465,7 +1470,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         //     ResearchLogger.latinIME_onCodeInput(primaryCode, x, y);
         // }
 
-	if (switcher.isCangjieMode()) {
+	if (isCangjieMode()) {
 	    mCandidateView.bringToFront();
 	    mCandidateView.invalidate();
 	    mSuggestionsContainer.invalidate();
@@ -1851,9 +1856,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
             resetComposingState(false /* alsoResetLastComposedWord */);
         }
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
-	if (switcher.isCangjieMode()) {
-	    isComposingWord = true;
-        }
+	if (isCangjieMode()) isComposingWord = true;
         if (isComposingWord) {
             final int keyX, keyY;
             if (KeyboardActionListener.Adapter.isInvalidCoordinate(x)
