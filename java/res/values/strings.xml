@@ -22,6 +22,8 @@
     <string name="language_mode">預設語言</string>
     <string name="language_mode_summary">選擇英文或中文, 為首選的顯示的鍵盤</string>
     <string name="cangjie_mode">中文輸入法</string>
+    <string name="prefs_clear_often_used_title">清洗常用字記錄</string>
+    <string name="prefs_clear_often_used_summary">如果常用字有問題，請按這個選項，下次鍵盤開啟時，將會重設．</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->

@@ -36,6 +36,12 @@
     	    android:defaultValue="0"
 	    android:entries="@array/listArray"
 	    android:entryValues="@array/listValues" />
+	<CheckBoxPreference
+            android:key="clear_often_used"
+            android:title="@string/prefs_clear_often_used_title"
+            android:summary="@string/prefs_clear_often_used_summary"
+	    android:defaultValue="false"
+            android:persistent="true"/>
         <CheckBoxPreference
             android:key="auto_cap"
             android:title="@string/auto_cap"

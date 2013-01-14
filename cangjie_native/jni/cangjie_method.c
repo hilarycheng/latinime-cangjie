@@ -251,6 +251,7 @@ void cangjie_saveMatch(void)
   strcpy(key, "CANGJ0");
   FILE *file = fopen(cangjie_func.mPath, "w");
   if (file != NULL) {
+    fwrite(key, 1, sizeof(key), file);
     fwrite(cangjie_frequency, 1, sizeof(cangjie_frequency), file);
     fclose(file);
   }

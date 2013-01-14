@@ -73,6 +73,10 @@ public class Cangjie implements CandidateListener {
 	resetState();
     }
 
+    public void resetFrequency() {
+	mTable.clearAllFrequency();
+    }
+    
     public char getFirstCharacter() {
 	return mTable.getMatchChar(0);
     }

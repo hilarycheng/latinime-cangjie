@@ -617,9 +617,21 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         return;
     }
 
+    private void checkCangjieFrequency() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+	boolean enabled = prefs.getBoolean("clear_often_used", false);
+	if (enabled) {
+	    android.content.SharedPreferences.Editor editor = prefs.edit();
+	    editor.putBoolean("clear_often_used", false);
+	    editor.commit();
+	    if (mCangjie != null) mCangjie.resetFrequency();
+	}
+    }
+    
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
 	mCangjie.resetState();
+	checkCangjieFrequency();
 	mLastSuggestionEngOnly.setLength(0);
         mHandler.onStartInput(editorInfo, restarting);
     }
@@ -627,6 +639,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     @Override
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
 	mCangjie.resetState();
+	checkCangjieFrequency();
 	mLastSuggestionEngOnly.setLength(0);
         mHandler.onStartInputView(editorInfo, restarting);
     }
