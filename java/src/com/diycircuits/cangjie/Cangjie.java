@@ -149,7 +149,6 @@ public class Cangjie implements CandidateListener {
     public boolean handleCharacter(int primaryCode) {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
-	Log.i("Cangjie", "handleCharacter " + primaryCode + " " + code);
 	if (code == 0) return false;
 	mCodeInput[mCodeCount] = code;
 	if (matchCangjie()) {
