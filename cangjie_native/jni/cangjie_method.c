@@ -153,7 +153,7 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 	swap = 0;
 	for (i = 0; i < loop - 1; i++) {
 	  if (cangjie_frequency[cangjie_index[i]] < cangjie_frequency[cangjie_index[i + 1]] &&
-	      cangjie[cangjie_index[i]][7] <= cangjie[cangjie_index[i + 1]][7]) {
+	      cangjie[cangjie_index[i]][7] > cangjie[cangjie_index[i + 1]][7]) {
 	    int temp = cangjie_index[i];
 	    cangjie_index[i] = cangjie_index[i + 1];
 	    cangjie_index[i + 1] = temp;
