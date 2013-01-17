@@ -1506,12 +1506,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    composer = "";
 	}
 	composer = composer + c;
+	mConnection.setComposingText("", 1);
         mConnection.beginBatchEdit();
 	// mConnection.setComposingText(composer, 1);
 	// sendKeyCodePoint(c);
 	mConnection.commitText(composer, 1);
-	resetComposingState(true);
         mConnection.endBatchEdit();
+	resetComposingState(true);
 	// mSpaceState = SPACE_STATE_PHANTOM;
 	mEnteredText = null;
     }
