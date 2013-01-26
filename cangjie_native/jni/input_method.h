@@ -16,7 +16,9 @@ struct _input_method {
   void  (*init)(char *path);
   int   (*maxKey)(void);
   void  (*searchWord)(jchar c0, jchar c1, jchar c2, jchar c3, jchar c4);
+  void  (*searchWordMore)(jchar *c0, jchar *c1, jchar *c2, jchar *c3, jchar *c4);
   jboolean (*tryMatchWord)(jchar c0, jchar c1, jchar c2, jchar c3, jchar c4);
+  jboolean (*tryMatchWordMore)(jchar* c0, jchar* c1, jchar* c2, jchar* c3, jchar* c4);
   void  (*enableHongKongChar)(jboolean hk);
   int   (*totalMatch)(void);
   int   (*updateFrequency)(jchar c0);

@@ -1460,11 +1460,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 			    for (int count = 0; count < mdest.length; count++) mdest[count] = 0;
 			    // final Keyboard _keyboard = mKeyboardSwitcher.getKeyboard();
 			    keyboard.getProximityInfo().fillArrayWithNearestKeyCodes(x, y, primaryCode, mdest);
+			    Log.i("Cangjie", "--------------------------------------------");
 			    for (int count = 0; count < mdest.length; count++)
-				Log.i("Cangjie", "Nearest Key Code " + (char) mdest[count]);
+				Log.i("Cangjie", "Nearest Key Code " + mdest[count]);
 			    final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
 			    mCandidateView.setReferenceSize(mainKeyboardView.getWidth(), mainKeyboardView.getHeight());
-			    result = mCangjie.handleCharacter(primaryCode);
+			    result = mCangjie.handleCharacter(primaryCode, mdest);
 			}
 			if (result) handleCharacter(primaryCode, keyX, keyY, spaceState);
 		    }

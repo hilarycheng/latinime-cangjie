@@ -83,6 +83,23 @@ void Java_com_diycircuits_cangjie_TableLoader_searchCangjie(JNIEnv* env, jobject
   input_method[mCurrentIm]->searchWord(key0, key1, key2, key3, key4);
 }
 
+void Java_com_diycircuits_cangjie_TableLoader_searchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
+{
+  jchar key0array[6];
+  jchar key1array[6];
+  jchar key2array[6];
+  jchar key3array[6];
+  jchar key4array[6];
+
+  (*env)->GetCharArrayRegion(env, key0, 0, 6, key0array);
+  (*env)->GetCharArrayRegion(env, key1, 0, 6, key1array);
+  (*env)->GetCharArrayRegion(env, key2, 0, 6, key2array);
+  (*env)->GetCharArrayRegion(env, key3, 0, 6, key3array);
+  (*env)->GetCharArrayRegion(env, key4, 0, 6, key4array);
+  
+  input_method[mCurrentIm]->searchWordMore(key0array, key1array, key2array, key3array, key4array);
+}
+
 void Java_com_diycircuits_cangjie_TableLoader_enableHongKongChar(JNIEnv* env, jobject thiz, jboolean hk)
 {
   mEnableHK = hk;
@@ -92,6 +109,23 @@ void Java_com_diycircuits_cangjie_TableLoader_enableHongKongChar(JNIEnv* env, jo
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjie(JNIEnv* env, jobject thiz, jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
   return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4);
+}
+ 
+jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
+{
+  jchar key0array[6];
+  jchar key1array[6];
+  jchar key2array[6];
+  jchar key3array[6];
+  jchar key4array[6];
+
+  (*env)->GetCharArrayRegion(env, key0, 0, 6, key0array);
+  (*env)->GetCharArrayRegion(env, key1, 0, 6, key1array);
+  (*env)->GetCharArrayRegion(env, key2, 0, 6, key2array);
+  (*env)->GetCharArrayRegion(env, key3, 0, 6, key3array);
+  (*env)->GetCharArrayRegion(env, key4, 0, 6, key4array);
+  
+  return input_method[mCurrentIm]->tryMatchWordMore(key0array, key1array, key2array, key3array, key4array);
 }
  
 jint Java_com_diycircuits_cangjie_TableLoader_totalMatch(JNIEnv* env, jobject thiz)

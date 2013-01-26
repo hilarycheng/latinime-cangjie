@@ -20,6 +20,8 @@ public class Cangjie implements CandidateListener {
 
     private Context mContext = null;
     private char mCodeInput[] = new char[5];
+    private char mCodeInputNearest[][] = new char[5][6];
+    private char mKeyList[] = new char[6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
     private char mMatchChar[] = new char[21529];
@@ -149,10 +151,41 @@ public class Cangjie implements CandidateListener {
 
 	return 0;
     }
+
+    private void convertPrimaryCodeNearest(char[] key, char output[]) {
+	boolean changed = false;
+	for (int i = 0; i < key.length; i++) {
+	    changed = false;
+	    if (key[i] == 0 || key[i] == -1) {
+		output[i] = 0;
+		continue;
+	    }
+	    for (int count = 0; count < mCodeMap.length; count += 2) {
+		if (mCodeMap[count] == key[i]) {
+		    output[i] = mCodeMap[count + 1];
+		    changed = true;
+		    break;
+		}
+	    }
+	    if (!changed) output[i] = 0;
+	}
+    }
     
-    public boolean handleCharacter(int primaryCode) {
+    public boolean handleCharacter(int primaryCode, int[] nearestKey) {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
+	int i = 1;
+	for (int count = 0; count < mKeyList.length; count++) {
+	    mKeyList[count] = 0;
+	}
+	mKeyList[0] = (char) primaryCode;
+	for (int count = 0; count < nearestKey.length; count++) {
+	    if (nearestKey[count] != primaryCode) {
+		mKeyList[i] = (char) nearestKey[count];
+		i++;
+	    }
+	}
+	convertPrimaryCodeNearest(mKeyList, mCodeInputNearest[mCodeCount]);
 	if (code == 0) return false;
 	mCodeInput[mCodeCount] = code;
 	if (matchCangjie()) {
@@ -161,13 +194,19 @@ public class Cangjie implements CandidateListener {
 	    return true;
 	}
 	mCodeInput[mCodeCount] = 0;
+	for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++)
+	    mCodeInputNearest[mCodeCount][count] = 0;
 
 	return false;
     }
     
     public void deleteLastCode() {
 	if (mCodeCount <= 0) return;
+
 	mCodeInput[--mCodeCount] = 0;
+	for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++)
+	    mCodeInputNearest[mCodeCount][count] = 0;
+
 	if (mCangjieCode.length() > 0) {
 	    mCangjieCode.setLength(mCangjieCode.length() - 1);
 	}
@@ -186,10 +225,13 @@ public class Cangjie implements CandidateListener {
     }
     
     private boolean matchCangjie() {
-	boolean res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	// boolean res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+
+	boolean res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 
 	if (res) {
-	    mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	    // mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	    mTable.searchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	    // for (int count = 0; count < mTable.totalMatch(); count++) {
 	    // 	mMatchChar[count] = mTable.getMatchChar(count);
 	    // }

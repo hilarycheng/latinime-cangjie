@@ -49,6 +49,11 @@ int quick_maxKey(void)
   return 2;
 }
 
+void quick_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
+{
+  quick_searchWord(key0[0], key1[0], key2[0], key3[0], key4[0]);
+}
+
 void quick_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
   int total = sizeof(quick) / (sizeof(jchar) * 3);
@@ -192,6 +197,11 @@ jboolean quick_tryMatchWord(jchar c0, jchar c1, jchar c2, jchar c3, jchar c4)
   return 1;
 }
 
+jboolean quick_tryMatchWordMore(jchar* c0, jchar* c1, jchar* c2, jchar* c3, jchar* c4)
+{
+  return 1;
+}
+
 void quick_enableHongKongChar(jboolean hk)
 {
   quick_func.mEnableHK = (hk != 0);
@@ -202,7 +212,9 @@ struct _input_method quick_func =
   .init            = quick_init,
   .maxKey          = quick_maxKey,
   .searchWord      = quick_searchWord,
+  .searchWordMore  = quick_searchWordMore,
   .tryMatchWord    = quick_tryMatchWord,
+  .tryMatchWordMore = quick_tryMatchWordMore,
   .enableHongKongChar = quick_enableHongKongChar,
   .totalMatch      = quick_totalMatch,
   .updateFrequency = quick_updateFrequency,
