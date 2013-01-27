@@ -74,6 +74,7 @@ int cangjie_memcmp(jchar *word, jchar **key, int len)
   return 0;
 }
 
+  char buffer[1024];
 jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4, int updateindex)
 {
   jchar *src[6];
@@ -93,6 +94,14 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   src[3] = key3;
   src[4] = key4;
   src[5] = empty;
+
+  for (i = 0; i < 5; i++) {
+    buffer[0] = 0;
+    for (j = 0; j < 5; j++) {
+      sprintf(buffer + j * 2, "%c ", src[i][j] == 0 ? '0' : src[i][j]);
+    }
+    LOGE("Key : %d, %s", i, buffer);
+  }
 
   found = 0;
   for (count0 = 0; count0 < 5; count0++) {
@@ -165,7 +174,9 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
 	/*      cangjie[count0][2], */
 	/*      cangjie[count0][3], */
 	/*      cangjie[count0][4]); */
-	/* LOGE("Matched %02x %02x %02x %02x %02x",  */
+	/* LOGE("Matched %02x %02x == %02x %02x %02x %02x %02x", */
+	/*      src[0][0],  */
+	/*      src[1][0],  */
 	/*      cangjie[count0][0], */
 	/*      cangjie[count0][1], */
 	/*      cangjie[count0][2], */
@@ -182,15 +193,16 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
     if (loop > 0) {
       LOGE("Cangjie Total : %d", loop);
       int swap = 1;
-      while (swap) {
-      	swap = 0;
-	for (i = 0; i < loop - 1; i++) {
-	  if (cangjie[cangjie_index[i]][7] > cangjie[cangjie_index[i + 1]][7] ||
-	      (cangjie_frequency[cangjie_index[i]] < cangjie_frequency[cangjie_index[i + 1]] &&
-	       cangjie[cangjie_index[i]][7] == cangjie[cangjie_index[i + 1]][7])) {
+      /* while (swap) { */
+      /* 	swap = 0; */
+      for (j = 0; j < loop - 1; j++) {
+	for (i = j; i < loop; i++) {
+	  if (cangjie[cangjie_index[j]][7] > cangjie[cangjie_index[i]][7] ||
+	      (cangjie_frequency[cangjie_index[j]] < cangjie_frequency[cangjie_index[i]] &&
+	       cangjie[cangjie_index[j]][7] == cangjie[cangjie_index[i]][7])) {
 	    int temp = cangjie_index[i];
-	    cangjie_index[i] = cangjie_index[i + 1];
-	    cangjie_index[i + 1] = temp;
+	    cangjie_index[i] = cangjie_index[j];
+	    cangjie_index[j] = temp;
 	    swap = 1;
 	  }
 	}

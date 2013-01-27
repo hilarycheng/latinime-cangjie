@@ -39,6 +39,9 @@ public class Cangjie implements CandidateListener {
 	
 	for (int count = 0; count < mCodeInput.length; count++) {
 	    mCodeInput[count] = 0;
+	    for (int i = 0; i < mCodeInputNearest[count].length; i++) {
+		mCodeInputNearest[count][i] = 0;
+	    }
 	}
 
 	try {
@@ -98,6 +101,9 @@ public class Cangjie implements CandidateListener {
 	mTable.reset();
 	for (int count = 0; count < mCodeInput.length; count++) {
 	    mCodeInput[count] = 0;
+	    for (int i = 0; i < mCodeInputNearest[count].length; i++) {
+		mCodeInputNearest[count][i] = 0;
+	    }
 	}
 	mCodeCount = 0;
 	if (mSelect != null) {
@@ -178,6 +184,8 @@ public class Cangjie implements CandidateListener {
 	for (int count = 0; count < mKeyList.length; count++) {
 	    mKeyList[count] = 0;
 	}
+	if (code == 0) return false;
+
 	mKeyList[0] = (char) primaryCode;
 	for (int count = 0; count < nearestKey.length; count++) {
 	    if (nearestKey[count] != primaryCode) {
@@ -186,8 +194,18 @@ public class Cangjie implements CandidateListener {
 	    }
 	}
 	convertPrimaryCodeNearest(mKeyList, mCodeInputNearest[mCodeCount]);
-	if (code == 0) return false;
 	mCodeInput[mCodeCount] = code;
+
+	for (int count = 0; count < mCodeInput.length; count++) {
+	    if (mCodeInput[count] == '*') {
+		for (int j = 1; j < mCodeInputNearest[count].length; j++)
+		    mCodeInputNearest[count][j] = 0;
+	    } else {
+		for (int j = 1; j < mCodeInputNearest[count].length; j++)
+		    if (mCodeInputNearest[count][j] == '*') mCodeInputNearest[count][j] = 0;
+	    }
+	}
+	
 	if (matchCangjie()) {
 	    mCangjieCode.append((char) primaryCode);
 	    mCodeCount++;
@@ -203,10 +221,10 @@ public class Cangjie implements CandidateListener {
     public void deleteLastCode() {
 	if (mCodeCount <= 0) return;
 
-	mCodeInput[--mCodeCount] = 0;
+	mCodeCount--;
+	mCodeInput[mCodeCount] = 0;
 	for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++)
 	    mCodeInputNearest[mCodeCount][count] = 0;
-
 	if (mCangjieCode.length() > 0) {
 	    mCangjieCode.setLength(mCangjieCode.length() - 1);
 	}

@@ -192,6 +192,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private CandidateSelect mCandidateSelect = null;
     private View mCandidateContainer = null;
     private StringBuffer mLastSuggestionEngOnly = new StringBuffer();
+    private int[] mdest = new int[4];
     
     public final UIHandler mHandler = new UIHandler(this);
 
@@ -1456,11 +1457,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 		    if (!mCangjie.isFull()) {
 			boolean result = true;
 			if (mCangjie != null) {
-			    int[] mdest = new int[5];
 			    for (int count = 0; count < mdest.length; count++) mdest[count] = 0;
 			    // final Keyboard _keyboard = mKeyboardSwitcher.getKeyboard();
-			    keyboard.getProximityInfo().fillArrayWithNearestKeyCodes(x, y, primaryCode, mdest);
-			    Log.i("Cangjie", "--------------------------------------------");
+			    keyboard.getProximityInfo().fillArrayWithNearestKeyCodes(x, y - 10, primaryCode, mdest);
+			    Log.i("Cangjie", "-------------------------------------------- " + x + " " + y);
 			    for (int count = 0; count < mdest.length; count++)
 				Log.i("Cangjie", "Nearest Key Code " + mdest[count]);
 			    final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
