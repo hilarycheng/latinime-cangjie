@@ -22,7 +22,6 @@ public class Cangjie implements CandidateListener {
     private Context mContext = null;
     private char mCodeInput[] = new char[5];
     private char mCodeInputNearest[][] = new char[5][6];
-    // private char mKeyList[] = new char[6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
     private char mMatchChar[] = new char[21529];
@@ -184,10 +183,8 @@ public class Cangjie implements CandidateListener {
 	char code = convertPrimaryCode(primaryCode);
 	
 	if (mCodeCount == 0 && code == '*') return false;
+
 	int i = 1;
-	// for (int count = 0; count < mKeyList.length; count++) {
-	//     mKeyList[count] = 0;
-	// }
 	if (code == 0) return false;
 
 	for (int count = 0; count < nearestKey.length; count++) nearestKey[count] = 0;
@@ -201,36 +198,9 @@ public class Cangjie implements CandidateListener {
 		    keys[c].mCode != primaryCode && keys[c].mCode != 65290) nearestKey[m++] = (char) keys[c].mCode;
 	    }
 	}
-	// Log.i("Cangjie", "-------------------------------------------- " + x + " " + y + " " + keys.length);
-	// for (int count = 0; count < nearest.length; count++)
-	//     Log.i("Cangjie", "Nearest Key Code " + mdest[count]);
-
-	// mKeyList[0] = (char) primaryCode;
-	// for (int count = 0; count < nearestKey.length; count++) {
-	//     if (nearestKey[count] != primaryCode) {
-	// 	mKeyList[i] = (char) nearestKey[count];
-	// 	i++;
-	//     }
-	// }
 	convertPrimaryCodeNearest(nearestKey, mCodeInputNearest[mCodeCount]);
 	mCodeInput[mCodeCount] = code;
 
-	// for (int count = 0; count < mCodeInput.length; count++) {
-	//     if (mCodeInput[count] == '*') {
-	// 	for (int j = 1; j < mCodeInputNearest[count].length; j++)
-	// 	    mCodeInputNearest[count][j] = 0;
-	//     } else {
-	// 	for (int j = 1; j < mCodeInputNearest[count].length; j++)
-	// 	    if (mCodeInputNearest[count][j] == '*') mCodeInputNearest[count][j] = 0;
-	//     }
-	// }
-	// if (code == 'a') mCodeInputNearest[mCodeCount][1] = 's';
-	// if (code == 'v') {
-	//     mCodeInputNearest[mCodeCount][1] = 'c';
-	//     mCodeInputNearest[mCodeCount][2] = 'b';
-	// }
-	// if (code == 'b') mCodeInputNearest[mCodeCount][2] = 'n';
-	
 	if (matchCangjie()) {
 	    mCangjieCode.append((char) primaryCode);
 	    mCodeCount++;
@@ -256,7 +226,6 @@ public class Cangjie implements CandidateListener {
 
 	if (mCodeCount == 0) {
 	    mTable.reset();
-	    // mSelect.updateMatch(null, 0);
 	    mSelect.updateTable(null);
 	} else { 
 	    matchCangjie();

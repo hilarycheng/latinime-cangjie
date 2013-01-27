@@ -109,13 +109,13 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   src[4] = key4;
   src[5] = empty;
 
-  for (i = 0; i < 5; i++) {
-    buffer[0] = 0;
-    for (j = 0; j < 5; j++) {
-      sprintf(buffer + j * 2, "%c ", src[i][j] == 0 ? '0' : src[i][j]);
-    }
-    LOGE("Key : %d, %s", i, buffer);
-  }
+  /* for (i = 0; i < 5; i++) { */
+  /*   buffer[0] = 0; */
+  /*   for (j = 0; j < 5; j++) { */
+  /*     sprintf(buffer + j * 2, "%c ", src[i][j] == 0 ? '0' : src[i][j]); */
+  /*   } */
+  /*   LOGE("Key : %d, %s", i, buffer); */
+  /* } */
 
   found = 0;
   for (count0 = 0; count0 < 5; count0++) {
@@ -212,13 +212,13 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   if (updateindex != 0) {
     cangjie_func.mTotalMatch = loop;
     if (loop > 0) {
-      LOGE("Cangjie Total : %d", loop);
-      LOGE("Cangjie Sort : %d %d %d %d %d",
-	   cangjie_sort[0].total,
-	   cangjie_sort[1].total,
-	   cangjie_sort[2].total,
-	   cangjie_sort[3].total,
-	   cangjie_sort[4].total);
+      /* LOGE("Cangjie Total : %d", loop); */
+      /* LOGE("Cangjie Sort : %d %d %d %d %d", */
+      /* 	   cangjie_sort[0].total, */
+      /* 	   cangjie_sort[1].total, */
+      /* 	   cangjie_sort[2].total, */
+      /* 	   cangjie_sort[3].total, */
+      /* 	   cangjie_sort[4].total); */
 
       for (i = 0; i < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); i++) {
 	if (cangjie_sort[i].total == 0) continue;
