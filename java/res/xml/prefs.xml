@@ -36,6 +36,11 @@
     	    android:defaultValue="0"
 	    android:entries="@array/listArray"
 	    android:entryValues="@array/listValues" />
+        <CheckBoxPreference
+            android:key="cangjie_autocorrection_mode"
+            android:title="@string/cangjie_autocorrection_mode"
+            android:persistent="true"
+    	    android:defaultValue="false" />
 	<CheckBoxPreference
             android:key="clear_often_used"
             android:title="@string/prefs_clear_often_used_title"

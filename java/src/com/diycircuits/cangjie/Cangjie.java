@@ -237,17 +237,22 @@ public class Cangjie implements CandidateListener {
     }
     
     private boolean matchCangjie() {
-	// boolean res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	boolean autocorrection = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_autocorrection_mode", false);
+	boolean res;
 
-	boolean res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
+
+	if (autocorrection) {
+	    res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
+	} else {
+	    res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	}
 
 	if (res) {
-	    // mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
-	    mTable.searchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
-	    // for (int count = 0; count < mTable.totalMatch(); count++) {
-	    // 	mMatchChar[count] = mTable.getMatchChar(count);
-	    // }
-	    // mSelect.updateMatch(mMatchChar, mTable.totalMatch());
+	    if (autocorrection) {
+		mTable.searchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
+	    } else {
+		mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
+	    }
 	    mSelect.updateTable(mTable);
 	}
 	
