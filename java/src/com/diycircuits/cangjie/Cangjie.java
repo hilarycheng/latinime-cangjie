@@ -205,6 +205,12 @@ public class Cangjie implements CandidateListener {
 		    if (mCodeInputNearest[count][j] == '*') mCodeInputNearest[count][j] = 0;
 	    }
 	}
+	if (code == 'a') mCodeInputNearest[mCodeCount][1] = 's';
+	if (code == 'v') {
+	    mCodeInputNearest[mCodeCount][1] = 'c';
+	    mCodeInputNearest[mCodeCount][2] = 'b';
+	}
+	if (code == 'b') mCodeInputNearest[mCodeCount][2] = 'n';
 	
 	if (matchCangjie()) {
 	    mCangjieCode.append((char) primaryCode);
