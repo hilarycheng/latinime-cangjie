@@ -129,7 +129,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    invalidate();
     	}
 	
-	Log.i("Cangjie", "OnTouch " + event.getX() + " " + event.getY() + " " + mSelectIndex);
+	// Log.i("Cangjie", "OnTouch " + event.getX() + " " + event.getY() + " " + mSelectIndex);
 	
 	return false;
     }
