@@ -88,7 +88,7 @@ int cangjie_memcmp(jchar *word, jchar **key, int len)
   return 0;
 }
 
-  char buffer[1024];
+  /* char buffer[1024]; */
 jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4, int updateindex)
 {
   jchar *src[6];
