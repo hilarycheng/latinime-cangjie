@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
 import com.diycircuits.cangjie.CandidateSelect.CandidateListener;
+import com.diycircuits.inputmethod.keyboard.ProximityInfo;
 
 public class Cangjie implements CandidateListener {
 
@@ -21,7 +22,7 @@ public class Cangjie implements CandidateListener {
     private Context mContext = null;
     private char mCodeInput[] = new char[5];
     private char mCodeInputNearest[][] = new char[5][6];
-    private char mKeyList[] = new char[6];
+    // private char mKeyList[] = new char[6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
     private char mMatchChar[] = new char[21529];
@@ -31,6 +32,7 @@ public class Cangjie implements CandidateListener {
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
     private StringBuffer mCangjieCode = new StringBuffer();
+    private char[] nearestKey = new char[4];
 
     public Cangjie(Context context) {
 	mContext = context;
@@ -177,40 +179,57 @@ public class Cangjie implements CandidateListener {
 	}
     }
     
-    public boolean handleCharacter(int primaryCode, int[] nearestKey) {
+    public boolean handleCharacter(ProximityInfo proximity, int x, int y, int primaryCode) {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
+	
+	if (mCodeCount == 0 && code == '*') return false;
 	int i = 1;
-	for (int count = 0; count < mKeyList.length; count++) {
-	    mKeyList[count] = 0;
-	}
+	// for (int count = 0; count < mKeyList.length; count++) {
+	//     mKeyList[count] = 0;
+	// }
 	if (code == 0) return false;
 
-	mKeyList[0] = (char) primaryCode;
-	for (int count = 0; count < nearestKey.length; count++) {
-	    if (nearestKey[count] != primaryCode) {
-		mKeyList[i] = (char) nearestKey[count];
-		i++;
+	for (int count = 0; count < nearestKey.length; count++) nearestKey[count] = 0;
+
+	final com.diycircuits.inputmethod.keyboard.Key[] keys = proximity.getNearestKeys(x, y);
+	int m = 1;
+	nearestKey[0] = (char) primaryCode;
+	if (primaryCode != 65290) {
+	    for (int c = 0; c < keys.length; c++) {
+		if (keys[c].mCode > 255 && m < nearestKey.length &&
+		    keys[c].mCode != primaryCode && keys[c].mCode != 65290) nearestKey[m++] = (char) keys[c].mCode;
 	    }
 	}
-	convertPrimaryCodeNearest(mKeyList, mCodeInputNearest[mCodeCount]);
+	// Log.i("Cangjie", "-------------------------------------------- " + x + " " + y + " " + keys.length);
+	// for (int count = 0; count < nearest.length; count++)
+	//     Log.i("Cangjie", "Nearest Key Code " + mdest[count]);
+
+	// mKeyList[0] = (char) primaryCode;
+	// for (int count = 0; count < nearestKey.length; count++) {
+	//     if (nearestKey[count] != primaryCode) {
+	// 	mKeyList[i] = (char) nearestKey[count];
+	// 	i++;
+	//     }
+	// }
+	convertPrimaryCodeNearest(nearestKey, mCodeInputNearest[mCodeCount]);
 	mCodeInput[mCodeCount] = code;
 
-	for (int count = 0; count < mCodeInput.length; count++) {
-	    if (mCodeInput[count] == '*') {
-		for (int j = 1; j < mCodeInputNearest[count].length; j++)
-		    mCodeInputNearest[count][j] = 0;
-	    } else {
-		for (int j = 1; j < mCodeInputNearest[count].length; j++)
-		    if (mCodeInputNearest[count][j] == '*') mCodeInputNearest[count][j] = 0;
-	    }
-	}
-	if (code == 'a') mCodeInputNearest[mCodeCount][1] = 's';
-	if (code == 'v') {
-	    mCodeInputNearest[mCodeCount][1] = 'c';
-	    mCodeInputNearest[mCodeCount][2] = 'b';
-	}
-	if (code == 'b') mCodeInputNearest[mCodeCount][2] = 'n';
+	// for (int count = 0; count < mCodeInput.length; count++) {
+	//     if (mCodeInput[count] == '*') {
+	// 	for (int j = 1; j < mCodeInputNearest[count].length; j++)
+	// 	    mCodeInputNearest[count][j] = 0;
+	//     } else {
+	// 	for (int j = 1; j < mCodeInputNearest[count].length; j++)
+	// 	    if (mCodeInputNearest[count][j] == '*') mCodeInputNearest[count][j] = 0;
+	//     }
+	// }
+	// if (code == 'a') mCodeInputNearest[mCodeCount][1] = 's';
+	// if (code == 'v') {
+	//     mCodeInputNearest[mCodeCount][1] = 'c';
+	//     mCodeInputNearest[mCodeCount][2] = 'b';
+	// }
+	// if (code == 'b') mCodeInputNearest[mCodeCount][2] = 'n';
 	
 	if (matchCangjie()) {
 	    mCangjieCode.append((char) primaryCode);

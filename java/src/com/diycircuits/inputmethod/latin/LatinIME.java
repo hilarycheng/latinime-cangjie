@@ -192,7 +192,6 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private CandidateSelect mCandidateSelect = null;
     private View mCandidateContainer = null;
     private StringBuffer mLastSuggestionEngOnly = new StringBuffer();
-    private int[] mdest = new int[4];
     
     public final UIHandler mHandler = new UIHandler(this);
 
@@ -1457,23 +1456,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 		    if (!mCangjie.isFull()) {
 			boolean result = true;
 			if (mCangjie != null) {
-			    for (int count = 0; count < mdest.length; count++) mdest[count] = 0;
-			    // final Keyboard _keyboard = mKeyboardSwitcher.getKeyboard();
-			    // keyboard.getProximityInfo().fillArrayWithNearestKeyCodes(x, y, primaryCode, mdest);
-
-			    com.diycircuits.inputmethod.keyboard.Key[] keys = keyboard.getProximityInfo().getNearestKeys(x, y);
-			    int m = 1;
-			    mdest[0] = primaryCode;
-			    for (int c = 0; c < keys.length; c++) {
-				Log.i("Cangjie", " Key " + c + " " + keys[c].mCode);
-				if (keys[c].mCode > 255 && m < mdest.length) mdest[m++] = keys[c].mCode;
-			    }
-			    Log.i("Cangjie", "-------------------------------------------- " + x + " " + y + " " + keys.length);
-			    for (int count = 0; count < mdest.length; count++)
-				Log.i("Cangjie", "Nearest Key Code " + mdest[count]);
 			    final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
 			    mCandidateView.setReferenceSize(mainKeyboardView.getWidth(), mainKeyboardView.getHeight());
-			    result = mCangjie.handleCharacter(primaryCode, mdest);
+			    result = mCangjie.handleCharacter(keyboard.getProximityInfo(), x, y, primaryCode);
 			}
 			if (result) handleCharacter(primaryCode, keyX, keyY, spaceState);
 		    }
