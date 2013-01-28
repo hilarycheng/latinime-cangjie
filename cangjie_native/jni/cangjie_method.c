@@ -64,7 +64,7 @@ int cangjie_maxKey(void)
   return 5;
 }
 
-int cangjie_memcmp(jchar *word, jchar **key, int len)
+inline int cangjie_memcmp(jchar *word, jchar **key, int len)
 {
   int count = 0;
   int result = 0;
@@ -97,7 +97,7 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   int loop  = 0;
   int found = 0;
   int ismatch = 0;
-  int count0 = 0, count1 = 0, state = 0;
+  int count0 = 0, count1 = 0, state = 0, cmatch = 0;
   int firstlen = 0, secondlen = 0, firstmatch = 0;
   int i = 0;
   int j = 0;
@@ -157,55 +157,63 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
     secondlen--;
 
   found = 0; state = 0;
-  for (count0 = 0; count0 < total; count0++) {
-    ismatch = 0;
-    if (cangjie_memcmp((jchar *) cangjie[count0], src, firstlen) == 0) {
-      // state = 1;
-      firstmatch++;
-      if (secondlen == 0 && (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
-	ismatch = 1;
-      } else {
-	if (firstlen + secondlen <= cangjie[count0][7]) {
-	  if (cangjie_memcmp((jchar *) &cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen) == 0 &&
-	      (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
-	    ismatch = 1;
-	  }
+  for (cmatch = 0; cmatch < 5; cmatch++) {
+    if (!(src[0][cmatch] >= 'a' && src[0][cmatch] <= 'z'))
+      continue;
+    int coffset = cangjie_code_index[src[0][cmatch] - 'a'][0];
+    int ccount  = cangjie_code_index[src[0][cmatch] - 'a'][1];
+    /* LOGE("Cangjie Size : %d %d %d %d %c", src[0][cmatch] - 'a', src[0][cmatch], coffset, ccount, cangjie[coffset][0]); */
+    /* found = 0; state = 0;  */
+    for (count0 = coffset; count0 < coffset + ccount; count0++) {
+      ismatch = 0;
+      if (cangjie_memcmp((jchar *) cangjie[count0], src, firstlen) == 0) {
+	// state = 1;
+	firstmatch++;
+	if (secondlen == 0 && (cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
+	  ismatch = 1;
 	} else {
-	  ismatch = 0;
+	  if (firstlen + secondlen <= cangjie[count0][7]) {
+	    if (cangjie_memcmp((jchar *) &cangjie[count0][cangjie[count0][7] - secondlen], &src[firstlen + 1], secondlen) == 0 &&
+		(cangjie_func.mEnableHK != 0 || cangjie[count0][6] == 0)) {
+	      ismatch = 1;
+	    }
+	  } else {
+	    ismatch = 0;
+	  }
 	}
-      }
-      if (ismatch) {
-	if (updateindex != 0) {
-	  cangjie_index[loop] = count0;
-	  int l = cangjie[count0][7];
-	  int t = cangjie_sort[l - 1].total;
-	  cangjie_sort[l - 1].index[t] = count0;
-	  cangjie_sort[l - 1].total++;
+	if (ismatch) {
+	  if (updateindex != 0) {
+	    cangjie_index[loop] = count0;
+	    int l = cangjie[count0][7];
+	    int t = cangjie_sort[l - 1].total;
+	    cangjie_sort[l - 1].index[t] = count0;
+	    cangjie_sort[l - 1].total++;
+	  }
+	  loop++;
+	  /* LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x", */
+	  /*      firstlen, */
+	  /*      src[0], */
+	  /*      src[1], */
+	  /*      src[2], */
+	  /*      src[3], */
+	  /*      src[4], */
+	  /*      cangjie[count0][0], */
+	  /*      cangjie[count0][1], */
+	  /*      cangjie[count0][2], */
+	  /*      cangjie[count0][3], */
+	  /*      cangjie[count0][4]); */
+	  /* LOGE("Matched %02x %02x == %02x %02x %02x %02x %02x", */
+	  /*      src[0][0],  */
+	  /*      src[1][0],  */
+	  /*      cangjie[count0][0], */
+	  /*      cangjie[count0][1], */
+	  /*      cangjie[count0][2], */
+	  /*      cangjie[count0][3], */
+	  /*      cangjie[count0][4]); */
 	}
-	loop++;
-	/* LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x", */
-	/*      firstlen, */
-	/*      src[0], */
-	/*      src[1], */
-	/*      src[2], */
-	/*      src[3], */
-	/*      src[4], */
-	/*      cangjie[count0][0], */
-	/*      cangjie[count0][1], */
-	/*      cangjie[count0][2], */
-	/*      cangjie[count0][3], */
-	/*      cangjie[count0][4]); */
-	/* LOGE("Matched %02x %02x == %02x %02x %02x %02x %02x", */
-	/*      src[0][0],  */
-	/*      src[1][0],  */
-	/*      cangjie[count0][0], */
-	/*      cangjie[count0][1], */
-	/*      cangjie[count0][2], */
-	/*      cangjie[count0][3], */
-	/*      cangjie[count0][4]); */
+      } else if (state == 1) {
+	break;
       }
-    } else if (state == 1) {
-      break;
     }
   }
 

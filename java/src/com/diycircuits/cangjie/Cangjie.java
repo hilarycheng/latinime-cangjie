@@ -199,6 +199,9 @@ public class Cangjie implements CandidateListener {
 	    }
 	}
 	convertPrimaryCodeNearest(nearestKey, mCodeInputNearest[mCodeCount]);
+	// for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++) {
+	//     Log.i("Cangjie", "Code Count " + (int) mCodeInputNearest[mCodeCount][count]);
+	// }
 	mCodeInput[mCodeCount] = code;
 
 	if (matchCangjie()) {
