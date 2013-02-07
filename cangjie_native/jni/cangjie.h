@@ -15411,5 +15411,7 @@ jint cangjie_code_index[26][2] = {
 { 14395,913 },
 { 15308,74 },
 };
+
 jint cangjie_index[15382];
+jint cangjie_index_temp[15382];
 jint cangjie_frequency[15382];

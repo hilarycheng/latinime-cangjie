@@ -15,7 +15,8 @@ typedef struct {
   int index[sizeof(cangjie_index)];
 } CANGJIE_SORT;
 
-CANGJIE_SORT cangjie_sort[5]; 
+CANGJIE_SORT cangjie_sort[5];
+int _mTotalMatch = 0;
 
 void cangjie_init(char *path)
 {
@@ -109,14 +110,6 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   src[4] = key4;
   src[5] = empty;
 
-  /* for (i = 0; i < 5; i++) { */
-  /*   buffer[0] = 0; */
-  /*   for (j = 0; j < 5; j++) { */
-  /*     sprintf(buffer + j * 2, "%c ", src[i][j] == 0 ? '0' : src[i][j]); */
-  /*   } */
-  /*   LOGE("Key : %d, %s", i, buffer); */
-  /* } */
-
   found = 0;
   for (count0 = 0; count0 < 5; count0++) {
     if (src[count0][0] == '*') found++;
@@ -125,10 +118,8 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   if (found > 1)
     return 0;
 
-  if (updateindex != 0) {
-    for (count0 = 0; count0 < sizeof(cangjie_index) / sizeof(jint); count0++) {
-      cangjie_index[count0] = 0;
-    }
+  for (count0 = 0; count0 < sizeof(cangjie_index_temp) / sizeof(jint); count0++) {
+    cangjie_index_temp[count0] = 0;
   }
   for (count0 = 0; count0 < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); count0++)
     cangjie_sort[count0].total = 0;
@@ -182,13 +173,11 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
 	  }
 	}
 	if (ismatch) {
-	  if (updateindex != 0) {
-	    cangjie_index[loop] = count0;
-	    int l = cangjie[count0][7];
-	    int t = cangjie_sort[l - 1].total;
-	    cangjie_sort[l - 1].index[t] = count0;
-	    cangjie_sort[l - 1].total++;
-	  }
+	  cangjie_index_temp[loop] = count0;
+	  int l = cangjie[count0][7];
+	  int t = cangjie_sort[l - 1].total;
+	  cangjie_sort[l - 1].index[t] = count0;
+	  cangjie_sort[l - 1].total++;
 	  loop++;
 	  /* LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x", */
 	  /*      firstlen, */
@@ -217,71 +206,45 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
     }
   }
 
-  if (updateindex != 0) {
-    cangjie_func.mTotalMatch = loop;
-    if (loop > 0) {
-      /* LOGE("Cangjie Total : %d", loop); */
-      /* LOGE("Cangjie Sort : %d %d %d %d %d", */
-      /* 	   cangjie_sort[0].total, */
-      /* 	   cangjie_sort[1].total, */
-      /* 	   cangjie_sort[2].total, */
-      /* 	   cangjie_sort[3].total, */
-      /* 	   cangjie_sort[4].total); */
-
-      for (i = 0; i < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); i++) {
-	if (cangjie_sort[i].total == 0) continue;
-	int swap = 1;
-	while (swap) {
-	  swap = 0;
-	  for (j = 0; j < cangjie_sort[i].total - 1; j++) {
-	    int mark0 = 0;
-	    int mark1 = 0;
-	    int k = 0;
-	    for (k = 0; k < (i + 1); k++) {
-	      if (src[k][0] == 0) continue;
-	      mark0 += cangjie[cangjie_sort[i].index[j]][k] - src[k][0];
-	      mark1 += cangjie[cangjie_sort[i].index[j + 1]][k] - src[k][0];
-	    }
-	    if (mark0 < 0) mark0 = -mark0;
-	    if (mark1 < 0) mark1 = -mark1;
-	    if ((cangjie_frequency[cangjie_sort[i].index[j]] < cangjie_frequency[cangjie_sort[i].index[j + 1]] &&
-		 (mark0 == mark1 || (mark0 != 0 && mark1 != 0)))
-		 ||
-		(mark1 == 0 && mark0 > mark1)) {
-	      int temp = cangjie_sort[i].index[j];
-	      cangjie_sort[i].index[j] = cangjie_sort[i].index[j + 1];
-	      cangjie_sort[i].index[j + 1] = temp;
-	      swap = 1;
-	    }
+  _mTotalMatch = loop;
+  if (loop > 0) {
+    for (i = 0; i < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); i++) {
+      if (cangjie_sort[i].total == 0) continue;
+      int swap = 1;
+      while (swap) {
+	swap = 0;
+	for (j = 0; j < cangjie_sort[i].total - 1; j++) {
+	  int mark0 = 0;
+	  int mark1 = 0;
+	  int k = 0;
+	  for (k = 0; k < (i + 1); k++) {
+	    if (src[k][0] == 0) continue;
+	    mark0 += cangjie[cangjie_sort[i].index[j]][k] - src[k][0];
+	    mark1 += cangjie[cangjie_sort[i].index[j + 1]][k] - src[k][0];
+	  }
+	  if (mark0 < 0) mark0 = -mark0;
+	  if (mark1 < 0) mark1 = -mark1;
+	  if ((cangjie_frequency[cangjie_sort[i].index[j]] < cangjie_frequency[cangjie_sort[i].index[j + 1]] &&
+	       (mark0 == mark1 || (mark0 != 0 && mark1 != 0)))
+	      ||
+	      (mark1 == 0 && mark0 > mark1)) {
+	    int temp = cangjie_sort[i].index[j];
+	    cangjie_sort[i].index[j] = cangjie_sort[i].index[j + 1];
+	    cangjie_sort[i].index[j + 1] = temp;
+	    swap = 1;
 	  }
 	}
       }
-
-      int copy = 0;
-      for (i = 0; i < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); i++) {
-	if (cangjie_sort[i].total == 0) continue;
-	for (j = 0; j < cangjie_sort[i].total; j++) {
-	  cangjie_index[copy] = cangjie_sort[i].index[j];
-	  copy++;
-	}
-      } 
-      
-      /* int swap = 1; */
-      /* /\* while (swap) { *\/ */
-      /* /\* 	swap = 0; *\/ */
-      /* for (j = 0; j < loop - 1; j++) { */
-      /* 	for (i = j; i < loop; i++) { */
-      /* 	  if (cangjie[cangjie_index[j]][7] > cangjie[cangjie_index[i]][7] || */
-      /* 	      (cangjie_frequency[cangjie_index[j]] < cangjie_frequency[cangjie_index[i]] && */
-      /* 	       cangjie[cangjie_index[j]][7] == cangjie[cangjie_index[i]][7])) { */
-      /* 	    int temp = cangjie_index[i]; */
-      /* 	    cangjie_index[i] = cangjie_index[j]; */
-      /* 	    cangjie_index[j] = temp; */
-      /* 	    swap = 1; */
-      /* 	  } */
-      /* 	} */
-      /* } */
     }
+
+    int copy = 0;
+    for (i = 0; i < sizeof(cangjie_sort) / sizeof(CANGJIE_SORT); i++) {
+      if (cangjie_sort[i].total == 0) continue;
+      for (j = 0; j < cangjie_sort[i].total; j++) {
+	cangjie_index_temp[copy] = cangjie_sort[i].index[j];
+	copy++;
+      }
+    } 
   }
 
   if (firstmatch > 0 && secondlen > 0 && updateindex == 0)
@@ -317,10 +280,8 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
   if (found > 1)
     return 0;
 
-  if (updateindex != 0) {
-    for (count0 = 0; count0 < sizeof(cangjie_index) / sizeof(jint); count0++) {
-      cangjie_index[count0] = 0;
-    }
+  for (count0 = 0; count0 < sizeof(cangjie_index) / sizeof(jint); count0++) {
+    cangjie_index_temp[count0] = 0;
   }
 
   // Clear End Star Match
@@ -365,8 +326,7 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 	}
       }
       if (ismatch) {
-	if (updateindex != 0)
-	  cangjie_index[loop] = count0;
+	cangjie_index_temp[loop] = count0;
 	loop++;
 	/* LOGE("Matched %d = %02x %02x %02x %02x %02x = %02x %02x %02x %02x %02x", */
 	/*      firstlen, */
@@ -386,20 +346,18 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
     }
   }
 
-  if (updateindex != 0) {
-    cangjie_func.mTotalMatch = loop;
-    if (loop > 0) {
-      int swap = 1;
-      while (swap) {
-	swap = 0;
-	for (i = 0; i < loop - 1; i++) {
-	  if (cangjie_frequency[cangjie_index[i]] < cangjie_frequency[cangjie_index[i + 1]] &&
-	      cangjie[cangjie_index[i]][7] >= cangjie[cangjie_index[i + 1]][7]) {
-	    int temp = cangjie_index[i];
-	    cangjie_index[i] = cangjie_index[i + 1];
-	    cangjie_index[i + 1] = temp;
-	    swap = 1;
-	  }
+  _mTotalMatch = loop;
+  if (loop > 0) {
+    int swap = 1;
+    while (swap) {
+      swap = 0;
+      for (i = 0; i < loop - 1; i++) {
+	if (cangjie_frequency[cangjie_index_temp[i]] < cangjie_frequency[cangjie_index_temp[i + 1]] &&
+	    cangjie[cangjie_index_temp[i]][7] >= cangjie[cangjie_index_temp[i + 1]][7]) {
+	  int temp = cangjie_index_temp[i];
+	  cangjie_index_temp[i] = cangjie_index_temp[i + 1];
+	  cangjie_index_temp[i + 1] = temp;
+	  swap = 1;
 	}
       }
     }
@@ -413,12 +371,14 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
 
 void cangjie_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
-  cangjie_searching(key0, key1, key2, key3, key4, 1);
+  cangjie_func.mTotalMatch = _mTotalMatch;
+  memcpy(cangjie_index, cangjie_index_temp, _mTotalMatch * sizeof(jint));
 }
 
 void cangjie_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
 {
-  cangjie_searchingMore(key0, key1, key2, key3, key4, 1);
+  cangjie_func.mTotalMatch = _mTotalMatch;
+  memcpy(cangjie_index, cangjie_index_temp, _mTotalMatch * sizeof(jint));
 }
 
 int cmp(jchar *s, jchar *d, int n) {
@@ -489,6 +449,7 @@ jint cangjie_getFrequency(int index)
 void cangjie_reset(void)
 {
   cangjie_func.mTotalMatch = 0;
+  _mTotalMatch = 0;
 }
 
 void cangjie_saveMatch(void)
