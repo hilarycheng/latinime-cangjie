@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <jni.h>
 #include <android/log.h>
-
 #define  LOG_TAG    "Cangjie"
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
 #include "input_method.h"
+#include "phrase.h"
 
 int mTotalMatch = 0;
 int mSaved = 0;
@@ -160,3 +160,49 @@ void Java_com_diycircuits_cangjie_TableLoader_clearAllFrequency(JNIEnv *env, job
   input_method[CANGJIE]->clearFrequency();
 }
 
+jint Java_com_diycircuits_cangjie_TableLoader_searchPhrase(JNIEnv *env, jobject thiz, jchar ch)
+{
+  /* jchar charray[16]; */
+  /* (*env)->GetCharArrayRegion(env, ch, 0, 16, charray); */
+
+  /* LOGE("Search Phrase"); */
+  return search_phrase(ch);
+}
+
+jint Java_com_diycircuits_cangjie_TableLoader_getPhraseCount(JNIEnv *env, jobject thiz)
+{
+  /* LOGE("Get Phrase Count"); */
+  return get_phrase_count();
+}
+
+jint Java_com_diycircuits_cangjie_TableLoader_getPhraseIndex(JNIEnv *env, jobject thiz)
+{
+  /* LOGE("Get Phrase Index"); */
+  return get_phrase_index();
+}
+
+jint Java_com_diycircuits_cangjie_TableLoader_getPhraseMax(JNIEnv *env, jobject thiz)
+{
+  LOGE("Get Phrase Max");
+  return get_phrase_max();
+}
+
+void Java_com_diycircuits_cangjie_TableLoader_getPhrase(JNIEnv *env, jobject thiz, jint index, jobject sb)
+{
+  jclass cls = (*env)->GetObjectClass(env, sb);
+  jmethodID id = (*env)->GetMethodID(env, cls, "append", "(C)Ljava/lang/StringBuffer;");
+  if (id != 0) {
+    /* LOGE("Method ID Found"); */
+    int max = get_phrase_max();
+    if (max > 0) {
+      int count = 0;
+      jchar *p = get_phrase(index);
+      for (count = 0; count < max; count++) {
+	if (p[count] == 0) return;
+	(*env)->CallObjectMethod(env, sb, id, p[count]);
+      }
+    }
+  /* } else { */
+  /*   LOGE("Method ID Not Found"); */
+  }
+}

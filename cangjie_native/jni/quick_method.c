@@ -49,11 +49,6 @@ int quick_maxKey(void)
   return 2;
 }
 
-void quick_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
-{
-  quick_searchWord(key0[0], key1[0], key2[0], key3[0], key4[0]);
-}
-
 void quick_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
   int total = sizeof(quick) / (sizeof(jchar) * 3);
@@ -105,6 +100,11 @@ void quick_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4
   }
 
   quick_func.mTotalMatch = loop;
+}
+
+void quick_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
+{
+  quick_searchWord(key0[0], key1[0], key2[0], key3[0], key4[0]);
 }
 
 int quick_totalMatch(void)

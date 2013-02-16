@@ -34,6 +34,11 @@ public class TableLoader {
     public native void saveMatch();
     public native void clearAllFrequency();
     public native void reset();
+    public native int searchPhrase(char c);
+    public native int getPhraseCount();
+    public native int getPhraseIndex();
+    public native int getPhraseMax();
+    public native void getPhrase(int index, StringBuffer buffer);
 
     static {
 	System.loadLibrary("chinese_table");
