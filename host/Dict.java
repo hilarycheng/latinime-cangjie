@@ -8,7 +8,7 @@ public class Dict
     public static void main(String[] args) {
 	try {
 	    Font font = new Font("Droid Sans Fallback", 16, Font.PLAIN);
-	    BufferedReader reader = new BufferedReader(new FileReader("./tsi.src"));
+	    BufferedReader reader = new BufferedReader(new FileReader("./phrase.txt"));
 
 	    ArrayList<Character> clist = new ArrayList<Character>();
 	    HashMap<Character, HashMap<String, ArrayList<String>>> dword = new HashMap<Character, HashMap<String, ArrayList<String>>>();
@@ -21,10 +21,11 @@ public class Dict
 		line = reader.readLine();
 		if (line == null)
 		    break;
-		StringTokenizer token = new StringTokenizer(line);
-		if (token.countTokens() < 1)
-		    continue;
-		String phrase = token.nextToken();
+		// StringTokenizer token = new StringTokenizer(line);
+		// if (token.countTokens() < 1)
+		//     continue;
+		// String phrase = token.nextToken();
+		String phrase = line.trim();
 		if (phrase.length() < 2)
 		    continue;
 		if (!Character.isDefined(phrase.charAt(0)))
