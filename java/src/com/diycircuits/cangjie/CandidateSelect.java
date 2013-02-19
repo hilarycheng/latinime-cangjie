@@ -20,7 +20,6 @@ public class CandidateSelect extends View implements Handler.Callback {
     
     private int width = 0;
     private int height = 0;
-    private char match[] = null;
     private int total = 0;
     private Paint paint = null;
     private float textWidth = 0.0f;
@@ -89,7 +88,6 @@ public class CandidateSelect extends View implements Handler.Callback {
     public class CandidateAdapter extends ArrayAdapter<CandidateItem> {
 
 	private Context context    = null;
-	private char[]  match      = null;
 	private TableLoader  table = null;
 	private int     total      = 0;
 	private int     layoutRes  = 0;
@@ -97,12 +95,10 @@ public class CandidateSelect extends View implements Handler.Callback {
 	private int     topOffset  = 0;
 	private int     columnc    = 0;
 
-	public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, char[] match, int columnc, int total, float fs, int to) {
+	public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, int columnc, int total, float fs, int to) {
 	    super(context, layoutRes, row);
 	    this.context    = context;
-	    this.match      = match;
 	    this.layoutRes  = layoutRes;
-	    this.match      = match;
 	    this.total      = total;
 	    this.fontSize   = fs;
 	    this.topOffset  = to;
@@ -114,7 +110,6 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    this.context    = context;
 	    this.table      = _table;
 	    this.layoutRes  = layoutRes;
-	    this.match      = match;
 	    this.total      = total;
 	    this.fontSize   = fs;
 	    this.topOffset  = to;
@@ -140,7 +135,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 	    holder.row.setHandler(mHandler);
 	    holder.row.setFontSize(fontSize, topOffset);
-	    holder.row.setMatch(table, position * columnc, total - (position * columnc) >= columnc ? columnc : (total - (position * columnc)), total);
+	    holder.row.setMatch(position * columnc, total - (position * columnc) >= columnc ? columnc : (total - (position * columnc)), total);
 
 	    return row;
 	}
@@ -189,7 +184,6 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    }
 
 	    CandidateItem[] row = new CandidateItem[rowc];
-	    // mAdapter = new andidateAdapter(context, R.layout.candidate, row, match, columnc, total, mFontSize, topOffset);
 	    mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, columnc, total, mFontSize, topOffset);
 
 	    ListView lv = (ListView) mPopupView.findViewById(R.id.sv);
@@ -326,7 +320,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
 
     public void showNextPage() {
-	if (match == null || mTable == null) return;
+	if (mTable == null) return;
 	if (total > 1 && charOffset < (total - 1)) {
 	    charOffset++;
 	    invalidate();
@@ -334,7 +328,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
     
     public void showPrevPage() {
-	if (match == null || mTable == null) return;
+	if (mTable == null) return;
 	if (charOffset > 0) {
 	    charOffset--;
 	    invalidate();
@@ -344,13 +338,6 @@ public class CandidateSelect extends View implements Handler.Callback {
     public void updateTable(TableLoader loader) {
 	mTable = loader;
 	if (loader == null) total = 0; else total = loader.totalMatch();
-        charOffset = 0;
-	invalidate();
-    }
-
-    public void updateMatch(char[] _match, int _total) {
-	match = _match;
-	total = _total;
         charOffset = 0;
 	invalidate();
     }

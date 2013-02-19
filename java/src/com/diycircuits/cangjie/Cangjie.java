@@ -130,7 +130,6 @@ public class Cangjie implements CandidateListener {
 	}
 	mCodeCount = 0;
 	if (mSelect != null) {
-	    // mSelect.updateMatch(null, 0);
 	    mSelect.updateTable(null);
 	    mSelect.closePopup();
 	}

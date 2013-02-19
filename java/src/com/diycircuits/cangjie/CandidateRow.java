@@ -21,7 +21,6 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private static int mTextWidth = 0;
     private int mWidth = 100;
     private int mHeight = 64;
-    private char[] mMatch = null;
     private int mTotal = 0;
     private int mOffset = 0;
     private int mTopOffset = 0;
@@ -72,8 +71,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	}
     }
     
-    public void setMatch(char[] match, int offset, int total, int alltotal) {
-	mMatch  = match;
+    public void setMatch(int offset, int total, int alltotal) {
 	mOffset = offset;
 	mTotal  = total;
 	if (mAllTotal != alltotal) cspacing = 0;
