@@ -206,3 +206,24 @@ void Java_com_diycircuits_cangjie_TableLoader_getPhrase(JNIEnv *env, jobject thi
   /*   LOGE("Method ID Not Found"); */
   }
 }
+
+jint Java_com_diycircuits_cangjie_TableLoader_getPhraseArray(JNIEnv *env, jobject thiz, jint index, jcharArray phrase)
+{
+  jint count = 0, total = 0;
+  int max = get_phrase_max();
+  jchar *input = get_phrase(index);
+  jchar *buf = (*env)->GetCharArrayElements(env, phrase, NULL);
+  jsize len = (*env)->GetArrayLength(env, phrase);
+
+  for (count = 0; count < max; count++) {
+    buf[count] = input[count];
+    if (buf[count] == 0) {
+      break;
+    }
+    total++;
+  }
+
+  (*env)->ReleaseCharArrayElements(env, phrase, buf, 0);
+
+  return total;
+}

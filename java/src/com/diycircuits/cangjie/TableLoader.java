@@ -39,6 +39,7 @@ public class TableLoader {
     public native int getPhraseIndex();
     public native int getPhraseMax();
     public native void getPhrase(int index, StringBuffer buffer);
+    public native int  getPhraseArray(int index, char phrase[]);
 
     static {
 	System.loadLibrary("chinese_table");

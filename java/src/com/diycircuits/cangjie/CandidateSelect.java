@@ -16,7 +16,9 @@ import android.view.ViewGroup.MarginLayoutParams;
 
 public class CandidateSelect extends View implements Handler.Callback {
 
-    public static final int CHARACTER = 0;
+    public static final int CHARACTER      = 0;
+    public static final int CHARACTER_MODE = 0;
+    public static final int PHRASE_MODE    = 1;
     
     private int width = 0;
     private int height = 0;
@@ -37,6 +39,9 @@ public class CandidateSelect extends View implements Handler.Callback {
     private int mSelectIndex = -1;
     private TableLoader mTable = null;
 
+    private int mState = CHARACTER_MODE;
+    private StringBuffer mPhraseBuffer = new StringBuffer();
+    private char[] mPhraseArray = null;
     private CandidateAdapter mAdapter = null;
     private View mPopupView = null;
 
@@ -55,6 +60,8 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 	this.context = context;
 
+	mState = CHARACTER_MODE;
+	
 	mFontSize = 50.0f;
 	paint = new Paint();
 	paint.setColor(Color.BLACK);
@@ -164,6 +171,9 @@ public class CandidateSelect extends View implements Handler.Callback {
 
     public void showCandidatePopup(View mParent, int w, int h) {
 	if (total == 0) return;
+	if (mState != CHARACTER_MODE)
+	    return;
+
 	if (mPopup == null) {
 	    int columnc = w / ((int) textWidth + spacing);
 
@@ -241,15 +251,16 @@ public class CandidateSelect extends View implements Handler.Callback {
     @Override
     protected void onDraw(Canvas canvas) {
 	super.onDraw(canvas);
-	if (canvas == null) {
+	if (canvas == null || mTable == null) {
 	    return;
 	}
-	char c[] = new char[1];
-	paint.setColor(0xff282828);
-	canvas.drawRect(0, 0, width, height - 0, paint);
-	paint.setColor(0xff33B5E5);
+
+	if (mState == CHARACTER_MODE) {
+	    char c[] = new char[1];
+	    paint.setColor(0xff282828);
+	    canvas.drawRect(0, 0, width, height - 0, paint);
+	    paint.setColor(0xff33B5E5);
 	
-	if (mTable != null) {
 	    int start = offset + (spacing / 2), index = charOffset;
 	    while (start < width && index < total) {
 		if (mSelectIndex == index) {
@@ -270,6 +281,30 @@ public class CandidateSelect extends View implements Handler.Callback {
 		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		}
 		start = start + (int) textWidth + spacing;
+		index++;
+	    }
+	} else if (mState == PHRASE_MODE) {
+	    if (mPhraseArray == null) {
+		mPhraseArray = new char[mTable.getPhraseMax()];
+	    }
+
+	    Log.i("Cangjie", "Phrase Mode Candidiate Select 0");
+	    int plen = 0;
+	    int start = (spacing / 2);
+	    int index = 0;
+
+	    paint.setColor(0xff282828);
+	    canvas.drawRect(0, 0, width, height - 0, paint);
+	    paint.setColor(0xff33B5E5);
+
+	    while (start < width && index < mTable.getPhraseCount()) {
+		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
+		canvas.drawText(mPhraseArray, 0, plen, start, topOffset, paint);
+		start += (plen * textWidth) + spacing;
+		paint.setColor(0xffcccccc);
+		canvas.drawLine(start, 5, start, height - 10, paint);
+		paint.setColor(0xff33B5E5);
+		start += (spacing / 2);
 		index++;
 	    }
 	}
@@ -336,9 +371,16 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
     
     public void updateTable(TableLoader loader) {
+	mState = CHARACTER_MODE;
 	mTable = loader;
 	if (loader == null) total = 0; else total = loader.totalMatch();
         charOffset = 0;
+	invalidate();
+    }
+
+    public void updatePhrase(TableLoader loader) {
+	mState = PHRASE_MODE;
+	mTable = loader;
 	invalidate();
     }
 

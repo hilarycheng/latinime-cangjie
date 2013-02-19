@@ -24,8 +24,8 @@ public class Cangjie implements CandidateListener {
     private char mCodeInputNearest[][] = new char[5][6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
-    private char mMatchChar[] = new char[21529];
-    private String mPhrase[] = new String[3000];
+    // private char mMatchChar[] = new char[21529];
+    // private String mPhrase[] = new String[3000];
     private int  mTotalMatch = 0;
     private int  mMode = CANGJIE;
     private TableLoader mTable = new TableLoader();
@@ -80,9 +80,7 @@ public class Cangjie implements CandidateListener {
 	    mListener.characterSelected(mTable.getMatchChar(0), 0);
 	}
 	resetState();
-	if ((int) c != 0) {
-	    updatePhrase(c);
-	}
+	if ((int) c != 0) updatePhrase(c);
     }
 
     public void resetFrequency() {
@@ -102,14 +100,18 @@ public class Cangjie implements CandidateListener {
 	Log.i("Cangjie", "Phrase(Java) " +
 	      mTable.getPhraseCount() + " " + 
 	      mTable.getPhraseIndex() + " " + 
-	      mTable.getPhraseMax());
-	StringBuffer sb = new StringBuffer();
-	for (int count = 0; count < mTable.getPhraseCount(); count++) {
-	    sb.setLength(0);
-	    mTable.getPhrase(count + mTable.getPhraseIndex(), sb);
-	    // Log.i("Cangjie", "Phrase(Java) Phrase = " + sb.toString());
-	    mPhrase[count] = sb.toString();
-	}
+	      mTable.getPhraseMax() + " " + c);
+	// StringBuffer sb = new StringBuffer();
+	// for (int count = 0; count < mTable.getPhraseCount(); count++) {
+	//     sb.setLength(0);
+	//     mTable.getPhrase(count + mTable.getPhraseIndex(), sb);
+	//     // Log.i("Cangjie", "Phrase(Java) Phrase = " + sb.toString());
+	//     mPhrase[count] = sb.toString();
+	// }
+	if (mTable.getPhraseCount() <= 0 || mSelect == null)
+	    return;
+
+	mSelect.updatePhrase(mTable);
     }
     
     public void characterSelected(char c, int idx) {
