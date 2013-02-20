@@ -119,7 +119,7 @@ public class Dict
 		}
 	    }
 
-	    System.out.println("jchar phrase[][" + (maxlen + 1) + "] = {");
+	    System.out.println("jchar phrase[][" + (maxlen + 2) + "] = {");
 	    for (int count = 0; count < clist.size(); count++) {
 		Character cc = clist.get(count);
 		ArrayList<String> sl = map.get(cc);
@@ -128,6 +128,7 @@ public class Dict
 		    // System.out.println("\"" + sl.get(count0) + "\", ");
 		    // if (sl.get(count0).length() > maxlen) maxlen = sl.get(count0).length();
 		    System.out.print("\t{ ");
+		    System.out.print(str.length() + ", ");
 		    for (int count1 = 0; count1 < str.length(); count1++) {
 			System.out.print((int) str.charAt(count1));
 			if (count1 != (str.length() - 1)) System.out.print(", ");

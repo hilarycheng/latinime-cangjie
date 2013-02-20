@@ -38,6 +38,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     private Rect mRect = new Rect();
     private int mSelectIndex = -1;
     private TableLoader mTable = null;
+    private int mPhraseRowOffset[] = new int[256];
 
     private int mState = CHARACTER_MODE;
     private StringBuffer mPhraseBuffer = new StringBuffer();
@@ -94,6 +95,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     
     public class CandidateAdapter extends ArrayAdapter<CandidateItem> {
 
+	private int     state      = 0;
 	private Context context    = null;
 	private TableLoader  table = null;
 	private int     total      = 0;
@@ -101,19 +103,21 @@ public class CandidateSelect extends View implements Handler.Callback {
 	private float   fontSize   = 0.0f;
 	private int     topOffset  = 0;
 	private int     columnc    = 0;
+	private int[]   rowOffset  = null;
 
-	public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, int columnc, int total, float fs, int to) {
-	    super(context, layoutRes, row);
-	    this.context    = context;
-	    this.layoutRes  = layoutRes;
-	    this.total      = total;
-	    this.fontSize   = fs;
-	    this.topOffset  = to;
-	    this.columnc    = columnc;
-	}
+	// public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, int columnc, int total, float fs, int to) {
+	//     super(context, layoutRes, row);
+	//     this.context    = context;
+	//     this.layoutRes  = layoutRes;
+	//     this.total      = total;
+	//     this.fontSize   = fs;
+	//     this.topOffset  = to;
+	//     this.columnc    = columnc;
+	// }
 
 	public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, TableLoader _table, int columnc, int total, float fs, int to) {
 	    super(context, layoutRes, row);
+	    state = 0;
 	    this.context    = context;
 	    this.table      = _table;
 	    this.layoutRes  = layoutRes;
@@ -121,6 +125,17 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    this.fontSize   = fs;
 	    this.topOffset  = to;
 	    this.columnc    = columnc;
+	}
+	
+	public CandidateAdapter(Context context, int layoutRes, CandidateItem[] row, TableLoader _table, int[] rowOffset, float fs, int to) {
+	    super(context, layoutRes, row);
+	    state = 1;
+	    this.rowOffset  = rowOffset;
+	    this.context    = context;
+	    this.table      = _table;
+	    this.layoutRes  = layoutRes;
+	    this.fontSize   = fs;
+	    this.topOffset  = to;
 	}
 
 	@Override
@@ -142,7 +157,11 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 	    holder.row.setHandler(mHandler);
 	    holder.row.setFontSize(fontSize, topOffset);
-	    holder.row.setMatch(position * columnc, total - (position * columnc) >= columnc ? columnc : (total - (position * columnc)), total);
+	    if (state == 0) {
+		holder.row.setMatch(table, position * columnc, total - (position * columnc) >= columnc ? columnc : (total - (position * columnc)), total);
+	    } else if (state == 1) {
+		holder.row.setPhrase(table, rowOffset[position], rowOffset[position + 1] - rowOffset[position]);
+	    }
 
 	    return row;
 	}
@@ -170,16 +189,14 @@ public class CandidateSelect extends View implements Handler.Callback {
     }
 
     public void showCandidatePopup(View mParent, int w, int h) {
-	if (total == 0) return;
-	if (mState != CHARACTER_MODE)
+
+	if (mState == CHARACTER_MODE && total == 0)
+	    return;
+
+	if (mState == PHRASE_MODE && mTable.getPhraseCount() == 0)
 	    return;
 
 	if (mPopup == null) {
-	    int columnc = w / ((int) textWidth + spacing);
-
-	    int rowc = total / columnc;
-	    if ((total % columnc) > 0) rowc++;
-
 	    if (mPopupView == null) {
 		LayoutInflater inflate = (LayoutInflater)
 		    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -192,9 +209,23 @@ public class CandidateSelect extends View implements Handler.Callback {
 			}
 		    });
 	    }
+	    if (mState == CHARACTER_MODE) {
+		int columnc = w / ((int) textWidth + spacing);
 
-	    CandidateItem[] row = new CandidateItem[rowc];
-	    mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, columnc, total, mFontSize, topOffset);
+		int rowc = total / columnc;
+		if ((total % columnc) > 0) rowc++;
+
+
+		CandidateItem[] row = new CandidateItem[rowc];
+		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, columnc, total, mFontSize, topOffset);
+	    } else if (mState == PHRASE_MODE) {
+		int rowc = mTable.measurePhraseRow(w, (int) textWidth, spacing, mPhraseRowOffset);
+		CandidateItem[] row = new CandidateItem[rowc];
+		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, mPhraseRowOffset, mFontSize, topOffset);
+		for (int count = 0; count < rowc + 1; count++) {
+		    Log.i("Cangjie", "PhraseRowOffset " + mPhraseRowOffset[count]);
+		}
+	    }
 
 	    ListView lv = (ListView) mPopupView.findViewById(R.id.sv);
 	    lv.setAdapter(mAdapter);

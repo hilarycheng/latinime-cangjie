@@ -78,5 +78,10 @@ int get_phrase_max()
 
 jchar* get_phrase(int index)
 {
-  return &phrase[index][0];
+  return &phrase[index][1];
+}
+
+int get_phrase_length(int index)
+{
+  return (int) phrase[index][0];
 }

@@ -227,3 +227,29 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseArray(JNIEnv *env, jobjec
 
   return total;
 }
+
+jint Java_com_diycircuits_cangjie_TableLoader_measurePhraseRow(JNIEnv *env, jobject thiz, jint width, jint charwidth, jint spacing, jintArray phraseRow)
+{
+  jint *buf = (*env)->GetIntArrayElements(env, phraseRow, NULL);
+  jsize len = (*env)->GetArrayLength(env, phraseRow);
+
+  int count = 0;
+  int offset = 0;
+  int row = 0;
+  for (count = 0; count < get_phrase_count(); count++) {
+    if (offset + spacing + charwidth * get_phrase_length(get_phrase_index() + count) > width || count == 0) {
+      /* LOGE("Phrase Row : %d = %d", row, get_phrase_index() + count); */
+      buf[row] = get_phrase_index() + count;
+      row++;
+      offset = 0;
+    }
+    offset += spacing + charwidth * get_phrase_length(get_phrase_index() + count);
+  }
+
+  /* if (offset > 0) row++; */
+  buf[row] = get_phrase_index() + get_phrase_count();
+
+  (*env)->ReleaseIntArrayElements(env, phraseRow, buf, 0);
+
+  return row;
+}

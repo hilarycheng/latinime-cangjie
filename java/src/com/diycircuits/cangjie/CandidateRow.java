@@ -31,6 +31,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int mLastX = -1;
     private int mLastY = -1;
     private int mSelectIndex = -1;
+    private int mState = 0;
+    private char[] mPhrase = new char[64];
     private TableLoader mTable = null;
 
     public CandidateRow(Context context, AttributeSet attrs) {
@@ -72,6 +74,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     }
     
     public void setMatch(int offset, int total, int alltotal) {
+	mState = 0;
 	mOffset = offset;
 	mTotal  = total;
 	if (mAllTotal != alltotal) cspacing = 0;
@@ -79,11 +82,19 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     }
     
     public void setMatch(TableLoader table, int offset, int total, int alltotal) {
+	mState = 0;
 	mTable = table;
 	mOffset = offset;
 	mTotal  = total;
 	if (mAllTotal != alltotal) cspacing = 0;
 	mAllTotal = alltotal;
+    }
+
+    public void setPhrase(TableLoader table, int offset, int total) {
+	mState = 1;
+	mTable = table;
+	mOffset = offset;
+	mTotal = total;
     }
     
     @Override
@@ -164,33 +175,53 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
 	mPaint.setColor(0xffeeeeee);
 	if (mTable != null) {
-	    char c[] = new char[1];
-	    int spacing = mLeftOffset + (cspacing / 2);
-	    int topOffset = (mRect.height() - mRect.bottom);
-	    topOffset = topOffset + ((mHeight - mRect.height()) / 2);
-	    for (int count = mOffset; count < mOffset + mTotal; count++) {
-		c[0] = mTable.getMatchChar(count);
-		int color = 0xffeeeeee;
-		if (mTable.getFrequency(count) > 0) color = 0xffff9000;
-		mPaint.setColor(color);
-		if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
-		spacing += cspacing + mTextWidth;
-	    }
-	    if (mSelectIndex >= 0 && mSelectIndex < mTotal) {
-		spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
+	    if (mState == 0) {
+		char c[] = new char[1];
+		int spacing = mLeftOffset + (cspacing / 2);
+		int topOffset = (mRect.height() - mRect.bottom);
+		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
+		for (int count = mOffset; count < mOffset + mTotal; count++) {
+		    c[0] = mTable.getMatchChar(count);
+		    int color = 0xffeeeeee;
+		    if (mTable.getFrequency(count) > 0) color = 0xffff9000;
+		    mPaint.setColor(color);
+		    if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
+		    spacing += cspacing + mTextWidth;
+		}
+		if (mSelectIndex >= 0 && mSelectIndex < mTotal) {
+		    spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
 
-		canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, Region.Op.REPLACE);
-		mPaint.setColor(0xff33B5E5);
-		canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, mPaint);
+		    canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, Region.Op.REPLACE);
+		    mPaint.setColor(0xff33B5E5);
+		    canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, mPaint);
 
-		int color = 0xffffffff;
-		if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = 0xffff9000;
-		mPaint.setColor(color);
-		c[0] = mTable.getMatchChar(mOffset + mSelectIndex);
-		canvas.drawText(c, 0, 1, spacing + (cspacing / 2), topOffset, mPaint);
+		    int color = 0xffffffff;
+		    if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = 0xffff9000;
+		    mPaint.setColor(color);
+		    c[0] = mTable.getMatchChar(mOffset + mSelectIndex);
+		    canvas.drawText(c, 0, 1, spacing + (cspacing / 2), topOffset, mPaint);
 
-		canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
-		mPaint.setColor(0xffffffff);
+		    canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
+		    mPaint.setColor(0xffffffff);
+		}
+	    } else if (mState == 1) {
+		int count = 0;
+		int spacing = (cspacing / 2);
+		int topOffset = (mRect.height() - mRect.bottom);
+		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
+
+		Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal);
+		for (count = 0; count < mTotal; count++) {
+		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
+		    mPaint.setColor(0xffeeeeee);
+		    canvas.drawText(mPhrase, 0, len, spacing, topOffset, mPaint);
+		    spacing += (cspacing / 2) + mTextWidth * len;
+		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);
+		    // mPaint.setColor(0xff888888);
+		    // canvas.drawLine(spacing, 5, spacing, mRect.bottom - 10, mPaint);
+		    // canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
+		    spacing += (cspacing / 2);
+		}
 	    }
 	}
     }
