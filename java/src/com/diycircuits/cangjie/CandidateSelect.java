@@ -25,6 +25,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     private int total = 0;
     private Paint paint = null;
     private float textWidth = 0.0f;
+    private float textFontSpacing = 0.0f;
     private int offset = 0;
     private int charOffset = 0;
     private int spacing = 16;
@@ -70,8 +71,11 @@ public class CandidateSelect extends View implements Handler.Callback {
 	paint.setTextSize(mFontSize);
 	paint.setStrokeWidth(0);
 
+	paint.getTextBounds(context.getString(R.string.cangjie_full), 0, 2, mRect);
+	textFontSpacing = mRect.width();
 	paint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
 	textWidth = mRect.width();
+	textFontSpacing = textFontSpacing - (2 * textWidth);
 	spacing   = (int) textWidth / 2;
 
 	mHandler = new Handler(this);
@@ -219,7 +223,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		CandidateItem[] row = new CandidateItem[rowc];
 		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, columnc, total, mFontSize, topOffset);
 	    } else if (mState == PHRASE_MODE) {
-		int rowc = mTable.measurePhraseRow(w, (int) textWidth, spacing, mPhraseRowOffset);
+		int rowc = mTable.measurePhraseRow(w, (int) textWidth, spacing, (int) textFontSpacing, mPhraseRowOffset);
 		CandidateItem[] row = new CandidateItem[rowc];
 		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, mPhraseRowOffset, mFontSize, topOffset);
 		for (int count = 0; count < rowc + 1; count++) {
@@ -331,7 +335,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    while (start < width && index < mTable.getPhraseCount()) {
 		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
 		canvas.drawText(mPhraseArray, 0, plen, start, topOffset, paint);
-		start += (plen * textWidth) + spacing;
+		start += (plen * textWidth) + ((plen - 1) * textFontSpacing) + (spacing / 2);
 		paint.setColor(0xffcccccc);
 		canvas.drawLine(start, 5, start, height - 10, paint);
 		paint.setColor(0xff33B5E5);

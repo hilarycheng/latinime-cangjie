@@ -16,9 +16,11 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 
     private static Paint mPaint = null;
     private static Rect mRect = new Rect();
+    private static Rect mFontRect = new Rect();
     private static int cspacing = 0;
     private static int mLeftOffset = 0;
     private static int mTextWidth = 0;
+    private static int mTextFontSpacing = 0;
     private int mWidth = 100;
     private int mHeight = 64;
     private int mTotal = 0;
@@ -55,6 +57,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    mPaint.setTextSize(mFontSize);
 	    mPaint.setStrokeWidth(0);
     	    mPaint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
+    	    mPaint.getTextBounds(context.getString(R.string.cangjie_full), 0, 2, mFontRect);
 	}
     }
 
@@ -69,6 +72,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    if (mPaint.getTextSize() != mFontSize) {
 		mPaint.setTextSize(mFontSize);
 		mPaint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
+		mPaint.getTextBounds(context.getString(R.string.cangjie_full), 0, 2, mFontRect);
 	    }
 	}
     }
@@ -161,6 +165,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	mLeftOffset = (mTotal * (int) mTextWidth) + ((mTotal - 0) * cspacing);
 
 	mLeftOffset = (mWidth - mLeftOffset) / 2;
+
+	mTextFontSpacing = mFontRect.width() - (2 * mTextWidth);
     }
     
     @Override
@@ -206,16 +212,16 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		}
 	    } else if (mState == 1) {
 		int count = 0;
-		int spacing = (cspacing / 2);
+		int spacing = cspacing;
 		int topOffset = (mRect.height() - mRect.bottom);
 		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
 
-		Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal);
+		Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal + " " + cspacing + " " + mOffset + " " + mTotal + " " + mTextWidth + " " + mTextFontSpacing);
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		    mPaint.setColor(0xffeeeeee);
 		    canvas.drawText(mPhrase, 0, len, spacing, topOffset, mPaint);
-		    spacing += (cspacing / 2) + mTextWidth * len;
+		    spacing += (cspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
 		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);
 		    // mPaint.setColor(0xff888888);
 		    // canvas.drawLine(spacing, 5, spacing, mRect.bottom - 10, mPaint);

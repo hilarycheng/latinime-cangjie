@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="cangjie">倉</string>
+    <string name="cangjie_full">倉頡</string>
     <string name="language_mode">預設語言</string>
     <string name="language_mode_summary">選擇英文或中文, 為首選的顯示的鍵盤</string>
     <string name="cangjie_mode">中文輸入法</string>
