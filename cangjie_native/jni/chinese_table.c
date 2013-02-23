@@ -187,6 +187,11 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseMax(JNIEnv *env, jobject 
   return get_phrase_max();
 }
 
+jint Java_com_diycircuits_cangjie_TableLoader_getAllPhraseMax(JNIEnv *env, jobject thiz)
+{
+  return MAX_PHRASE_LENGTH;
+}
+
 void Java_com_diycircuits_cangjie_TableLoader_getPhrase(JNIEnv *env, jobject thiz, jint index, jobject sb)
 {
   jclass cls = (*env)->GetObjectClass(env, sb);

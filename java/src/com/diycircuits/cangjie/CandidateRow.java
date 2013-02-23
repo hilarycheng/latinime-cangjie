@@ -36,7 +36,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int mLastY = -1;
     private int mSelectIndex = -1;
     private int mState = CHARACTER_MODE;
-    private char[] mPhrase = new char[64];
+    private char[] mPhrase = null;
     private TableLoader mTable = null;
 
     public CandidateRow(Context context, AttributeSet attrs) {
@@ -94,6 +94,10 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	mTotal  = total;
 	if (mAllTotal != alltotal) cspacing = 0;
 	mAllTotal = alltotal;
+
+	synchronized(this) {
+	    if (mPhrase == null) mPhrase = new char[mTable.getAllPhraseMax()];
+	}
     }
 
     public void setPhrase(TableLoader table, int offset, int total) {
@@ -101,6 +105,10 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	mTable = table;
 	mOffset = offset;
 	mTotal = total;
+
+	synchronized(this) {
+	    if (mPhrase == null) mPhrase = new char[mTable.getAllPhraseMax()];
+	}
     }
     
     @Override

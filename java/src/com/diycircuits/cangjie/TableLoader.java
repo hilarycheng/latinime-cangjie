@@ -38,6 +38,7 @@ public class TableLoader {
     public native int getPhraseCount();
     public native int getPhraseIndex();
     public native int getPhraseMax();
+    public native int getAllPhraseMax();
     public native void getPhrase(int index, StringBuffer buffer);
     public native int  getPhraseArray(int index, char phrase[]);
     public native int  measurePhraseRow(int width, int charwidth, int spacing, int fontSpacing, int[] phraseRow);

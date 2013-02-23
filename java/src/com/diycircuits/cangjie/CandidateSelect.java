@@ -324,9 +324,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		index++;
 	    }
 	} else if (mState == PHRASE_MODE) {
-	    if (mPhraseArray == null) {
-		mPhraseArray = new char[mTable.getPhraseMax()];
-	    }
+	    if (mPhraseArray == null) mPhraseArray = new char[mTable.getAllPhraseMax()];
 
 	    // Log.i("Cangjie", "Phrase Mode Candidiate Select 0");
 	    int plen = 0;

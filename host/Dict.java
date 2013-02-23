@@ -143,6 +143,7 @@ public class Dict
 	    }
 	    System.out.println("};");
 
+	    System.out.println("#define MAX_PHRASE_LENGTH " + maxlen);
 	    System.err.println("Max Phrase Length : " + maxlen);
 	    // System.out.println((int) c + " " + max);
 	    total = 0; max = 0;
