@@ -55,6 +55,7 @@ public class CandidateSelect extends View implements Handler.Callback {
     
     public static interface CandidateListener {
 	void characterSelected(char c, int idx);
+	void phraseSelected(String phrase, int idx);
     }
     
     public CandidateSelect(Context context, AttributeSet attrs) {
@@ -355,35 +356,67 @@ public class CandidateSelect extends View implements Handler.Callback {
 	char c = 0;
 	int idx = -1;
 
-	for (int count = charOffset; count < total; count++) {
-	    if (count == charOffset) {
-		if (select < (left + (int) textWidth + spacing)) {
+	if (mState ==  CHARACTER_MODE) {
+	    for (int count = charOffset; count < total; count++) {
+		if (count == charOffset) {
+		    if (select < (left + (int) textWidth + spacing)) {
+			c = mTable.getMatchChar(count);
+			idx = count;
+			break;
+		    }
+		} else if (select > left && select < (left + (int) textWidth + spacing)) {
 		    c = mTable.getMatchChar(count);
 		    idx = count;
 		    break;
 		}
-	    } else if (select > left && select < (left + (int) textWidth + spacing)) {
-		c = mTable.getMatchChar(count);
-		idx = count;
+		left = left + (int) textWidth + spacing;
+	    }
+
+	    switch (action) {
+	    case MotionEvent.ACTION_DOWN:
+	    case MotionEvent.ACTION_MOVE:
+		mSelectIndex = idx;
+		invalidate();
+		break;
+	    case MotionEvent.ACTION_UP:
+		if (listener != null && c != 0 && mSelectIndex == idx) {
+		    listener.characterSelected(c, idx);
+		}
+	    case MotionEvent.ACTION_CANCEL:
+		mSelectIndex = -1;
+		invalidate();
 		break;
 	    }
-	    left = left + (int) textWidth + spacing;
-	}
-
-	switch (action) {
-	case MotionEvent.ACTION_DOWN:
-	case MotionEvent.ACTION_MOVE:
-	    mSelectIndex = idx;
-	    invalidate();
-	    break;
-	case MotionEvent.ACTION_UP:
-	    if (listener != null && c != 0 && mSelectIndex == idx) {
-		listener.characterSelected(c, idx);
+	} else if (mState == PHRASE_MODE) {
+	    String phrase = null;
+	    int start = 0, index = 0, end = 0, plen = 0;
+	    while (start < width && index < mTable.getPhraseCount()) {
+		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
+		end = start + (int) (plen * textWidth) + (int) ((plen - 1) * textFontSpacing) + spacing;
+		if (x > start && x < end) {
+		    phrase = new String(mPhraseArray, 0, plen);
+		    // Log.i("Cangjie", "Phrase On Touch " + phrase + " " + index);
+		    break;
+		}
+		start = end;
+		index++;
 	    }
-	case MotionEvent.ACTION_CANCEL:
-	    mSelectIndex = -1;
-	    invalidate();
-	    break;
+
+	    switch (action) {
+	    case MotionEvent.ACTION_DOWN:
+	    case MotionEvent.ACTION_MOVE:
+		mSelectIndex = index;
+		invalidate();
+		break;
+	    case MotionEvent.ACTION_UP:
+		if (listener != null && mSelectIndex == index && phrase != null) {
+		    listener.phraseSelected(phrase, idx);
+		}
+	    case MotionEvent.ACTION_CANCEL:
+		mSelectIndex = -1;
+		invalidate();
+		break;
+	    }
 	}
 
 	return true;

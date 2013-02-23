@@ -1516,6 +1516,26 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	// mSpaceState = SPACE_STATE_PHANTOM;
 	mEnteredText = null;
     }
+
+    // Cangjie Candidate Phrase Selected
+    public void phraseSelected(String phrase, int idx) {
+	String composer = mWordComposer.getTypedWord();
+	if (composer != null && composer.endsWith(mCangjie.getCangjieCode())) {
+	    composer = composer.substring(0, composer.length() - mCangjie.getCangjieCode().length());
+	} else {
+	    composer = "";
+	}
+	composer = composer + phrase;
+	mConnection.setComposingText("", 1);
+        mConnection.beginBatchEdit();
+	// mConnection.setComposingText(composer, 1);
+	// sendKeyCodePoint(c);
+	mConnection.commitText(composer, 1);
+        mConnection.endBatchEdit();
+	resetComposingState(true);
+	// mSpaceState = SPACE_STATE_PHANTOM;
+	mEnteredText = null;
+    }
     
     // Called from PointerTracker through the KeyboardActionListener interface
     @Override

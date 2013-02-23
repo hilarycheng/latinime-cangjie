@@ -120,6 +120,12 @@ public class Cangjie implements CandidateListener {
 	resetState();
 	updatePhrase(c);
     }
+    
+    public void phraseSelected(String phrase, int idx) {
+	if (mListener != null) mListener.phraseSelected(phrase, idx);
+	resetState();
+	updatePhrase(phrase.charAt(phrase.length() - 1));
+    }
 
     public void resetState() {
 	mCangjieCode.setLength(0);
