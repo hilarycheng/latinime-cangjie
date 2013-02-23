@@ -17,7 +17,7 @@ int search_phrase(jchar index)
   int loop = 1;
   int found = -1;
   int total = 0;
-  LOGE("Phrase : %d", sizeof(phraseindex) / sizeof(struct PHRASE_INDEX));
+  /* LOGE("Phrase : %d", sizeof(phraseindex) / sizeof(struct PHRASE_INDEX)); */
 
   while (max > min) {
     if (phraseindex[min].c == index) {
@@ -43,7 +43,7 @@ int search_phrase(jchar index)
     total++;
   }
   if (found >= 0) {
-    LOGE("Phrase : %d %d %d %d %d %d", total, found, phraseindex[found].index, phraseindex[found].size, ch, phraseindex[found].c);
+    /* LOGE("Phrase : %d %d %d %d %d %d", total, found, phraseindex[found].index, phraseindex[found].size, ch, phraseindex[found].c); */
     phrase_index = phraseindex[found].index;
     phrase_count = phraseindex[found].size;
     phrase_max   = phraseindex[found].maxphrase;
@@ -55,7 +55,7 @@ int search_phrase(jchar index)
     phrase_index = 0;
     phrase_count = 0;
     phrase_max   = 0;
-    LOGE("No Phrase : %d", sizeof(phraseindex) / sizeof(struct PHRASE_INDEX));
+    /* LOGE("No Phrase : %d", sizeof(phraseindex) / sizeof(struct PHRASE_INDEX)); */
   }
 
   return phrase_count;

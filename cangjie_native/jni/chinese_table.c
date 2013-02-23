@@ -183,7 +183,7 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseIndex(JNIEnv *env, jobjec
 
 jint Java_com_diycircuits_cangjie_TableLoader_getPhraseMax(JNIEnv *env, jobject thiz)
 {
-  LOGE("Get Phrase Max");
+  /* LOGE("Get Phrase Max"); */
   return get_phrase_max();
 }
 

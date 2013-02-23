@@ -97,10 +97,10 @@ public class Cangjie implements CandidateListener {
 
     private void updatePhrase(char c) {
 	mTable.searchPhrase(c);
-	Log.i("Cangjie", "Phrase(Java) " +
-	      mTable.getPhraseCount() + " " + 
-	      mTable.getPhraseIndex() + " " + 
-	      mTable.getPhraseMax() + " " + c);
+	// Log.i("Cangjie", "Phrase(Java) " +
+	//       mTable.getPhraseCount() + " " + 
+	//       mTable.getPhraseIndex() + " " + 
+	//       mTable.getPhraseMax() + " " + c);
 	// StringBuffer sb = new StringBuffer();
 	// for (int count = 0; count < mTable.getPhraseCount(); count++) {
 	//     sb.setLength(0);

@@ -216,7 +216,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		int topOffset = (mRect.height() - mRect.bottom);
 		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
 
-		Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal + " " + cspacing + " " + mOffset + " " + mTotal + " " + mTextWidth + " " + mTextFontSpacing);
+		// Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal + " " + cspacing + " " + mOffset + " " + mTotal + " " + mTextWidth + " " + mTextFontSpacing);
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		    mPaint.setColor(0xffeeeeee);

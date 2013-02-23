@@ -226,9 +226,9 @@ public class CandidateSelect extends View implements Handler.Callback {
 		int rowc = mTable.measurePhraseRow(w, (int) textWidth, spacing, (int) textFontSpacing, mPhraseRowOffset);
 		CandidateItem[] row = new CandidateItem[rowc];
 		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, mPhraseRowOffset, mFontSize, topOffset);
-		for (int count = 0; count < rowc + 1; count++) {
-		    Log.i("Cangjie", "PhraseRowOffset " + mPhraseRowOffset[count]);
-		}
+		// for (int count = 0; count < rowc + 1; count++) {
+		//     Log.i("Cangjie", "PhraseRowOffset " + mPhraseRowOffset[count]);
+		// }
 	    }
 
 	    ListView lv = (ListView) mPopupView.findViewById(R.id.sv);
@@ -323,7 +323,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		mPhraseArray = new char[mTable.getPhraseMax()];
 	    }
 
-	    Log.i("Cangjie", "Phrase Mode Candidiate Select 0");
+	    // Log.i("Cangjie", "Phrase Mode Candidiate Select 0");
 	    int plen = 0;
 	    int start = (spacing / 2);
 	    int index = 0;
