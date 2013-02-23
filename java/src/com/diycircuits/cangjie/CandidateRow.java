@@ -122,16 +122,17 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    } else if (mState == PHRASE_MODE) {
 		int x = mLastX;
 
-		int start = -(cspacing / 2), index = 0, count = 0, pos = -1, end;
+		int start = cspacing, index = 0, count = 0, pos = -1, end;
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
-		    end = start + (2 * cspacing) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    end = start + (cspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    if (count == 0) start = 0;
 		    // Log.i("Cangjie", "Candidate Row " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + x);
 		    if (x >= start && x < end) {
 			pos = count;
 			break;
 		    }
-		    start = end;
+		    start = end + (cspacing / 2);
 		}
 		if (pos >= 0) {
 		    // Log.i("Cangjie", "Candidate Row 0 " + pos);
@@ -159,16 +160,17 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 
 		mSelectIndex = pos;
 	    } else if (mState == PHRASE_MODE) {
-		int start = -(cspacing / 2), index = 0, count = 0, pos = -1, end;
+		int start = cspacing, index = 0, count = 0, pos = -1, end;
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
-		    end = start + (2 * cspacing) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    end = start + (cspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    if (count == 0) start = 0;
 		    // Log.i("Cangjie", "Candidate Row " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + (int) event.getX());
 		    if ((int) event.getX() >= start && (int) event.getX() < end) {
 			pos = count;
 			break;
 		    }
-		    start = end;
+		    start = end + (cspacing / 2);
 		}
 		// Log.i("Cangjie", "Candidate Row 0 " + pos);
 		if (pos >= 0) mSelectIndex = pos;
