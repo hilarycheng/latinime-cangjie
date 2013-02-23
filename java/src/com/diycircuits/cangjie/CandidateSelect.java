@@ -17,6 +17,7 @@ import android.view.ViewGroup.MarginLayoutParams;
 public class CandidateSelect extends View implements Handler.Callback {
 
     public static final int CHARACTER      = 0;
+    public static final int PHRASE         = 1;
     public static final int CHARACTER_MODE = 0;
     public static final int PHRASE_MODE    = 1;
     
@@ -188,6 +189,9 @@ public class CandidateSelect extends View implements Handler.Callback {
 	if (msg.what == CHARACTER) {
 	    closePopup();
 	    if (listener != null && msg.arg1 != 0) listener.characterSelected((char) msg.arg1, msg.arg2);
+	} else if (msg.what == PHRASE) {
+	    closePopup();
+	    if (listener != null && msg.obj!= null) listener.phraseSelected((String) msg.obj, msg.arg2);
 	}
 	
 	return true;

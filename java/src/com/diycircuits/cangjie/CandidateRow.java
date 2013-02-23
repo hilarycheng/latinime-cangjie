@@ -14,6 +14,8 @@ import android.os.Message;
 
 public class CandidateRow extends View implements View.OnClickListener, View.OnTouchListener {
 
+    private final static int CHARACTER_MODE = 0;
+    private final static int PHRASE_MODE    = 1;
     private static Paint mPaint = null;
     private static Rect mRect = new Rect();
     private static Rect mFontRect = new Rect();
@@ -33,7 +35,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int mLastX = -1;
     private int mLastY = -1;
     private int mSelectIndex = -1;
-    private int mState = 0;
+    private int mState = CHARACTER_MODE;
     private char[] mPhrase = new char[64];
     private TableLoader mTable = null;
 
@@ -78,7 +80,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     }
     
     public void setMatch(int offset, int total, int alltotal) {
-	mState = 0;
+	mState = CHARACTER_MODE;
 	mOffset = offset;
 	mTotal  = total;
 	if (mAllTotal != alltotal) cspacing = 0;
@@ -86,7 +88,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     }
     
     public void setMatch(TableLoader table, int offset, int total, int alltotal) {
-	mState = 0;
+	mState = CHARACTER_MODE;
 	mTable = table;
 	mOffset = offset;
 	mTotal  = total;
@@ -95,7 +97,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     }
 
     public void setPhrase(TableLoader table, int offset, int total) {
-	mState = 1;
+	mState = PHRASE_MODE;
 	mTable = table;
 	mOffset = offset;
 	mTotal = total;
@@ -104,18 +106,40 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     @Override
     public void onClick(View v) {
 	if (mLastX != -1 && mLastY != -1) {
-    	    int x = mLastX;
-    	    int pos = x - mLeftOffset;
+	    if (mState == CHARACTER_MODE) {
+		int x = mLastX;
+		int pos = x - mLeftOffset;
 
-    	    pos = pos / (mTextWidth + cspacing);
-    	    if (x < mLeftOffset + mTextWidth + cspacing) {
-    		pos = 0;
-    	    }
+		pos = pos / (mTextWidth + cspacing);
+		if (x < mLeftOffset + mTextWidth + cspacing) {
+		    pos = 0;
+		}
 	    
-    	    if ((mOffset + pos) < mAllTotal) {
-    		Message msg = mHandler.obtainMessage(CandidateSelect.CHARACTER, mTable.getMatchChar(mOffset + pos), mOffset + pos);
-    		mHandler.sendMessage(msg);
-    	    }
+		if ((mOffset + pos) < mAllTotal) {
+		    Message msg = mHandler.obtainMessage(CandidateSelect.CHARACTER, mTable.getMatchChar(mOffset + pos), mOffset + pos);
+		    mHandler.sendMessage(msg);
+		}
+	    } else if (mState == PHRASE_MODE) {
+		int x = mLastX;
+
+		int start = -(cspacing / 2), index = 0, count = 0, pos = -1, end;
+		for (count = 0; count < mTotal; count++) {
+		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
+		    end = start + (2 * cspacing) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    // Log.i("Cangjie", "Candidate Row " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + x);
+		    if (x >= start && x < end) {
+			pos = count;
+			break;
+		    }
+		    start = end;
+		}
+		if (pos >= 0) {
+		    // Log.i("Cangjie", "Candidate Row 0 " + pos);
+		    int len = mTable.getPhraseArray(mOffset + pos, mPhrase);
+		    Message msg = mHandler.obtainMessage(CandidateSelect.PHRASE, 0, mOffset + pos, new String(mPhrase, 0, len));
+		    mHandler.sendMessage(msg);
+		}
+	    }
 	}
     }
 
@@ -125,14 +149,30 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     	if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
 	    mLastX = -1;
 	    mLastY = -1;
-	    int pos = (int) event.getX() - mLeftOffset;
+	    if (mState == CHARACTER_MODE) {
+		int pos = (int) event.getX() - mLeftOffset;
 
-	    pos = pos / (mTextWidth + cspacing);
-	    if ((int) event.getX() < mLeftOffset + mTextWidth + cspacing) {
-		pos = 0;
+		pos = pos / (mTextWidth + cspacing);
+		if ((int) event.getX() < mLeftOffset + mTextWidth + cspacing) {
+		    pos = 0;
+		}
+
+		mSelectIndex = pos;
+	    } else if (mState == PHRASE_MODE) {
+		int start = -(cspacing / 2), index = 0, count = 0, pos = -1, end;
+		for (count = 0; count < mTotal; count++) {
+		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
+		    end = start + (2 * cspacing) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    // Log.i("Cangjie", "Candidate Row " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + (int) event.getX());
+		    if ((int) event.getX() >= start && (int) event.getX() < end) {
+			pos = count;
+			break;
+		    }
+		    start = end;
+		}
+		// Log.i("Cangjie", "Candidate Row 0 " + pos);
+		if (pos >= 0) mSelectIndex = pos;
 	    }
-
-	    mSelectIndex = pos;
 	    invalidate();
 	} else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
 	    mLastX = (int) event.getX();
@@ -181,7 +221,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
 	mPaint.setColor(0xffeeeeee);
 	if (mTable != null) {
-	    if (mState == 0) {
+	    if (mState == CHARACTER_MODE) {
 		char c[] = new char[1];
 		int spacing = mLeftOffset + (cspacing / 2);
 		int topOffset = (mRect.height() - mRect.bottom);
@@ -210,7 +250,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
 		    mPaint.setColor(0xffffffff);
 		}
-	    } else if (mState == 1) {
+	    } else if (mState == PHRASE_MODE) {
 		int count = 0;
 		int spacing = cspacing;
 		int topOffset = (mRect.height() - mRect.bottom);
