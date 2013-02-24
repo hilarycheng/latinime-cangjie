@@ -57,11 +57,11 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean hasMatch() {
-	if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
+	// if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
 	    return mTable.totalMatch() > 0;
-	} else {
-	    return mTable.getPhraseCount() > 0;
-	}
+	// } else {
+	//     return mTable.getPhraseCount() > 0;
+	// }
     }
 
     public boolean isFull() {
