@@ -96,6 +96,10 @@ public class CandidateSelect extends View implements Handler.Callback {
 	listener = listen;
     }
 
+    public int getState() {
+	return mState;
+    }
+    
     private class CandidateItem {
     }
     

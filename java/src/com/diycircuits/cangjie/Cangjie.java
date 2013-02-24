@@ -25,7 +25,7 @@ public class Cangjie implements CandidateListener {
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
     // private char mMatchChar[] = new char[21529];
-    // private String mPhrase[] = new String[3000];
+    private char mPhrase[] = new char[256];
     private int  mTotalMatch = 0;
     private int  mMode = CANGJIE;
     private TableLoader mTable = new TableLoader();
@@ -57,7 +57,11 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean hasMatch() {
-	return mTable.totalMatch() > 0;
+	if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
+	    return mTable.totalMatch() > 0;
+	} else {
+	    return mTable.getPhraseCount() > 0;
+	}
     }
 
     public boolean isFull() {
@@ -74,13 +78,26 @@ public class Cangjie implements CandidateListener {
     }
 
     public void sendFirstCharacter() {
-	char c = (char) 0;
-	if (mListener != null && mTable.totalMatch() > 0) {
-	    c = mTable.getMatchChar(0);
-	    mListener.characterSelected(mTable.getMatchChar(0), 0);
+	if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
+	    char c = (char) 0;
+	    if (mListener != null && mTable.totalMatch() > 0) {
+		c = mTable.getMatchChar(0);
+		mListener.characterSelected(mTable.getMatchChar(0), 0);
+	    }
+	    resetState();
+	    if ((int) c != 0) updatePhrase(c);
+	} else if (mSelect.getState() == CandidateSelect.PHRASE_MODE) {
+	    char c = (char) 0;
+	    if (mListener != null && mTable.getPhraseCount() > 0) {
+		int len = mTable.getPhraseArray(mTable.getPhraseIndex(), mPhrase);
+		if (len > 0) {
+		    mListener.phraseSelected(new String(mPhrase, 0, len), 0);
+		    c = mPhrase[0];
+		}
+	    }
+	    resetState();
+	    if ((int) c != 0) updatePhrase(c);
 	}
-	resetState();
-	if ((int) c != 0) updatePhrase(c);
     }
 
     public void resetFrequency() {
