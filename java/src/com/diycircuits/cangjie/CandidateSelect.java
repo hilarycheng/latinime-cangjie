@@ -78,7 +78,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 	paint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
 	textWidth = mRect.width();
 	textFontSpacing = textFontSpacing - (2 * textWidth);
-	spacing   = (int) textWidth / 2;
+	spacing = ((int) textWidth) * 4 / 5;
 
 	mHandler = new Handler(this);
     }
@@ -277,7 +277,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		paint.setTextSize(mFontSize);
 		paint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
 		textWidth = mRect.width();
-		spacing   = (int) textWidth / 2;
+		spacing = ((int) textWidth) * 4 / 5;
 
 		topOffset = mRect.height() - mRect.bottom;
 		topOffset += (h - mRect.height()) / 2;
@@ -301,7 +301,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    canvas.drawRect(0, 0, width, height - 0, paint);
 	    paint.setColor(0xff33B5E5);
 	
-	    int start = offset + (spacing / 2), index = charOffset;
+	    int start = spacing / 2, index = charOffset;
 	    while (start < width && index < total) {
 		if (mSelectIndex == index) {
 		    int x = start - (spacing / 2);
@@ -320,7 +320,11 @@ public class CandidateSelect extends View implements Handler.Callback {
 		    paint.setColor(color);
 		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		}
-		start = start + (int) textWidth + spacing;
+		start = start + (int) textWidth + (spacing / 2);
+		paint.setColor(0xffcccccc);
+		canvas.drawLine(start, 5, start, height - 10, paint);
+		paint.setColor(0xff33B5E5);
+		start = start + (spacing / 2);
 		index++;
 	    }
 	} else if (mState == PHRASE_MODE) {
