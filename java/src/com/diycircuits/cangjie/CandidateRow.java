@@ -23,6 +23,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private static int mLeftOffset = 0;
     private static int mTextWidth = 0;
     private static int mTextFontSpacing = 0;
+    private int pspacing = 0;
     private int mWidth = 100;
     private int mHeight = 64;
     private int mTotal = 0;
@@ -210,14 +211,28 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 
     private void calculateSpacingAndOffset() {
 	if (mState == PHRASE_MODE) {
-	    cspacing = mRect.width() / 2;
+	    int total = 0;
+
 	    mTextWidth = mRect.width();
-	
-	    mLeftOffset = (mTotal * (int) mTextWidth) + ((mTotal - 0) * cspacing);
-
-	    mLeftOffset = (mWidth - mLeftOffset) / 2;
-
 	    mTextFontSpacing = mFontRect.width() - (2 * mTextWidth);
+	    for (int count = 0; count < mTotal; count++) {
+		int len = mTable.getPhraseArray(mOffset + count, mPhrase);
+		total += len * mTextWidth + (len - 1) * mTextFontSpacing;
+		Log.i("Cangjie", "Len " + len + " " + total);
+	    }
+
+	    // cspacing = mRect.width() / 2;
+	
+	    // mLeftOffset = (mTotal * (int) mTextWidth) + ((mTotal - 0) * cspacing);
+
+	    // mLeftOffset = (mWidth - mLeftOffset) / 2;
+
+	    pspacing = (mWidth - total) / mTotal;
+	    Log.i("Cangjie", "Total " + total + " " + mTextWidth + " " + mTextFontSpacing + " " + mWidth + " " + pspacing);
+	    
+	    // mLeftOffset = (pspacing / 4);
+	    mLeftOffset = 0;
+
 	} else if (mState == CHARACTER_MODE) {
 	    mTextWidth = mRect.width();
 	    cspacing = (mWidth - mTextWidth / 2) / mTotal;
@@ -233,7 +248,10 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	super.onDraw(canvas);
 	if (canvas == null) return;
 	
-	if (cspacing == 0) calculateSpacingAndOffset();
+	if (mState == PHRASE_MODE && pspacing == 0)
+	    calculateSpacingAndOffset();
+	else if (mState == CHARACTER_MODE && cspacing == 0)
+	    calculateSpacingAndOffset();
 
 	canvas.save();
 	canvas.clipRect(0, 0, mWidth, mHeight);
@@ -282,21 +300,23 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		}
 	    } else if (mState == PHRASE_MODE) {
 		int count = 0;
-		int spacing = cspacing;
+		int spacing = (pspacing / 2);
 		int topOffset = (mRect.height() - mRect.bottom);
 		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
 
-		// Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal + " " + cspacing + " " + mOffset + " " + mTotal + " " + mTextWidth + " " + mTextFontSpacing);
+		// Log.i("Cangjie", "CandidateRow 0 " + mOffset + " " + mTotal + " " + pspacing + " " + mOffset + " " + mTotal + " " + mTextWidth + " " + mTextFontSpacing);
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		    mPaint.setColor(0xffeeeeee);
 		    canvas.drawText(mPhrase, 0, len, spacing, topOffset, mPaint);
-		    spacing += (cspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    spacing += (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
 		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);
-		    // mPaint.setColor(0xff888888);
-		    // canvas.drawLine(spacing, 5, spacing, mRect.bottom - 10, mPaint);
+		    if (count < (mTotal - 1)) {
+			mPaint.setColor(0xffcccccc);
+			canvas.drawLine(spacing, 5, spacing, getHeight() - 10, mPaint);
+		    }
 		    // canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
-		    spacing += (cspacing / 2);
+		    spacing += (pspacing / 2);
 		}
 	    }
 	}
