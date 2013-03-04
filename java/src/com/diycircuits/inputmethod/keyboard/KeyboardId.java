@@ -117,6 +117,8 @@ public final class KeyboardId {
                 id.mCustomActionLabel,
                 id.navigateNext(),
                 id.navigatePrevious(),
+		id.isCangjie(),
+		id.isPunctuationSwap(),
                 id.mSubtype
         });
     }
@@ -139,11 +141,21 @@ public final class KeyboardId {
                 && TextUtils.equals(other.mCustomActionLabel, mCustomActionLabel)
                 && other.navigateNext() == navigateNext()
                 && other.navigatePrevious() == navigatePrevious()
+                && other.isCangjie() == isCangjie()
+                && other.isPunctuationSwap() == isPunctuationSwap()
                 && other.mSubtype.equals(mSubtype);
     }
 
     public boolean isAlphabetKeyboard() {
         return mElementId < ELEMENT_SYMBOLS || (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK);
+    }
+
+    public boolean isCangjie() {
+	return (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK);	
+    }
+
+    public boolean isPunctuationSwap() {
+	return true;
     }
 
     public boolean navigateNext() {
