@@ -15,8 +15,8 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="41"
-        android:versionName="0.8.2.18"
+        android:versionCode="44"
+        android:versionName="0.8.2.20"
         package="com.diycircuits.inputmethod.latin">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
