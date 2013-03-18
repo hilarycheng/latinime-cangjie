@@ -369,12 +369,18 @@ public class CandidateSelect extends View implements Handler.Callback {
 	if (mState ==  CHARACTER_MODE) {
 	    for (int count = charOffset; count < total; count++) {
 		if (count == charOffset) {
+		    Log.i("Cangjie", "CandidateSelect 0 " + count + " " + charOffset + " " +
+			  left + " " + (int) textWidth + " " + spacing);
 		    if (select < (left + (int) textWidth + spacing)) {
 			c = mTable.getMatchChar(count);
 			idx = count;
+		    Log.i("Cangjie", "CandidateSelect 1 " + count + " " + charOffset + " " +
+			  left + " " + (int) textWidth + " " + spacing + " " + c + " " + idx);
 			break;
 		    }
 		} else if (select > left && select < (left + (int) textWidth + spacing)) {
+		    Log.i("Cangjie", "CandidateSelect 2 " + count + " " + charOffset + " " +
+			  left + " " + (int) textWidth + " " + spacing + " " + select + " " + left);
 		    c = mTable.getMatchChar(count);
 		    idx = count;
 		    break;
@@ -402,9 +408,15 @@ public class CandidateSelect extends View implements Handler.Callback {
 	    int start = 0, index = 0, end = 0, plen = 0;
 	    while (start < width && index < mTable.getPhraseCount()) {
 		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
+		Log.i("Cangjie", "CandidateSelect Phrase 0 " + start + " " + width + " " + index + " " + mTable.getPhraseCount() + " " +
+		      plen);
 		end = start + (int) (plen * textWidth) + (int) ((plen - 1) * textFontSpacing) + spacing;
+		Log.i("Cangjie", "CandidateSelect Phrase 1 " + x + " " + start + " " + end + " " + width + " " + index + " " + mTable.getPhraseCount() + " " +
+		      plen + " " + textWidth + " " + textFontSpacing);
 		if (x > start && x < end) {
 		    phrase = new String(mPhraseArray, 0, plen);
+		Log.i("Cangjie", "CandidateSelect Phrase 2 " + x + " " + start + " " + end + " " + width + " " + index + " " + mTable.getPhraseCount() + " " +
+		      plen + " " + textWidth + " " + textFontSpacing + " " + phrase);
 		    // Log.i("Cangjie", "Phrase On Touch " + phrase + " " + index);
 		    break;
 		}
