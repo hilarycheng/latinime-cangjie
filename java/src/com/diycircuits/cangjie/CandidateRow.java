@@ -131,17 +131,18 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    } else if (mState == PHRASE_MODE) {
 		int x = mLastX;
 
-		int start = (pspacing / 2), index = 0, count = 0, pos = -1, end;
+		// int start = (pspacing / 2), index = 0, count = 0, pos = -1, end;
+		int start = 0, index = 0, count = 0, pos = -1, end;
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
-		    end = start + (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
-		    if (count == 0) start = 0;
+		    end = start + pspacing + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    // if (count == 0) start = 0;
 		    // Log.i("Cangjie", "Candidate Row " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + x);
 		    if (x >= start && x < end) {
 			pos = count;
 			break;
 		    }
-		    start = end + (pspacing / 2);
+		    start = end;
 		}
 		if (pos >= 0) {
 		    // Log.i("Cangjie", "Candidate Row 0 " + pos);
@@ -167,21 +168,22 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    pos = 0;
 		}
 
-		Log.i("Cangjie", "CandidateRow onTouch C " + (int) event.getX() + " " + mLeftOffset + " " + mTextWidth + " " + cspacing + " " + pos);
+		// Log.i("Cangjie", "CandidateRow onTouch C " + (int) event.getX() + " " + mLeftOffset + " " + mTextWidth + " " + cspacing + " " + pos);
 
 		mSelectIndex = pos;
 	    } else if (mState == PHRASE_MODE) {
-		int start = (pspacing / 2), index = 0, count = 0, pos = -1, end;
+		int start = 0, index = 0, count = 0, pos = -1, end;
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
-		    end = start + (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
-		    if (count == 0) start = 0;
-		    Log.i("Cangjie", "Candidate onTouch P " + count + " " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + (int) event.getX() + " " + mTextFontSpacing + " " + len + " " + mTextWidth + " " + pspacing);
-		    if ((int) event.getX() >= start && (int) event.getX() < end) {
+		    end = start + pspacing + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
+		    // if (count == 0) start = 0;
+		    // Log.i("Cangjie", "Candidate onTouch P " + count + " " + start + " " + end + " " + len + " " + new String(mPhrase, 0, len) + " " + (int) event.getX() + " " + mTextFontSpacing + " " + len + " " + mTextWidth + " " + pspacing);
+		    // if ((int) event.getX() >= start && (int) event.getX() < end) {
+		    if ((int) event.getX() < end) {
 			pos = count;
 			break;
 		    }
-		    start = end + (pspacing / 2);
+		    start = end;
 		}
 		// Log.i("Cangjie", "CandidateRow onTouch P " + (int) event.getX() + " " + mLeftOffset + " " + mTextWidth + " " + cspacing + " " + pos);
 		// Log.i("Cangjie", "Candidate Row 0 " + pos);
@@ -221,7 +223,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    for (int count = 0; count < mTotal; count++) {
 		int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		total += len * mTextWidth + (len - 1) * mTextFontSpacing;
-		Log.i("Cangjie", "Len " + len + " " + total);
+		// Log.i("Cangjie", "Len " + len + " " + total);
 	    }
 
 	    // cspacing = mRect.width() / 2;
@@ -231,7 +233,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	    // mLeftOffset = (mWidth - mLeftOffset) / 2;
 
 	    pspacing = (mWidth - total) / mTotal;
-	    Log.i("Cangjie", "Total " + total + " " + mTextWidth + " " + mTextFontSpacing + " " + mWidth + " " + pspacing);
+	    // Log.i("Cangjie", "Total " + total + " " + mTextWidth + " " + mTextFontSpacing + " " + mWidth + " " + pspacing);
 	    
 	    // mLeftOffset = (pspacing / 4);
 	    mLeftOffset = 0;
