@@ -45,4 +45,7 @@
     <Element
         latin:elementName="quick"
         latin:elementKeyboard="@xml/kbd_quick" />
+    <Element
+        latin:elementName="fullsymbols"
+        latin:elementKeyboard="@xml/kbd_fullsymbols" />
 </KeyboardLayoutSet>

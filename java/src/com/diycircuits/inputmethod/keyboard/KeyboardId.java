@@ -56,6 +56,7 @@ public final class KeyboardId {
     public static final int ELEMENT_NUMBER = 9;
     public static final int ELEMENT_CANGJIE = 10;
     public static final int ELEMENT_QUICK = 11;
+    public static final int ELEMENT_FULLSYMBOLS = 12;
 
     public static final int FORM_FACTOR_PHONE = 0;
     public static final int FORM_FACTOR_TABLET7 = 1;
@@ -234,6 +235,7 @@ public final class KeyboardId {
         case ELEMENT_NUMBER: return "number";
         case ELEMENT_CANGJIE: return "cangjie";
         case ELEMENT_QUICK: return "quick";
+        case ELEMENT_FULLSYMBOLS: return "fullsymbols";
         default: return null;
         }
     }
