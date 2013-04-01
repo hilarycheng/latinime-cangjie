@@ -130,6 +130,15 @@ public class Cangjie implements CandidateListener {
 
 	mSelect.updatePhrase(mTable);
     }
+
+    public boolean isCode(int primaryCode) {
+	for (int count = 0; count < mCodeMap.length; count += 2) {
+	    if (mCodeMap[count] == primaryCode)
+		return true;
+	}
+
+	return false;
+    }
     
     public void characterSelected(char c, int idx) {
 	mTable.updateFrequency(c);
