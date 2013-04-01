@@ -57,6 +57,7 @@ public final class KeyboardIconsSet {
         "language_switch_english_key",  R.styleable.Keyboard_iconLanguageSwitchEnglishKey,
         "zwnj_key",                     R.styleable.Keyboard_iconZwnjKey,
         "zwj_key",                      R.styleable.Keyboard_iconZwjKey,
+        "cangjie_q",                    R.styleable.Keyboard_iconCangjieQ,
     };
 
     private static int NUM_ICONS = NAMES_AND_ATTR_IDS.length / 2;
