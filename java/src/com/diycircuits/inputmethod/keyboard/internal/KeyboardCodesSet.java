@@ -62,6 +62,7 @@ public final class KeyboardCodesSet {
         "key_right_square_bracket",
         "key_left_curly_bracket",
         "key_right_curly_bracket",
+        "key_fullsymbol",
     };
 
     private static final int CODE_LEFT_PARENTHESIS = '(';
@@ -97,6 +98,7 @@ public final class KeyboardCodesSet {
         CODE_RIGHT_SQUARE_BRACKET,
         CODE_LEFT_CURLY_BRACKET,
         CODE_RIGHT_CURLY_BRACKET,
+	Keyboard.CODE_FULLSYMBOLS,
     };
 
     private static final int[] RTL = {
