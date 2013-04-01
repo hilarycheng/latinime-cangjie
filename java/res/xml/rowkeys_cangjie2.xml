@@ -23,28 +23,38 @@
 >
     <Key
         latin:keyLabel="日"
-        latin:moreKeys="!text/more_keys_for_a" />
+        latin:keyHintLabel="（"
+        latin:additionalMoreKeys="（" />
     <Key
         latin:keyLabel="尸"
-        latin:moreKeys="!text/more_keys_for_s" />
+        latin:keyHintLabel="）"
+        latin:additionalMoreKeys="）" />
     <Key
         latin:keyLabel="木"
-        latin:moreKeys="!text/more_keys_for_d" />
+        latin:keyHintLabel="「"
+        latin:additionalMoreKeys="「" />
     <Key
-        latin:keyLabel="火" />
+        latin:keyLabel="火" 
+        latin:keyHintLabel="」"
+        latin:additionalMoreKeys="」" />
     <Key
         latin:keyLabel="土"
-        latin:moreKeys="!text/more_keys_for_g" />
+        latin:keyHintLabel="，"
+        latin:additionalMoreKeys="，" />
     <Key
         latin:keyLabel="竹"
-        latin:moreKeys="!text/more_keys_for_h" />
+        latin:keyHintLabel="、"
+        latin:additionalMoreKeys="、" />
     <Key
         latin:keyLabel="十"
-        latin:moreKeys="!text/more_keys_for_j" />
+        latin:keyHintLabel="。"
+        latin:additionalMoreKeys="。" />
     <Key
         latin:keyLabel="大"
-        latin:moreKeys="!text/more_keys_for_k" />
+        latin:keyHintLabel="！"
+        latin:additionalMoreKeys="！" />
     <Key
         latin:keyLabel="中"
-        latin:moreKeys="!text/more_keys_for_l" />
+        latin:keyHintLabel="："
+        latin:additionalMoreKeys="：" />
 </merge>

@@ -516,12 +516,12 @@ public final class KeyboardState {
                 }
                 mSwitchActions.startLongPressTimer(Keyboard.CODE_SHIFT);
             }
-	} else if (mIsCangjieMode) {
-	    Log.i("Cangjie", "KeyboardState CangjieMode Shift Pressed");
-	    mSwitchActions.setFullSymbolsKeyboard();
-	    mIsAlphabetMode = false;
-	    mIsSymbolShifted = false;
-	    mIsCangjieMode = false;
+	// } else if (mIsCangjieMode) {
+	//     Log.i("Cangjie", "KeyboardState CangjieMode Shift Pressed");
+	//     mSwitchActions.setFullSymbolsKeyboard();
+	//     mIsAlphabetMode = false;
+	//     mIsSymbolShifted = false;
+	//     mIsCangjieMode = false;
         } else {
             // In symbol mode, just toggle symbol and symbol more keyboard.
             toggleShiftInSymbols();
