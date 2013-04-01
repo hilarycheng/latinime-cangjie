@@ -160,6 +160,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 		holder = new CandidateHolder();
 		holder.row = (CandidateRow) row.findViewById(R.id.candidateRow);
+		holder.row.setPreferredHeight(height);
 		row.setTag(holder);
 	    } else {
 		holder = (CandidateHolder) row.getTag();

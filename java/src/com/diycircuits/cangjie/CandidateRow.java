@@ -26,6 +26,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     private int pspacing = 0;
     private int mWidth = 100;
     private int mHeight = 64;
+    private int mPreferredHeight = 64;
     private int mTotal = 0;
     private int mOffset = 0;
     private int mTopOffset = 0;
@@ -52,6 +53,10 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	setOnTouchListener(this);
     }
 
+    public void setPreferredHeight(int height) {
+	mPreferredHeight = height;
+    }
+    
     private synchronized void setupPaint() {
 	if (mPaint == null) {
 	    mPaint = new Paint();
@@ -206,7 +211,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 	int desireWidth = resolveSize(mWidth, widthMeasureSpec);
-	int desiredHeight = resolveSize(mHeight, heightMeasureSpec);
+	int desiredHeight = resolveSize(mPreferredHeight, heightMeasureSpec);
 
 	mWidth  = desireWidth;
 	mHeight = desiredHeight;
