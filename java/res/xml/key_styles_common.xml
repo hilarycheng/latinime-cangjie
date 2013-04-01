@@ -174,13 +174,6 @@
         latin:keyLabelFlags="preserveCase"
         latin:keyActionFlags="noKeyPreview"
         latin:backgroundType="functional" />
-    <!--
-    <key-style
-        latin:styleName="toFullSymbolsKeyStyle"
-        latin:code="!code/key_shift"
-        latin:keyLabel="!text/label_to_full_symbols_key"
-        latin:keyActionFlags="noKeyPreview"
-        latin:backgroundType="functional" /> -->
     <key-style
         latin:styleName="toMoreSymbolKeyStyle"
         latin:code="!code/key_shift"
@@ -193,91 +186,16 @@
         latin:keyLabel="!text/label_to_symbol_key"
         latin:keyActionFlags="noKeyPreview"
         latin:backgroundType="functional" />
-    <switch>
-      <case
-	latin:isPunctuationSwap="true"
-	latin:isCangjie="false"
-      >
-       <key-style
-         latin:styleName="punctuationKeyStyle"
-         latin:keyLabel="!text/keylabel_for_comma"
-         latin:keyLabelFlags="hasPopupHint"
-         latin:moreKeys="!text/more_keys_for_punctuation"
-         latin:backgroundType="functional" />
-      </case>
-      <case
-	latin:isPunctuationSwap="true"
-	latin:isCangjie="true"
-      >
-       <key-style
-         latin:styleName="punctuationKeyStyle"
-         latin:keyLabel="，"
-         latin:keyLabelFlags="hasPopupHint"
-         latin:moreKeys="!text/more_keys_for_punctuation"
-         latin:backgroundType="functional" />
-      </case>
-      <case
-	latin:isPunctuationSwap="false"
-	latin:isCangjie="true"
-      >
-       <key-style
-         latin:styleName="punctuationKeyStyle"
-         latin:keyLabel="。"
-         latin:keyLabelFlags="hasPopupHint"
-         latin:moreKeys="!text/more_keys_for_punctuation"
-         latin:backgroundType="functional" />
-      </case>
-      <default>
-       <key-style
-         latin:styleName="punctuationKeyStyle"
-         latin:keyLabel="."
-         latin:keyLabelFlags="hasPopupHint"
-         latin:moreKeys="!text/more_keys_for_punctuation"
-         latin:backgroundType="functional" />
-      </default>
-    </switch>
-    
-    <switch>
-      <case
-	latin:isPunctuationSwap="true"
-	latin:isCangjie="false"
-      >
-       <key-style
-         latin:styleName="commaKeyStyle"
-                latin:keyLabel="."
-                latin:keyLabelFlags="hasPopupHint"
-                latin:additionalMoreKeys="!text/more_keys_for_comma"
-                latin:parentStyle="f1MoreKeysStyle" />
-      </case>
-      <case
-	latin:isPunctuationSwap="true"
-	latin:isCangjie="true"
-      >
-       <key-style
-         latin:styleName="commaKeyStyle"
-                latin:keyLabel="。"
-                latin:keyLabelFlags="hasPopupHint"
-                latin:additionalMoreKeys="!text/more_keys_for_comma"
-                latin:parentStyle="f1MoreKeysStyle" />
-      </case>
-      <case
-	latin:isPunctuationSwap="false"
-	latin:isCangjie="true"
-      >
-       <key-style
-         latin:styleName="commaKeyStyle"
-                latin:keyLabel="，"
-                latin:keyLabelFlags="hasPopupHint"
-                latin:additionalMoreKeys="!text/more_keys_for_comma"
-                latin:parentStyle="f1MoreKeysStyle" />
-      </case>
-      <default>
-       <key-style
-         latin:styleName="commaKeyStyle"
-                latin:keyLabel="!text/keylabel_for_comma"
-                latin:keyLabelFlags="hasPopupHint"
-                latin:additionalMoreKeys="!text/more_keys_for_comma"
-                latin:parentStyle="f1MoreKeysStyle" />
-      </default>
-    </switch>
+    <key-style
+        latin:styleName="punctuationKeyStyle"
+        latin:keyLabel="."
+        latin:keyLabelFlags="hasPopupHint"
+        latin:moreKeys="!text/more_keys_for_punctuation"
+        latin:backgroundType="functional" />
+    <key-style
+        latin:styleName="toFullSymbolsKeyStyle"
+        latin:code="!code/key_shift"
+        latin:keyLabel="!text/label_to_full_symbols_key"
+        latin:keyActionFlags="noKeyPreview"
+        latin:backgroundType="functional" />
 </merge>

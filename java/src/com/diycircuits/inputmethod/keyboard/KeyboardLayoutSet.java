@@ -152,6 +152,7 @@ public final class KeyboardLayoutSet {
         try {
             return getKeyboard(elementParams, id);
         } catch (RuntimeException e) {
+	    e.printStackTrace();
             throw new KeyboardLayoutSetException(e, id);
         }
     }

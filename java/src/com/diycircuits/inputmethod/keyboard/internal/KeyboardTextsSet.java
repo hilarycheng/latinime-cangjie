@@ -98,6 +98,7 @@ public final class KeyboardTextsSet {
         // Other labels.
         "label_to_alpha_key",
         "label_to_symbol_key",
+        "label_to_full_symbols_key",
         "label_to_symbol_with_microphone_key",
         "label_pause_key",
         "label_wait_key",
