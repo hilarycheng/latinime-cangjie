@@ -63,6 +63,7 @@ public final class KeyboardCodesSet {
         "key_left_curly_bracket",
         "key_right_curly_bracket",
         "key_fullsymbol",
+        "key_cangjie_q",
     };
 
     private static final int CODE_LEFT_PARENTHESIS = '(';
