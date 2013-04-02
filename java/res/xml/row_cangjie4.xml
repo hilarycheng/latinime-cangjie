@@ -32,21 +32,8 @@
         <include
             latin:keyXPos="25%p"
             latin:keyboardLayout="@xml/key_cangjie_space" />
-        <switch>
-            <case
-                latin:languageCode="ar|fa"
-            >
-                <Key
-                    latin:keyHintLabel="!text/keyhintlabel_for_arabic_diacritics"
-                    latin:keyLabelFlags="hasPopupHint|hasShiftedLetterHint"
-                    latin:moreKeys="!text/more_keys_for_arabic_diacritics"
-                    latin:keyStyle="punctuationKeyStyle" />
-            </case>
-            <default>
-                <Key
-                    latin:keyStyle="punctuationKeyStyle" />
-            </default>
-        </switch>
+        <Key
+            latin:keyStyle="punctuationKeyStyle" />
         <Key
             latin:keyStyle="enterKeyStyle"
             latin:keyWidth="fillRight" />
