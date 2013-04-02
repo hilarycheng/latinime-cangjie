@@ -1500,6 +1500,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     // Cangjie Candidate Selected
     public void characterSelected(char c, int idx) {
+	// Log.i("Cangjie", "Character Selected 0 " + c + " " + idx);
 	String composer = mWordComposer.getTypedWord();
 	if (composer != null && composer.endsWith(mCangjie.getCangjieCode())) {
 	    composer = composer.substring(0, composer.length() - mCangjie.getCangjieCode().length());
@@ -1507,12 +1508,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    composer = "";
 	}
 	composer = composer + c;
-	mConnection.setComposingText("", 1);
+	// mConnection.setComposingText("", 1);
         mConnection.beginBatchEdit();
 	// mConnection.setComposingText(composer, 1);
 	// sendKeyCodePoint(c);
 	mConnection.commitText(composer, 1);
         mConnection.endBatchEdit();
+	// Log.i("Cangjie", "Character Selected 1 " + c + " " + idx + " " + composer);
 	resetComposingState(true);
 	// mSpaceState = SPACE_STATE_PHANTOM;
 	mEnteredText = null;
@@ -1527,7 +1529,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    composer = "";
 	}
 	composer = composer + phrase;
-	mConnection.setComposingText("", 1);
+	// mConnection.setComposingText("", 1);
         mConnection.beginBatchEdit();
 	// mConnection.setComposingText(composer, 1);
 	// sendKeyCodePoint(c);
