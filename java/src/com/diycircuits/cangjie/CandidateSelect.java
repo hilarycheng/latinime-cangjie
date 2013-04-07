@@ -342,15 +342,17 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 	    paint.setColor(0xff282828);
 	    canvas.drawRect(0, 0, width, height - 0, paint);
-	    paint.setColor(0xff33B5E5);
 
 	    while (start < width && index < mTable.getPhraseCount()) {
 		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
+		if (mTable.getPhraseFrequency(index) > 0)
+		    paint.setColor(0xffff9000);
+		else
+		    paint.setColor(0xff33B5E5);
 		canvas.drawText(mPhraseArray, 0, plen, start, topOffset, paint);
 		start += (plen * textWidth) + ((plen - 1) * textFontSpacing) + (spacing / 2);
 		paint.setColor(0xffcccccc);
 		canvas.drawLine(start, 5, start, height - 10, paint);
-		paint.setColor(0xff33B5E5);
 		start += (spacing / 2);
 		index++;
 	    }

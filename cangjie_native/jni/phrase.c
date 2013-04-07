@@ -134,7 +134,7 @@ void update_phrase_frequency(int index)
 {
   /* LOGE("Update Phrase Frequency : %d", index); */
   phrase_saved = 1;
-  phrase_freq[phrase_map[index - phrase_index]]++;
+  phrase_freq[phrase_map[index]]++;
 }
 
 void load_phrase(char *path)
@@ -186,3 +186,8 @@ void clear_phrase()
   memset(phrase_freq, 0, sizeof(phrase_freq));
 }
 
+jint get_phrase_frequency(int index)
+{
+  /* LOGE("Phrase Frequency : %d %d %d", index, phrase_map[index], phrase_freq[phrase_map[index]]); */
+  return phrase_freq[phrase_map[index]];
+}

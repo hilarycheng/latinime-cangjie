@@ -271,3 +271,8 @@ void Java_com_diycircuits_cangjie_TableLoader_updatePhraseFrequency(JNIEnv *env,
 {
   update_phrase_frequency(idx);
 }
+
+jint Java_com_diycircuits_cangjie_TableLoader_getPhraseFrequency(JNIEnv *env, jobject thiz, jint idx)
+{
+  return get_phrase_frequency(idx);
+}

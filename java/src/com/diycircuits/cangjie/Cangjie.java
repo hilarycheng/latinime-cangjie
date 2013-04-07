@@ -148,7 +148,7 @@ public class Cangjie implements CandidateListener {
     }
     
     public void phraseSelected(String phrase, int idx) {
-	if (idx > 0) mTable.updatePhraseFrequency(mTable.getPhraseIndex() + idx);
+	if (idx > 0) mTable.updatePhraseFrequency(idx);
 	if (mListener != null) mListener.phraseSelected(phrase, idx);
 	resetState();
 	updatePhrase(phrase.charAt(phrase.length() - 1));
