@@ -318,8 +318,10 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		for (count = 0; count < mTotal; count++) {
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		    int mapoffset = (mOffset + count) - mTable.getPhraseIndex();
-		    // Log.i("Cangjie", "CandidateRow " + mOffset + " " + count + " " + mapoffset);
-		    mPaint.setColor(0xffeeeeee);
+		    if (mTable.getPhraseFrequency(mOffset + count) > 0)
+			mPaint.setColor(0xffff9000);
+		    else
+			mPaint.setColor(0xffeeeeee);
 		    canvas.drawText(mPhrase, 0, len, spacing, topOffset, mPaint);
 		    spacing += (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
 		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);
