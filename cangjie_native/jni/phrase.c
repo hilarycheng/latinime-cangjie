@@ -134,7 +134,7 @@ void update_phrase_frequency(int index)
 {
   /* LOGE("Update Phrase Frequency : %d", index); */
   phrase_saved = 1;
-  phrase_freq[phrase_map[index]]++;
+  phrase_freq[phrase_map[index - phrase_index]]++;
 }
 
 void load_phrase(char *path)
@@ -149,11 +149,18 @@ void load_phrase(char *path)
   memset(key, 0, 8);
   strcpy(key, "PHRAS0");
 
-  FILE *file = fopen(path, "r");
+  /* LOGE("Load Phrase Path : %s", phrase_path); */
+  FILE *file = fopen(phrase_path, "r");
   if (file != 0) {
     int read = fread(buf, 1, sizeof(buf), file);
+    /* LOGE("Load Phrase0 : %d", read); */
+    /* LOGE("Load Phrase0-1 : %02X %02X %02X %02X %02X %02X %02X %02X ", */
+    /* 	 buf[0], buf[1], buf[2], buf[3],  */
+    /* 	 buf[4], buf[5], buf[6], buf[7] */
+    /* 	 ); */
     if (memcmp(buf, key, 8) == 0) {
       int read = fread(phrase_freq, 1, sizeof(phrase_freq), file);
+      /* LOGE("Load Phrase1 : %d %d", read, sizeof(phrase_freq)); */
       fclose(file);
       if (read == sizeof(phrase_freq)) clear = 0;
     }
@@ -169,7 +176,7 @@ void save_phrase()
   char key[8];
 
   if (phrase_saved == 0) return;
-  phrase_saved = 1;
+  phrase_saved = 0;
 
   memset(key, 0, 8);
   strcpy(key, "PHRAS0");
@@ -177,12 +184,14 @@ void save_phrase()
   if (file != NULL) {
     fwrite(key, 1, sizeof(key), file);
     fwrite(phrase_freq, 1, sizeof(phrase_freq), file);
+    /* LOGE("Save Phrase : %d", sizeof(phrase_freq)); */
     fclose(file);
   }
 }
 
 void clear_phrase()
 {
+  /* LOGE("Clear Phrase"); */
   memset(phrase_freq, 0, sizeof(phrase_freq));
 }
 

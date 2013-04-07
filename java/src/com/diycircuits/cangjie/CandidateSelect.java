@@ -436,7 +436,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		break;
 	    case MotionEvent.ACTION_UP:
 		if (listener != null && mSelectIndex == index && phrase != null) {
-		    listener.phraseSelected(phrase, index);
+		    listener.phraseSelected(phrase, index + mTable.getPhraseIndex());
 		}
 	    case MotionEvent.ACTION_CANCEL:
 		mSelectIndex = -1;
