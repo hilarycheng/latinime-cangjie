@@ -237,7 +237,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 		CandidateItem[] row = new CandidateItem[rowc];
 		mAdapter = new CandidateAdapter(context, R.layout.candidate, row, mTable, mPhraseRowOffset, mFontSize, topOffset);
 		// for (int count = 0; count < rowc + 1; count++) {
-		//     Log.i("Cangjie", "PhraseRowOffset " + mPhraseRowOffset[count]);
+		//     og.i("Cangjie", "PhraseRowOffset " + mPhraseRowOffset[count]);
 		// }
 	    }
 
@@ -345,7 +345,7 @@ public class CandidateSelect extends View implements Handler.Callback {
 
 	    while (start < width && index < mTable.getPhraseCount()) {
 		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
-		if (mTable.getPhraseFrequency(index) > 0)
+		if (mTable.getPhraseFrequency(mTable.getPhraseIndex() + index) > 0)
 		    paint.setColor(0xffff9000);
 		else
 		    paint.setColor(0xff33B5E5);

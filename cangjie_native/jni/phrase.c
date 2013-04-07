@@ -198,5 +198,5 @@ void clear_phrase()
 jint get_phrase_frequency(int index)
 {
   /* LOGE("Phrase Frequency : %d %d %d", index, phrase_map[index], phrase_freq[phrase_map[index]]); */
-  return phrase_freq[phrase_map[index]];
+  return phrase_freq[phrase_map[index - phrase_index]];
 }
