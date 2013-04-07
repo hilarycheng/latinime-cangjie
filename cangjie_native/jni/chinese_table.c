@@ -32,7 +32,9 @@ void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz,
 void Java_com_diycircuits_cangjie_TableLoader_initialize(JNIEnv* env, jobject thiz)
 {
   input_method[QUICK]->init(quick_data);  
-  input_method[CANGJIE]->init(quick_data);  
+  input_method[CANGJIE]->init(quick_data);
+  init_phrase();
+  load_phrase(quick_data);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_reset(JNIEnv* env, jobject thiz)
@@ -152,12 +154,14 @@ void Java_com_diycircuits_cangjie_TableLoader_saveMatch(JNIEnv* env, jobject thi
 {
   input_method[QUICK]->saveMatch();
   input_method[CANGJIE]->saveMatch();
+  save_phrase();
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_clearAllFrequency(JNIEnv *env, jobject thiz)
 {
   input_method[QUICK]->clearFrequency();
   input_method[CANGJIE]->clearFrequency();
+  clear_phrase();
 }
 
 jint Java_com_diycircuits_cangjie_TableLoader_searchPhrase(JNIEnv *env, jobject thiz, jchar ch)
@@ -261,4 +265,9 @@ jint Java_com_diycircuits_cangjie_TableLoader_measurePhraseRow(JNIEnv *env, jobj
   (*env)->ReleaseIntArrayElements(env, phraseRow, buf, 0);
 
   return row;
+}
+
+void Java_com_diycircuits_cangjie_TableLoader_updatePhraseFrequency(JNIEnv *env, jobject thiz, jint idx)
+{
+  update_phrase_frequency(idx);
 }
