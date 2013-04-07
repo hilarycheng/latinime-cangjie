@@ -1362,7 +1362,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     @Override
     public void onCodeInput(final int primaryCode, final int x, final int y) {
 
-	Log.i("Cangjie", "Code Input " + primaryCode);
+	// Log.i("Cangjie", "Code Input " + primaryCode);
         final long when = SystemClock.uptimeMillis();
         if (primaryCode != Keyboard.CODE_DELETE || when > mLastKeyTime + QUICK_PRESS) {
             mDeleteCount = 0;
