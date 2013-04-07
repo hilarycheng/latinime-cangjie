@@ -248,15 +248,18 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                 keyboardHeight = keyboardAttr.getDimension(
                         R.styleable.Keyboard_keyboardHeight, displayHeight / 2);
             }
-            final float maxKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                    R.styleable.Keyboard_maxKeyboardHeight, displayHeight, displayHeight / 2);
-            float minKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                    R.styleable.Keyboard_minKeyboardHeight, displayHeight, displayHeight / 2);
+            // final float maxKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
+            //         R.styleable.Keyboard_maxKeyboardHeight, displayHeight, displayHeight / 2);
+	    final float maxKeyboardHeight = (float) displayHeight * (float) 0.46;
+            // float minKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
+            //         R.styleable.Keyboard_minKeyboardHeight, displayHeight, displayHeight / 2);
+            float minKeyboardHeight = (float) displayHeight * (float) -0.618;
             if (minKeyboardHeight < 0) {
                 // Specified fraction was negative, so it should be calculated against display
                 // width.
-                minKeyboardHeight = -ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                        R.styleable.Keyboard_minKeyboardHeight, displayWidth, displayWidth / 2);
+                // minKeyboardHeight = -ResourceUtils.getDimensionOrFraction(keyboardAttr,
+                //         R.styleable.Keyboard_minKeyboardHeight, displayWidth, displayWidth / 2);
+                minKeyboardHeight = - (float) displayWidth * (float) -0.618;
             }
             final KeyboardParams params = mParams;
             // Keyboard height will not exceed maxKeyboardHeight and will not be less than
