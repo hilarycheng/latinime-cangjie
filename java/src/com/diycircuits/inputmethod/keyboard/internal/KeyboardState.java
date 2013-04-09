@@ -77,6 +77,8 @@ public final class KeyboardState {
     private static final int SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL = 3;
     private static final int SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE = 4;
     private static final int SWITCH_STATE_CANGJIE = 5;
+    private static final int SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL_CANGJIE = 6;
+    private static final int SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE_CANGJIE = 7;
     private int mSwitchState = SWITCH_STATE_ALPHA;
     private String mLayoutSwitchBackSymbols;
 
@@ -86,6 +88,7 @@ public final class KeyboardState {
     private boolean mPrevMainKeyboardWasShiftLocked;
     private boolean mPrevSymbolsKeyboardWasShifted;
     private boolean mIsCangjieMode;
+    private boolean mLastCangjieMode;
 
     // For handling long press.
     private boolean mLongPressShiftLockFired;
@@ -265,7 +268,11 @@ public final class KeyboardState {
             mPrevSymbolsKeyboardWasShifted = false;
         } else {
             mPrevSymbolsKeyboardWasShifted = mIsSymbolShifted;
-            setAlphabetKeyboard();
+	    if (mLastCangjieMode) {
+	     	setCangjieKeyboard();
+	    } else {
+		setAlphabetKeyboard();
+	    }
             if (mPrevMainKeyboardWasShiftLocked) {
                 setShiftLocked(true);
             }
@@ -415,9 +422,14 @@ public final class KeyboardState {
     }
 
     private void onPressSymbol() {
+	mLastCangjieMode = mIsCangjieMode;
+	// boolean isCangjie = mIsCangjieMode;
         toggleAlphabetAndSymbols();
         mSymbolKeyState.onPress();
-        mSwitchState = SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL;
+	// if (isCangjie)
+	//     mSwitchState = SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL_CANGJIE;
+	// else
+	    mSwitchState = SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL;
     }
 
     private void onReleaseSymbol(boolean withSliding) {
@@ -523,6 +535,7 @@ public final class KeyboardState {
 	//     mIsSymbolShifted = false;
 	//     mIsCangjieMode = false;
         } else {
+	    mLastCangjieMode = mIsCangjieMode;
             // In symbol mode, just toggle symbol and symbol more keyboard.
             toggleShiftInSymbols();
             mSwitchState = SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE;
@@ -574,7 +587,11 @@ public final class KeyboardState {
             // In symbol mode, switch back to the previous keyboard mode if the user chords the
             // shift key and another key, then releases the shift key.
             if (mShiftKeyState.isChording()) {
-                toggleShiftInSymbols();
+		if (mLastCangjieMode) {
+		    setCangjieKeyboard();
+		} else {
+		    toggleShiftInSymbols();
+		}
             }
         }
         mShiftKeyState.onRelease();
@@ -590,13 +607,18 @@ public final class KeyboardState {
                 toggleAlphabetAndSymbols();
             } else if (mSwitchState == SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE) {
                 toggleShiftInSymbols();
-            }
+            // } else if (mSwitchState == SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL_CANGJIE ||
+	    // 	       mSwitchState == SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE_CANGJIE) {
+	    // 	setCangjieKeyboard();
+	    }
         }
     }
 
     public boolean isInMomentarySwitchState() {
         return mSwitchState == SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL
-                || mSwitchState == SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE;
+                || mSwitchState == SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE
+	        || mSwitchState == SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL_CANGJIE
+                || mSwitchState == SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE_CANGJIE;
     }
 
     private static boolean isSpaceCharacter(int c) {
@@ -688,6 +710,8 @@ public final class KeyboardState {
         case SWITCH_STATE_SYMBOL: return "SYMBOL";
         case SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL: return "MOMENTARY-ALPHA-SYMBOL";
         case SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE: return "MOMENTARY-SYMBOL-MORE";
+        case SWITCH_STATE_MOMENTARY_ALPHA_AND_SYMBOL_CANGJIE: return "MOMENTARY-ALPHA-SYMBOL-CANGJIE";
+        case SWITCH_STATE_MOMENTARY_SYMBOL_AND_MORE_CANGJIE: return "MOMENTARY-SYMBOL-MORE-CANGJIE";
         default: return null;
         }
     }
