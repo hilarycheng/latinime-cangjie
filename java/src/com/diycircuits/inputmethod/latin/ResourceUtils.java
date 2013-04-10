@@ -20,6 +20,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.TypedValue;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -92,6 +93,7 @@ public final class ResourceUtils {
             return defValue;
         }
         if (isFractionValue(value)) {
+	    // Log.i("Cangjie", "Fraction Value " + value.getFraction(1, 1));
             return a.getFraction(index, base, base, defValue);
         } else if (isDimensionValue(value)) {
             return a.getDimension(index, defValue);
