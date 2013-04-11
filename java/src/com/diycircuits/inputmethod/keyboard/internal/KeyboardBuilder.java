@@ -26,6 +26,10 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
 import android.view.InflateException;
+import android.view.WindowManager;
+import android.view.Display;
+import android.graphics.Point;
+import android.content.res.Configuration;
 
 import com.diycircuits.inputmethod.keyboard.Key;
 import com.diycircuits.inputmethod.keyboard.Keyboard;
@@ -249,33 +253,48 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                         R.styleable.Keyboard_keyboardHeight, displayHeight / 2);
             }
 
-	    // Log.i("Cangjie", "Density0 " + mContext.getResources().getDisplayMetrics().density);
-	    // Log.i("Cangjie", "Density1 " + mContext.getResources().getDisplayMetrics().densityDpi);
-	    // Log.i("Cangjie", "Density2 " + mContext.getResources().getDisplayMetrics().scaledDensity);
-	    // Log.i("Cangjie", "Density3 " + mContext.getResources().getDisplayMetrics().widthPixels);
-	    // Log.i("Cangjie", "Density3 " + mContext.getResources().getDisplayMetrics().heightPixels);
-	    // Log.i("Cangjie", "Density4 " + mContext.getResources().getDisplayMetrics().xdpi);
-	    // Log.i("Cangjie", "Density5 " + mContext.getResources().getDisplayMetrics().ydpi);
-
-	    // Log.i("Cangjie", "Density6 " +
-	    // 	  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-	    // 				    mContext.getResources().getDisplayMetrics().widthPixels, mContext.getResources().getDisplayMetrics()));
-	    // Log.i("Cangjie", "Density7 " +
-	    // 	  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-	    // 				    mContext.getResources().getDisplayMetrics().heightPixels, mContext.getResources().getDisplayMetrics()));
 	    
-            final float maxKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                    R.styleable.Keyboard_maxKeyboardHeight, displayHeight, displayHeight / 2);
-	    // final float maxKeyboardHeight = (float) displayHeight * (float) 0.46;
-            float minKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                    R.styleable.Keyboard_minKeyboardHeight, displayHeight, displayHeight / 2);
-            // float minKeyboardHeight = (float) displayHeight * (float) -0.618;
+	    int orient = mContext.getResources().getConfiguration().orientation;
+	    int swdp   = mContext.getResources().getConfiguration().smallestScreenWidthDp;
+
+	    double maxKeyboardRatio = 1.0;
+	    double minKeyboardRatio = 1.0;
+	    if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
+		if (swdp >= 600 && swdp < 768) {
+		    minKeyboardRatio = 0.45;
+		    maxKeyboardRatio = 0.46;
+		} else if (swdp >= 768) {
+		    minKeyboardRatio = 0.45;
+		    maxKeyboardRatio = 0.46;
+		} else {
+		    minKeyboardRatio = 0.45;
+		    maxKeyboardRatio = 0.46;
+		}
+	    } else {
+		if (swdp >= 600 && swdp < 768) {
+		    minKeyboardRatio = -0.35;
+		    maxKeyboardRatio = 0.46;
+		} else if (swdp >= 768) {
+		    minKeyboardRatio = -0.35;
+		    maxKeyboardRatio = 0.46;
+		} else {
+		    minKeyboardRatio = -0.618;
+		    maxKeyboardRatio = 0.46;
+		}
+	    }
+
+            // final float maxKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
+            //         R.styleable.Keyboard_maxKeyboardHeight, displayHeight, displayHeight / 2);
+	    final float maxKeyboardHeight = (float) displayHeight * (float) maxKeyboardRatio;
+            // float minKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
+            //         R.styleable.Keyboard_minKeyboardHeight, displayHeight, displayHeight / 2);
+            float minKeyboardHeight = (float) displayHeight * (float) minKeyboardRatio;
             if (minKeyboardHeight < 0) {
                 // Specified fraction was negative, so it should be calculated against display
                 // width.
-                minKeyboardHeight = -ResourceUtils.getDimensionOrFraction(keyboardAttr,
-                        R.styleable.Keyboard_minKeyboardHeight, displayWidth, displayWidth / 2);
-                // minKeyboardHeight = - (float) displayWidth * (float) -0.618;
+                // minKeyboardHeight = -ResourceUtils.getDimensionOrFraction(keyboardAttr,
+                //         R.styleable.Keyboard_minKeyboardHeight, displayWidth, displayWidth / 2);
+                minKeyboardHeight = - (float) displayWidth * (float) minKeyboardRatio;
             }
             final KeyboardParams params = mParams;
             // Keyboard height will not exceed maxKeyboardHeight and will not be less than
