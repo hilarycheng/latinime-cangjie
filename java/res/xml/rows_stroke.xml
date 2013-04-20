@@ -27,13 +27,13 @@
         latin:keyWidth="10%p"
     >
         <include
-            latin:keyboardLayout="@xml/rowkeys_fullsymbols1" />
+            latin:keyboardLayout="@xml/rowkeys_stroke1" />
     </Row>
     <Row
         latin:keyWidth="10%p"
     >
         <include
-            latin:keyboardLayout="@xml/rowkeys_fullsymbols2"
+            latin:keyboardLayout="@xml/rowkeys_stroke2"
             latin:keyXPos="5%p" />
     </Row>
     <Row
@@ -44,12 +44,12 @@
             latin:keyWidth="15%p"
             latin:visualInsetsRight="1%p" />
         <include
-            latin:keyboardLayout="@xml/rowkeys_fullsymbols3" />
+            latin:keyboardLayout="@xml/rowkeys_stroke3" />
         <Key
             latin:keyStyle="deleteKeyStyle"
             latin:keyWidth="fillRight"
             latin:visualInsetsLeft="1%p" />
     </Row>
     <include
-        latin:keyboardLayout="@xml/row_fullsymbols4" />
+        latin:keyboardLayout="@xml/row_cangjie4" />
 </merge>

@@ -132,6 +132,11 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isCode(int primaryCode) {
+	if (isCangjieEnglishKey()) {
+	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
+		return true;
+	    }
+	}
 	for (int count = 0; count < mCodeMap.length; count += 2) {
 	    if (mCodeMap[count] == primaryCode)
 		return true;
@@ -205,8 +210,13 @@ public class Cangjie implements CandidateListener {
 	    ex.printStackTrace();
 	}
     }
-    
+
     private char convertPrimaryCode(int primaryCode) {
+	if (isCangjieEnglishKey()) {
+	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
+		return (char) (primaryCode | 0x20);
+	    }
+	}
 	for (int count = 0; count < mCodeMap.length; count += 2) {
 	    if (mCodeMap[count] == primaryCode)
 		return mCodeMap[count + 1];
@@ -223,11 +233,20 @@ public class Cangjie implements CandidateListener {
 		output[i] = 0;
 		continue;
 	    }
-	    for (int count = 0; count < mCodeMap.length; count += 2) {
-		if (mCodeMap[count] == key[i]) {
-		    output[i] = mCodeMap[count + 1];
+	    if (isCangjieEnglishKey()) {
+		if (key[i] >= 'A' && key[i] <= 'Z') {
+		    output[i] = (char) (key[i] | 0x20);
 		    changed = true;
-		    break;
+		    continue;
+		}
+	    }
+	    if (!changed) {
+		for (int count = 0; count < mCodeMap.length; count += 2) {
+		    if (mCodeMap[count] == key[i]) {
+			output[i] = mCodeMap[count + 1];
+			changed = true;
+			break;
+		    }
 		}
 	    }
 	    if (!changed) output[i] = 0;
@@ -237,7 +256,7 @@ public class Cangjie implements CandidateListener {
     public boolean handleCharacter(ProximityInfo proximity, int x, int y, int primaryCode) {
 	if (mCodeCount >= mTable.getMaxKey()) return false;
 	char code = convertPrimaryCode(primaryCode);
-	
+
 	if (mCodeCount == 0 && code == '*') return false;
 
 	int i = 1;
@@ -250,8 +269,12 @@ public class Cangjie implements CandidateListener {
 	nearestKey[0] = (char) primaryCode;
 	if (primaryCode != 65290) {
 	    for (int c = 0; c < keys.length; c++) {
-		if (keys[c].mCode > 255 && m < nearestKey.length &&
-		    keys[c].mCode != primaryCode && keys[c].mCode != 65290) nearestKey[m++] = (char) keys[c].mCode;
+		if (isCangjieEnglishKey() && m < nearestKey.length && keys[c].mCode != primaryCode) {
+		    if (keys[c].mCode != 65290) nearestKey[m++] = (char) keys[c].mCode;
+		} else {
+		    if (keys[c].mCode > 255 && m < nearestKey.length &&
+			keys[c].mCode != primaryCode && keys[c].mCode != 65290) nearestKey[m++] = (char) keys[c].mCode;
+		}
 	    }
 	}
 	convertPrimaryCodeNearest(nearestKey, mCodeInputNearest[mCodeCount]);
@@ -293,6 +316,10 @@ public class Cangjie implements CandidateListener {
 
     public String getCangjieCode() {
 	return mCangjieCode.toString();
+    }
+
+    private boolean isCangjieEnglishKey() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_english_key", false);
     }
     
     private boolean matchCangjie() {

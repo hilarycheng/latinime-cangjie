@@ -48,7 +48,7 @@ public final class KeyboardState {
         public void setSymbolsKeyboard();
         public void setSymbolsShiftedKeyboard();
         public void setCangjieKeyboard();
-	public void setFullSymbolsKeyboard();
+	public void setStrokeKeyboard();
 
         /**
          * Request to call back {@link KeyboardState#onUpdateShiftState(int)}.
