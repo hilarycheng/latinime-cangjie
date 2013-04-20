@@ -21,22 +21,12 @@
 <merge
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
+
     <Key
-        latin:keyLabel="（" />
+        latin:keyLabel="丶" />
     <Key
-        latin:keyLabel="）" />
+        latin:keyLabel="乛" />
     <Key
-        latin:keyLabel="「" />
-    <Key
-        latin:keyLabel="」" />
-    <Key
-        latin:keyLabel="，" />
-    <Key
-        latin:keyLabel="、" />
-    <Key
-        latin:keyLabel="。" />
-    <Key
-        latin:keyLabel="！" />
-    <Key
-        latin:keyLabel="：" />
+        latin:keyLabel="＊" />
+
 </merge>

@@ -273,23 +273,34 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS));
     }
 
+    private boolean isCangjieEnglishKey() {
+	return PreferenceManager.getDefaultSharedPreferences(mThemeContext).getBoolean("cangjie_english_key", false);
+    }
+
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
     public void setCangjieKeyboard() {
 	mIsCangjieMode = true;
 	String value = PreferenceManager.getDefaultSharedPreferences(mThemeContext).getString("cangjie_mode", "0");
 	if (value.compareTo("1") == 0) {
-	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK));
+	    if (isCangjieEnglishKey()) 
+		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_ENGLISH));
+	    else
+		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK));
 	} else {
-	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+	    if (isCangjieEnglishKey()) 
+		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_ENGLISH));
+	    else
+		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
 	}
+	// setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
     @Override
-    public void setFullSymbolsKeyboard() {
+    public void setStrokeKeyboard() {
 	mIsCangjieMode = false;
-	setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_FULLSYMBOLS));
+	setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
     }
 
     // Implements {@link KeyboardState.SwitchActions}.

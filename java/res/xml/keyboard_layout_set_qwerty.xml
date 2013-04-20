@@ -52,6 +52,6 @@
         latin:elementName="quick_english"
         latin:elementKeyboard="@xml/kbd_quick_english" />
     <Element
-        latin:elementName="fullsymbols"
-        latin:elementKeyboard="@xml/kbd_fullsymbols" />
+        latin:elementName="stroke"
+        latin:elementKeyboard="@xml/kbd_stroke" />
 </KeyboardLayoutSet>

@@ -19,19 +19,27 @@
 -->
 
 <merge
-    xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin">
+    xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
+>
     <Key
-        latin:keyLabel="；" />
+        latin:keyLabel="1" />
     <Key
-        latin:keyLabel="…" />
+        latin:keyLabel="2" />
     <Key
-        latin:keyLabel="『" />
+        latin:keyLabel="3" />
     <Key
-        latin:keyLabel="』" />
+        latin:keyLabel="4" />
     <Key
-        latin:keyLabel="“" />
+        latin:keyLabel="5" />
     <Key
-        latin:keyLabel="”" />
+        latin:keyLabel="6" />
     <Key
-        latin:keyLabel="｜" />
+        latin:keyLabel="7" />
+    <Key
+        latin:keyLabel="8" />
+    <Key
+        latin:keyLabel="9" />
+    <Key
+        latin:keyLabel="0" />
+
 </merge>

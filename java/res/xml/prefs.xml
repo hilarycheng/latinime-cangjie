@@ -36,6 +36,11 @@
     	    android:defaultValue="0"
 	    android:entries="@array/listArray"
 	    android:entryValues="@array/listValues" />
+	<CheckBoxPreference
+            android:key="cangjie_english_key"
+            android:title="@string/prefs_cangjie_english_key"
+	    android:defaultValue="false"
+            android:persistent="true"/>
         <CheckBoxPreference
             android:key="cangjie_autocorrection_mode"
             android:title="@string/cangjie_autocorrection_mode"
@@ -75,6 +80,18 @@
             android:entryValues="@array/voice_input_modes_values"
             android:entries="@array/voice_input_modes"
             android:defaultValue="@string/voice_mode_main" />
+	<!--
+	<com.diycircuits.widgets.SeekBarPreference
+            android:key="speechRate"
+            android:title="Speech speed"
+            android:summary="Adjust reading speed"
+            android:defaultValue="80"
+            android:max="200"
+            robobunny:min="1"
+            robobunny:unitsLeft=""
+            robobunny:unitsRight="%"
+            />
+	-->
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/correction_category"
