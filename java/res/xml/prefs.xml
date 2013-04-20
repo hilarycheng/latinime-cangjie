@@ -80,18 +80,19 @@
             android:entryValues="@array/voice_input_modes_values"
             android:entries="@array/voice_input_modes"
             android:defaultValue="@string/voice_mode_main" />
-	<!--
-	<com.diycircuits.widgets.SeekBarPreference
-            android:key="speechRate"
-            android:title="Speech speed"
-            android:summary="Adjust reading speed"
-            android:defaultValue="80"
-            android:max="200"
-            robobunny:min="1"
-            robobunny:unitsLeft=""
-            robobunny:unitsRight="%"
-            />
-	-->
+
+        <com.diycircuits.widgets.SeekBarPreference
+            android:defaultValue="618"
+            android:key="portrait_height"
+            android:max="999"
+            android:title="@string/prefs_keyboard_portrait_height" />
+
+        <com.diycircuits.widgets.SeekBarPreference
+            android:defaultValue="460"
+            android:key="landscape_height"
+            android:max="999"
+            android:title="@string/prefs_keyboard_landscape_height" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/correction_category"

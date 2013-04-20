@@ -17,6 +17,9 @@
 package com.diycircuits.inputmethod.keyboard.internal;
 
 import android.content.Context;
+
+
+
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
@@ -30,6 +33,7 @@ import android.view.WindowManager;
 import android.view.Display;
 import android.graphics.Point;
 import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 
 import com.diycircuits.inputmethod.keyboard.Key;
 import com.diycircuits.inputmethod.keyboard.Keyboard;
@@ -259,7 +263,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
 
 	    double maxKeyboardRatio = 1.0;
 	    double minKeyboardRatio = 1.0;
-	    if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
+	    if (orient == Configuration.ORIENTATION_LANDSCAPE) {
 		if (swdp >= 600 && swdp < 768) {
 		    minKeyboardRatio = 0.45;
 		    maxKeyboardRatio = 0.46;
@@ -283,6 +287,23 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
 		}
 	    }
 
+	    if (orient == Configuration.ORIENTATION_LANDSCAPE) {
+		maxKeyboardRatio = 0.8;
+		minKeyboardRatio = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("landscape_height", (int) (minKeyboardRatio * 1000));
+		minKeyboardRatio = (double) minKeyboardRatio / (double) 1000;
+	    } else {
+		minKeyboardRatio = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("portrait_height", (int) (minKeyboardRatio * 1000));
+		if (swdp >= 600 && swdp < 768) {
+		    maxKeyboardRatio = 0.8;
+		    minKeyboardRatio = (double) minKeyboardRatio / (double) 1000;
+		} else if (swdp >= 768) {
+		    maxKeyboardRatio = 0.8;
+		    minKeyboardRatio = (double) minKeyboardRatio / (double) 1000;
+		} else {
+		    maxKeyboardRatio = 0.8;
+		    minKeyboardRatio = (double) -minKeyboardRatio / (double) 1000;
+		}
+	    }
             // final float maxKeyboardHeight = ResourceUtils.getDimensionOrFraction(keyboardAttr,
             //         R.styleable.Keyboard_maxKeyboardHeight, displayHeight, displayHeight / 2);
 	    final float maxKeyboardHeight = (float) displayHeight * (float) maxKeyboardRatio;
@@ -296,11 +317,15 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                 //         R.styleable.Keyboard_minKeyboardHeight, displayWidth, displayWidth / 2);
                 minKeyboardHeight = - (float) displayWidth * (float) minKeyboardRatio;
             }
+
             final KeyboardParams params = mParams;
             // Keyboard height will not exceed maxKeyboardHeight and will not be less than
             // minKeyboardHeight.
             params.mOccupiedHeight = (int)Math.max(
                     Math.min(keyboardHeight, maxKeyboardHeight), minKeyboardHeight);
+
+	    // Log.i("Cangjie", "Builder " + minKeyboardRatio + " " + maxKeyboardRatio + " " + minKeyboardHeight + " " + maxKeyboardHeight + " " + keyboardHeight + " " + params.mOccupiedHeight);
+
             params.mOccupiedWidth = params.mId.mWidth;
             params.mTopPadding = (int)ResourceUtils.getDimensionOrFraction(keyboardAttr,
                     R.styleable.Keyboard_keyboardTopPadding, params.mOccupiedHeight, 0);
