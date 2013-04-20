@@ -27,6 +27,8 @@
     <string name="prefs_cangjie_english_key">倉頡速成英文鍵</string>
     <string name="prefs_clear_often_used_title">清洗常用字記錄</string>
     <string name="prefs_clear_often_used_summary">如果常用字有問題，請按這個選項，下次鍵盤開啟時，將會重設．</string>
+    <string name="prefs_keyboard_portrait_height">鍵盤直向高度 (總螢幕高度百份比)</string>
+    <string name="prefs_keyboard_landscape_height">鍵盤撗向高度 (總螢幕高度百份比)</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->

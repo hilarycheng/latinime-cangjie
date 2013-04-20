@@ -47,6 +47,8 @@ import com.diycircuits.inputmethod.latin.SubtypeLocale;
 import com.diycircuits.inputmethod.latin.SubtypeSwitcher;
 import com.diycircuits.inputmethod.latin.XmlParseUtils;
 
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -158,6 +160,20 @@ public final class KeyboardLayoutSet {
     }
 
     private Keyboard getKeyboard(final ElementParams elementParams, final KeyboardId id) {
+	// int changed = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("keyboard_height_change", 0);
+	// PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("keyboard_height_change", 0);
+	// PreferenceManager.getDefaultSharedPreferences(mContext).edit().commit();
+	
+	SharedPreferences shared = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE);
+	int changed = shared.getInt("keyboard_height_change", 0);
+
+	if (changed == 1) {
+	    SharedPreferences.Editor edit = shared.edit();
+	    edit.putInt("keyboard_height_change", 0);
+	    edit.commit();
+	    clearKeyboardCache();
+	}
+	
         final SoftReference<Keyboard> ref = sKeyboardCache.get(id);
         Keyboard keyboard = (ref == null) ? null : ref.get();
         if (keyboard == null) {
