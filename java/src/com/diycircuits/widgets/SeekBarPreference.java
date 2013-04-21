@@ -7,10 +7,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.*;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.CheckBox;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.content.res.Configuration;
@@ -18,7 +20,7 @@ import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import com.diycircuits.inputmethod.latin.R;
 
-public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
+public class SeekBarPreference extends Preference implements OnSeekBarChangeListener, View.OnClickListener {
    
     private final String TAG = getClass().getName();
    
@@ -30,9 +32,12 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     private int mMinValue      = 300;
     private int mInterval      = 1;
     private int mCurrentValue;
+    private int mDefaultValue  = 0;
+    private boolean mDefaultChecked = true;
     
     private SeekBar mSeekBar;
     private TextView mStatusText;
+    private CheckBox mDefault;
     private Context mContext = null;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
@@ -55,11 +60,36 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     private void initPreference(Context context, AttributeSet attrs) {
         // setValuesFromXml(attrs);
+	
+	mDefaultValue = attrs.getAttributeIntValue(ANDROIDNS, "defaultValue", 0);
+	boolean checked = true;
+	if (mDefaultValue == 460) 
+	    checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("landscape_height_default", true);
+	else
+	    checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("portrait_height_default", true);
+
+	mDefaultChecked = checked;
+
+	Log.i("Cangjie", " Init Preference Default " + mDefaultValue + " " + checked);
+ 
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
         mSeekBar.setOnSeekBarChangeListener(this);
     }
-   
+
+    public void onClick(View v) {
+	SharedPreferences.Editor edit = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).edit();
+	if (mDefaultValue == 460) 
+	    edit.putBoolean("landscape_height_default", mDefault.isChecked());
+	else
+	    edit.putBoolean("portrait_height_default", mDefault.isChecked());	
+	edit.commit();
+
+	mDefaultChecked = mDefault.isChecked();
+	mStatusText.setEnabled(!mDefaultChecked);
+	mSeekBar.setEnabled(!mDefaultChecked);
+    }
+
     // private void setValuesFromXml(AttributeSet attrs) {
     //     mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
     //     mMinValue = attrs.getAttributeIntValue(FLATWORLDNS, "min", 0);
@@ -85,7 +115,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
        
         try {
             LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            layout = (LinearLayout)mInflater.inflate(R.layout.seek_bar_preference, parent, false);
+            layout = (LinearLayout) mInflater.inflate(R.layout.seek_bar_preference, parent, false);
         } catch(Exception e) {
             Log.e(TAG, "Error creating seek bar preference", e);
         }
@@ -133,13 +163,19 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
      */
     protected void updateView(View view) {
         try {
-            LinearLayout layout = (LinearLayout)view;
+            LinearLayout layout = (LinearLayout) view;
 
-            mStatusText = (TextView)layout.findViewById(R.id.seekBarPrefValue);
+            mStatusText = (TextView) layout.findViewById(R.id.seekBarPrefValue);
             mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
             mStatusText.setMinimumWidth(30);
-           
+            mDefault    = (CheckBox) layout.findViewById(R.id.seekBarDefault);
+	    mDefault.setChecked(mDefaultChecked);
+	    mDefault.setOnClickListener(this);
+
             mSeekBar.setProgress(mCurrentValue - mMinValue);
+
+	    mStatusText.setEnabled(!mDefaultChecked);
+	    mSeekBar.setEnabled(!mDefaultChecked);
         } catch(Exception e) {
             Log.e(TAG, "Error updating seek bar preference", e);
         }
@@ -189,7 +225,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	int swdp   = getContext().getResources().getConfiguration().smallestScreenWidthDp;
 
 	int defaultValue = ta.getInt(index, DEFAULT_VALUE);
-	
+
 	if (defaultValue == 460) {
 	    if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
 		if (swdp >= 600 && swdp < 768) {
