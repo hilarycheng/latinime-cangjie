@@ -70,7 +70,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 	mDefaultChecked = checked;
 
-	Log.i("Cangjie", " Init Preference Default " + mDefaultValue + " " + checked);
+	// Log.i("Cangjie", " Init Preference Default " + mDefaultValue + " " + checked);
  
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
@@ -83,6 +83,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	    edit.putBoolean("landscape_height_default", mDefault.isChecked());
 	else
 	    edit.putBoolean("portrait_height_default", mDefault.isChecked());	
+	edit.putInt("keyboard_height_change", 1);
 	edit.commit();
 
 	mDefaultChecked = mDefault.isChecked();
@@ -269,7 +270,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-	Log.i("Cangjie", "on Set Initial Value " + defaultValue);
+	// Log.i("Cangjie", "on Set Initial Value " + defaultValue);
         if (restoreValue) {
             mCurrentValue = getPersistedInt(mCurrentValue);
         } else {
