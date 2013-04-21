@@ -289,12 +289,14 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
 
 	    boolean useDefault = true;
 	    if (orient == Configuration.ORIENTATION_LANDSCAPE) {
-		useDefault = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("landscape_height_default", true);
+		useDefault = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("landscape_height_default", true);
+		// Log.i("Cangjie", "Landscape Use Default " + useDefault);
 		maxKeyboardRatio = 0.8;
 		minKeyboardRatio = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("landscape_height", (int) (minKeyboardRatio * 1000));
 		minKeyboardRatio = (double) minKeyboardRatio / (double) 1000;
 	    } else {
-		useDefault = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("portrait_height_default", true);
+		// Log.i("Cangjie", "Portrait Use Default " + useDefault);
+		useDefault = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("portrait_height_default", true);
 		minKeyboardRatio = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("portrait_height", (int) (minKeyboardRatio * 1000));
 		if (swdp >= 600 && swdp < 768) {
 		    maxKeyboardRatio = 0.8;
