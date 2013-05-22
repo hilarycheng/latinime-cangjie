@@ -22,23 +22,43 @@
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
     <Key
-        latin:keyLabel="Q" />
+        latin:keyLabel="Q" 
+        latin:keyHintLabel="1"
+        latin:additionalMoreKeys="1" />
     <Key
-        latin:keyLabel="W" />
+        latin:keyLabel="W" 
+        latin:keyHintLabel="2"
+        latin:additionalMoreKeys="2" />
     <Key
-        latin:keyLabel="E" />
+        latin:keyLabel="E"
+        latin:keyHintLabel="3"
+        latin:additionalMoreKeys="3" />
     <Key
-        latin:keyLabel="R" />
+        latin:keyLabel="R"
+        latin:keyHintLabel="4"
+        latin:additionalMoreKeys="4" />
     <Key
-        latin:keyLabel="T" />
+        latin:keyLabel="T"
+        latin:keyHintLabel="5"
+        latin:additionalMoreKeys="5" />
     <Key
-        latin:keyLabel="Y" />
+        latin:keyLabel="Y"
+        latin:keyHintLabel="6"
+        latin:additionalMoreKeys="6" />
     <Key
-        latin:keyLabel="U" />
+        latin:keyLabel="U" 
+        latin:keyHintLabel="7"
+        latin:additionalMoreKeys="7" />
     <Key
-        latin:keyLabel="I" />
+        latin:keyLabel="I"
+        latin:keyHintLabel="8"
+        latin:additionalMoreKeys="8" />
     <Key
-        latin:keyLabel="O" />
+        latin:keyLabel="O" 
+        latin:keyHintLabel="9"
+        latin:additionalMoreKeys="9" />
     <Key
-        latin:keyLabel="P" />
+        latin:keyLabel="P" 
+        latin:keyHintLabel="0"
+        latin:additionalMoreKeys="0" />
 </merge>
