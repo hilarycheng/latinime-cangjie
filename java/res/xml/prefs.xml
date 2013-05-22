@@ -63,11 +63,19 @@
             android:title="@string/vibrate_on_keypress"
             android:defaultValue="@bool/config_default_vibration_enabled"
             android:persistent="true" />
+	<PreferenceScreen
+            android:key="pref_vibration_duration_settings"
+            android:title="@string/prefs_keypress_vibration_duration_settings"
+            android:summary="5ms"/>
         <CheckBoxPreference
             android:key="sound_on"
             android:title="@string/sound_on_keypress"
             android:defaultValue="@bool/config_default_sound_enabled"
             android:persistent="true" />
+	<PreferenceScreen
+            android:key="pref_keypress_sound_volume"
+            android:title="@string/prefs_keypress_sound_volume_settings"
+            android:summary="50"/>
         <CheckBoxPreference
             android:key="popup_on"
             android:title="@string/popup_on_keypress"
