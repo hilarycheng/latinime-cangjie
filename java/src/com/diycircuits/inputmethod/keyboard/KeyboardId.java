@@ -59,6 +59,10 @@ public final class KeyboardId {
     public static final int ELEMENT_QUICK = 12;
     public static final int ELEMENT_QUICK_ENGLISH = 13;
     public static final int ELEMENT_STROKE = 14;
+    public static final int ELEMENT_CANGJIE_NORMAL = 15;
+    public static final int ELEMENT_CANGJIE_ENGLISH_NORMAL = 16;
+    public static final int ELEMENT_QUICK_NORMAL = 17;
+    public static final int ELEMENT_QUICK_ENGLISH_NORMAL = 18;
 
     public static final int FORM_FACTOR_PHONE = 0;
     public static final int FORM_FACTOR_TABLET7 = 1;
@@ -150,7 +154,11 @@ public final class KeyboardId {
     }
 
     public boolean isAlphabetKeyboard() {
-        return mElementId < ELEMENT_SYMBOLS || (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK || mElementId == ELEMENT_CANGJIE_ENGLISH || mElementId == ELEMENT_QUICK_ENGLISH);
+        return mElementId < ELEMENT_SYMBOLS ||
+	    (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK ||
+	     mElementId == ELEMENT_CANGJIE_ENGLISH || mElementId == ELEMENT_QUICK_ENGLISH ||
+	     mElementId == ELEMENT_CANGJIE_ENGLISH_NORMAL || mElementId == ELEMENT_QUICK_ENGLISH_NORMAL ||
+	     mElementId == ELEMENT_CANGJIE_NORMAL || mElementId == ELEMENT_QUICK_NORMAL);
     }
 
     public boolean isCangjie() {
@@ -252,6 +260,10 @@ public final class KeyboardId {
         case ELEMENT_QUICK: return "quick";
         case ELEMENT_QUICK_ENGLISH: return "quick_english";
         case ELEMENT_STROKE: return "stroke";
+        case ELEMENT_CANGJIE_NORMAL: return "cangjie_normal";
+        case ELEMENT_CANGJIE_ENGLISH_NORMAL: return "cangjie_english_normal";
+        case ELEMENT_QUICK_NORMAL: return "quick_normal";
+        case ELEMENT_QUICK_ENGLISH_NORMAL: return "quick_english_normal";
         default: return null;
         }
     }

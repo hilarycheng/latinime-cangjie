@@ -47,11 +47,23 @@
         latin:elementKeyboard="@xml/kbd_cangjie_english" />
     <Element
         latin:elementName="quick"
-        latin:elementKeyboard="@xml/kbd_quick" />
+        latin:elementKeyboard="@xml/kbd_cangjie" />
     <Element
         latin:elementName="quick_english"
-        latin:elementKeyboard="@xml/kbd_quick_english" />
+        latin:elementKeyboard="@xml/kbd_cangjie_english" />
     <Element
         latin:elementName="stroke"
         latin:elementKeyboard="@xml/kbd_stroke" />
+    <Element
+        latin:elementName="cangjie_normal"
+        latin:elementKeyboard="@xml/kbd_cangjie_normal" />
+    <Element
+        latin:elementName="cangjie_english_normal"
+        latin:elementKeyboard="@xml/kbd_cangjie_english_normal" />
+    <Element
+        latin:elementName="quick_normal"
+        latin:elementKeyboard="@xml/kbd_cangjie_normal" />
+    <Element
+        latin:elementName="quick_english_normal"
+        latin:elementKeyboard="@xml/kbd_cangjie_english_normal" />
 </KeyboardLayoutSet>

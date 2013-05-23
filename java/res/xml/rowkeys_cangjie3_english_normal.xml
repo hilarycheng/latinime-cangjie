@@ -22,42 +22,42 @@
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin">
     <switch>
         <case
-            latin:keyboardLayoutSetElement="cangjie_english">
+            latin:keyboardLayoutSetElement="cangjie_english_normal">
 	  <Key
               latin:keyLabel="＊"
-              latin:keyHintLabel="；"
-              latin:additionalMoreKeys="；" />
+              latin:keyHintLabel="("
+              latin:additionalMoreKeys="(" />
 	</case>
         <case
-            latin:keyboardLayoutSetElement="quick_english">
+            latin:keyboardLayoutSetElement="quick_english_normal">
 	  <Key
               latin:keyLabel="Z"
-              latin:keyHintLabel="；"
-              latin:additionalMoreKeys="；" />
+              latin:keyHintLabel="("
+              latin:additionalMoreKeys="(" />
 	</case>
     </switch>
     <Key
         latin:keyLabel="X" 
-        latin:keyHintLabel="，"
-        latin:additionalMoreKeys="，" />
+        latin:keyHintLabel=")"
+        latin:additionalMoreKeys=")" />
     <Key
         latin:keyLabel="C" 
-        latin:keyHintLabel="『"
-        latin:additionalMoreKeys="『" />
+        latin:keyHintLabel="&quot;"
+        latin:additionalMoreKeys="&quot;" />
     <Key
         latin:keyLabel="V" 
-        latin:keyHintLabel="』"
-        latin:additionalMoreKeys="』" />
+        latin:keyHintLabel="\'"
+        latin:additionalMoreKeys="\'" />
     <Key
         latin:keyLabel="B" 
-        latin:keyHintLabel="”"
-        latin:additionalMoreKeys="”" />
+        latin:keyHintLabel=":"
+        latin:additionalMoreKeys=":" />
     <Key
         latin:keyLabel="N" 
-        latin:keyHintLabel="；"
-        latin:additionalMoreKeys="；" />
+        latin:keyHintLabel=";"
+        latin:additionalMoreKeys=";" />
     <Key
         latin:keyLabel="M"
-        latin:keyHintLabel="。"
-        latin:additionalMoreKeys="。" />
+        latin:keyHintLabel="/"
+        latin:additionalMoreKeys="/" />
 </merge>

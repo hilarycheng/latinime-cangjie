@@ -22,5 +22,5 @@
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
     <include
-        latin:keyboardLayout="@xml/rows_cangjie" />
+        latin:keyboardLayout="@xml/rows_cangjie_english_normal" />
 </Keyboard>
