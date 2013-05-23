@@ -381,6 +381,10 @@
             <enum name="quick" value="12"  />
             <enum name="quick_english" value="13"  />
             <enum name="stroke" value="14"  />
+            <enum name="cangjie_normal" value="15"  />
+            <enum name="cangjie_english_normal" value="16"  />
+            <enum name="quick_normal" value="17"  />
+            <enum name="quick_english_normal" value="18"  />
         </attr>
         <!-- This should be aligned with KeyboardId.MODE_* -->
         <attr name="mode" format="enum|string">
@@ -440,6 +444,10 @@
             <enum name="quick" value="12"  />
             <enum name="quick_english" value="13"  />
             <enum name="stroke" value="14"  />
+            <enum name="cangjie_normal" value="15"  />
+            <enum name="cangjie_english_normal" value="16"  />
+            <enum name="quick_normal" value="17"  />
+            <enum name="quick_english_normal" value="18"  />
         </attr>
         <attr name="elementKeyboard" format="reference"/>
         <!-- Enable proximity characters correction. Disabled by default. -->

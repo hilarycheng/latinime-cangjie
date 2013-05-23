@@ -59,6 +59,11 @@
             android:persistent="true"
             android:defaultValue="true" />
         <CheckBoxPreference
+            android:key="fullsymbol_chinesekeyboard"
+            android:title="@string/fullsymbol_chinesekeyboard"
+            android:defaultValue="true"
+            android:persistent="true" />
+        <CheckBoxPreference
             android:key="vibrate_on"
             android:title="@string/vibrate_on_keypress"
             android:defaultValue="@bool/config_default_vibration_enabled"

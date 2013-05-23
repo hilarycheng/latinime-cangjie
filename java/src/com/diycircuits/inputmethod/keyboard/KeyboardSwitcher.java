@@ -273,6 +273,10 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS));
     }
 
+    private boolean isFullSymbol() {
+	return PreferenceManager.getDefaultSharedPreferences(mThemeContext).getBoolean("fullsymbol_chinesekeyboard", false);
+    }
+
     private boolean isCangjieEnglishKey() {
 	return PreferenceManager.getDefaultSharedPreferences(mThemeContext).getBoolean("cangjie_english_key", false);
     }
@@ -283,15 +287,29 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 	mIsCangjieMode = true;
 	String value = PreferenceManager.getDefaultSharedPreferences(mThemeContext).getString("cangjie_mode", "0");
 	if (value.compareTo("1") == 0) {
-	    if (isCangjieEnglishKey()) 
-		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_ENGLISH));
-	    else
-		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK));
+	    if (isFullSymbol()) {
+		if (isCangjieEnglishKey()) 
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_ENGLISH));
+		else
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK));
+	    } else {
+		if (isCangjieEnglishKey()) 
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_ENGLISH_NORMAL));
+		else
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_NORMAL));
+	    }
 	} else {
-	    if (isCangjieEnglishKey()) 
-		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_ENGLISH));
-	    else
-		setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+	    if (isFullSymbol()) {
+		if (isCangjieEnglishKey()) 
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_ENGLISH));
+		else
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE));
+	    } else {
+		if (isCangjieEnglishKey()) 
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_ENGLISH_NORMAL));
+		else
+		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_NORMAL));
+	    }
 	}
 	// setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
     }

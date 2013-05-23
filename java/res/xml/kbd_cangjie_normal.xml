@@ -2,7 +2,7 @@
 <!--
 /*
 **
-** Copyright 2012, The Android Open Source Project
+** Copyright 2008, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -18,21 +18,9 @@
 */
 -->
 
-<merge
+<Keyboard
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
-    <Key
-        latin:keyLabel="重" />
-    <Key
-        latin:keyLabel="難" />
-    <Key
-        latin:keyLabel="金" />
-    <Key
-        latin:keyLabel="女" />
-    <Key
-        latin:keyLabel="月" />
-    <Key
-        latin:keyLabel="弓" />
-    <Key
-        latin:keyLabel="一" />
-</merge>
+    <include
+        latin:keyboardLayout="@xml/rows_cangjie_normal" />
+</Keyboard>

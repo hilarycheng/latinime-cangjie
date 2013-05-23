@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+**
+** Copyright 2012, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<merge
+    xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
+>
+    <Key
+        latin:keyLabel="A"
+        latin:keyHintLabel="\@"
+        latin:additionalMoreKeys="\@" />
+    <Key
+        latin:keyLabel="S"
+        latin:keyHintLabel="#"
+        latin:additionalMoreKeys="#" />
+    <Key
+        latin:keyLabel="D"
+        latin:keyHintLabel="$"
+        latin:additionalMoreKeys="$" />
+    <Key
+        latin:keyLabel="F" 
+        latin:keyHintLabel="%"
+        latin:additionalMoreKeys="%" />
+    <Key
+        latin:keyLabel="G" 
+        latin:keyHintLabel="&amp;"
+        latin:additionalMoreKeys="&amp;" />
+    <Key
+        latin:keyLabel="H"
+        latin:keyHintLabel="*"
+        latin:additionalMoreKeys="*" />
+    <Key
+        latin:keyLabel="J"
+        latin:keyHintLabel="-"
+        latin:additionalMoreKeys="-" />
+    <Key
+        latin:keyLabel="K" 
+        latin:keyHintLabel="+"
+        latin:additionalMoreKeys="+" />
+    <Key
+        latin:keyLabel="L" 
+        latin:keyHintLabel="!"
+        latin:additionalMoreKeys="!" />
+</merge>
