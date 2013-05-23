@@ -58,6 +58,6 @@
         latin:additionalMoreKeys="；" />
     <Key
         latin:keyLabel="一" 
-        latin:keyHintLabel="。"
-        latin:additionalMoreKeys="。" />
+        latin:keyHintLabel="？"
+        latin:additionalMoreKeys="？" />
 </merge>
