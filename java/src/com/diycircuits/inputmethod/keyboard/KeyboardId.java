@@ -154,7 +154,8 @@ public final class KeyboardId {
 	    (mElementId == ELEMENT_CANGJIE || mElementId == ELEMENT_QUICK ||
 	     mElementId == ELEMENT_CANGJIE_ENGLISH || mElementId == ELEMENT_QUICK_ENGLISH ||
 	     mElementId == ELEMENT_CANGJIE_ENGLISH_NORMAL || mElementId == ELEMENT_QUICK_ENGLISH_NORMAL ||
-	     mElementId == ELEMENT_CANGJIE_NORMAL || mElementId == ELEMENT_QUICK_NORMAL);
+	     mElementId == ELEMENT_CANGJIE_NORMAL || mElementId == ELEMENT_QUICK_NORMAL ||
+	     mElementId == ELEMENT_STROKE);
     }
 
     public boolean navigateNext() {

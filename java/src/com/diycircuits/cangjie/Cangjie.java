@@ -21,14 +21,14 @@ public class Cangjie implements CandidateListener {
     public final static int STROKE  = 2;
 
     private Context mContext = null;
-    private char mCodeInput[] = new char[5];
-    private char mCodeInputNearest[][] = new char[5][6];
+    private char mCodeInput[] = new char[64];
+    private char mCodeInputNearest[][] = new char[64][6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
     // private char mMatchChar[] = new char[21529];
     private char mPhrase[] = new char[256];
     private int  mTotalMatch = 0;
-    // private int  mMode = CANGJIE;
+    private int  mMode = CANGJIE;
     private TableLoader mTable = new TableLoader();
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
@@ -133,6 +133,19 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isCode(int primaryCode) {
+	if (mMode == STROKE) {
+	    if ((char) primaryCode == '一' ||
+		(char) primaryCode == '丨' ||
+		(char) primaryCode == '丿' ||
+		(char) primaryCode == '丶' ||
+		(char) primaryCode == '乛' ||
+		(char) primaryCode == '＊') {
+		return true;
+	    }
+
+	    return false;
+	}
+
 	if (isCangjieEnglishKey()) {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return true;
@@ -177,19 +190,19 @@ public class Cangjie implements CandidateListener {
 	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
 	if (value.compareTo("1") == 0) {
 	    mTable.setInputMethod(TableLoader.QUICK);
-	    // mMode = QUICK;
+	    mMode = QUICK;
 	} else if (value.compareTo("3") == 0) {
 	    mTable.setInputMethod(TableLoader.STROKE);
 	    mTable.enableHongKongChar(true);
-	    // mMode = STROKE;
+	    mMode = STROKE;
 	} else if (value.compareTo("2") == 0) {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(true);
-	    // mMode = CANGJIE;
+	    mMode = CANGJIE;
 	} else {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(false);
-	    // mMode = CANGJIE;
+	    mMode = CANGJIE;
 	}
     }
     
@@ -217,6 +230,20 @@ public class Cangjie implements CandidateListener {
     }
 
     private char convertPrimaryCode(int primaryCode) {
+	if (mMode == STROKE) {
+	    if ((char) primaryCode == '一')
+		return '1';
+	    if ((char) primaryCode == '丨')
+		return '2';
+	    if ((char) primaryCode == '丿')
+		return '3';
+	    if ((char) primaryCode == '丶')
+		return '4';
+	    if ((char) primaryCode == '乛')
+		return '5';
+	    if ((char) primaryCode == '＊')
+		return '*';
+	}
 	if (isCangjieEnglishKey()) {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return (char) (primaryCode | 0x20);
@@ -331,7 +358,11 @@ public class Cangjie implements CandidateListener {
 	boolean autocorrection = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_autocorrection_mode", false);
 	boolean res;
 
-
+	if (mMode == STROKE) {
+	    mTable.searchWord(mCodeInput, mCodeCount + 1);
+	    return true;
+	}
+	
 	if (autocorrection) {
 	    res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	} else {
