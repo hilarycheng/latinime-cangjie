@@ -25,6 +25,7 @@ public class TableLoader {
     public native int  updateFrequency(char ch);
     public native void enableHongKongChar(boolean hk);
     public native void setInputMethod(int im);
+    public native void searchWord(char[] key, int len);
     public native void searchCangjie(char index0, char index1, char index2, char index3, char index4);
     public native void searchCangjieMore(char[] index0, char[] index1, char[] index2, char[] index3, char[] index4);
     public native boolean tryMatchCangjie(char index0, char index1, char index2, char index3, char index4);

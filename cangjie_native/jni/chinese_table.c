@@ -16,6 +16,7 @@ char data_path[1024] = "0";
 char quick_data[1024] = "0";
 char cangjie_data[1024] = "0";
 char cangjie_hk_data[1024] = "0";
+jchar keyStorage[64];
 
 void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz, jbyteArray path)
 {
@@ -113,6 +114,17 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjie(JNIEnv* env, j
   return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4);
 }
  
+void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject thiz, jcharArray key, jint len)
+{
+  memset(keyStorage, 0, sizeof(keyStorage));
+  (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
+
+  if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
+    input_method[mCurrentIm]->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
+  else if (mCurrentIm == STROKE)
+    input_method[mCurrentIm]->searchWordArray(keyStorage, len);
+}
+
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
 {
   jchar key0array[6];

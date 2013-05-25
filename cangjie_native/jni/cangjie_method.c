@@ -480,6 +480,7 @@ struct _input_method cangjie_func =
   .maxKey          = cangjie_maxKey,
   .searchWord      = cangjie_searchWord,
   .searchWordMore  = cangjie_searchWordMore,
+  .searchWordArray = 0,
   .tryMatchWord    = cangjie_tryMatchWord,
   .tryMatchWordMore = cangjie_tryMatchWordMore,
   .enableHongKongChar = cangjie_enableHongKongChar,

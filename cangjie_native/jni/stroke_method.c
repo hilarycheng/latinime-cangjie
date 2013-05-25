@@ -12,6 +12,8 @@
 
 void stroke_init(char *path)
 {
+  stroke_func.mTotalMatch = 0;
+  
   /*
   int clear = 1;
   int count = 0;
@@ -48,7 +50,7 @@ void stroke_init(char *path)
 
 int stroke_maxKey(void)
 {
-  return 2;
+  return 51;
 }
 
 void stroke_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
@@ -111,6 +113,11 @@ void stroke_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, j
   /*
   stroke_searchWord(key0[0], key1[0], key2[0], key3[0], key4[0]);
   */
+}
+
+void stroke_searchWordArray(jchar *key, int len)
+{
+  LOGE("Stroke Word Array %d", len);
 }
 
 int stroke_totalMatch(void)
@@ -234,6 +241,7 @@ struct _input_method stroke_func =
   .maxKey          = stroke_maxKey,
   .searchWord      = stroke_searchWord,
   .searchWordMore  = stroke_searchWordMore,
+  .searchWordArray = stroke_searchWordArray,
   .tryMatchWord    = stroke_tryMatchWord,
   .tryMatchWordMore = stroke_tryMatchWordMore,
   .enableHongKongChar = stroke_enableHongKongChar,

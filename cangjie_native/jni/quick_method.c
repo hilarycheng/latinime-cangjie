@@ -213,6 +213,7 @@ struct _input_method quick_func =
   .maxKey          = quick_maxKey,
   .searchWord      = quick_searchWord,
   .searchWordMore  = quick_searchWordMore,
+  .searchWordArray = 0,
   .tryMatchWord    = quick_tryMatchWord,
   .tryMatchWordMore = quick_tryMatchWordMore,
   .enableHongKongChar = quick_enableHongKongChar,
