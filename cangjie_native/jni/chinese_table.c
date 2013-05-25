@@ -34,6 +34,7 @@ void Java_com_diycircuits_cangjie_TableLoader_initialize(JNIEnv* env, jobject th
 {
   input_method[QUICK]->init(quick_data);  
   input_method[CANGJIE]->init(quick_data);
+  input_method[STROKE]->init(quick_data);
   init_phrase();
   load_phrase(quick_data);
 }
@@ -42,6 +43,7 @@ void Java_com_diycircuits_cangjie_TableLoader_reset(JNIEnv* env, jobject thiz)
 {
   input_method[QUICK]->reset();
   input_method[CANGJIE]->reset();
+  input_method[STROKE]->reset();
 }
  
 jchar Java_com_diycircuits_cangjie_TableLoader_getChar(JNIEnv* env, jobject thiz)
