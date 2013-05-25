@@ -2088,7 +2088,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
         final SuggestedWords suggestedWords = getSuggestedWords(Suggest.SESSION_TYPING);
         final String typedWord = mWordComposer.getTypedWord();
-        showSuggestionStrip(suggestedWords, typedWord);
+	if (!isCangjieMode()) showSuggestionStrip(suggestedWords, typedWord);
     }
 
     private SuggestedWords getSuggestedWords(final int sessionId) {
