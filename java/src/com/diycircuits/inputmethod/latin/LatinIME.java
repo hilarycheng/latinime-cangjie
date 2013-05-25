@@ -1432,7 +1432,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         default:
             mSpaceState = SPACE_STATE_NONE;
             if (mCurrentSettings.isWordSeparator(primaryCode)) {
-		if (mCangjie.hasMatch() && primaryCode == 32) { // Send Key for White Space
+		if (isCangjieMode() && mCangjie.hasMatch() && primaryCode == 32) { // Send Key for White Space
 		     mCangjie.sendFirstCharacter();
 		} else {
 		    didAutoCorrect = handleSeparator(primaryCode, x, y, spaceState);
