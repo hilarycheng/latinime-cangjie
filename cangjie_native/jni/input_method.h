@@ -21,6 +21,7 @@ struct _input_method {
   void  (*searchWordArray)(jchar* c0, int len);
   jboolean (*tryMatchWord)(jchar c0, jchar c1, jchar c2, jchar c3, jchar c4);
   jboolean (*tryMatchWordMore)(jchar* c0, jchar* c1, jchar* c2, jchar* c3, jchar* c4);
+  jboolean (*tryMatchWordArray)(jchar *c0, int len);
   void  (*enableHongKongChar)(jboolean hk);
   int   (*totalMatch)(void);
   int   (*updateFrequency)(jchar c0);
