@@ -13067,5 +13067,15 @@ int num;
  { "5554334", 28797, 7 },
  { "555454", 24033, 6 },
 };
+struct STROKE_MAP {
+int index;
+int count;
+} stroke_map[5] = {
+{ 0, 4026 },
+{ 4026, 2414 },
+{ 6440, 2916 },
+{ 9356, 2571 },
+{ 11927, 1136 },
+};
 #define STROKE_MAXKEY 51
 #define STROKE_TOTAL 13063
