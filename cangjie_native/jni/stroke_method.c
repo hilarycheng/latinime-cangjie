@@ -121,14 +121,18 @@ void stroke_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, j
 void stroke_searchWordArray(jchar *key, int len)
 {
   int index = 0, count;
-  LOGE("Stroke Word Array %d %c %c %c %c", len, key[0], key[1], key[2], key[3]);
   for (count = 0; count < len; count++) stroke_char[count] = key[count];
-  for (count = 0; count < STROKE_TOTAL; count++) {
+
+  int start = stroke_map[key[0] - '1'].index;
+  int end   = stroke_map[key[0] - '1'].count + start;
+  
+  for (count = start; count < end; count++) {
     if (memcmp(stroke[count].stroke, stroke_char, len) == 0) {
       stroke_index[index++] = count;
     }
   }
-  LOGE("Stroke Total Match %d", index);
+
+  stroke_func.mTotalMatch = count;
 }
 
 int stroke_totalMatch(void)
@@ -195,7 +199,7 @@ jchar stroke_getMatchChar(int index)
   return stroke[stroke_index[index]][2];
   */
 
-  return 0;
+  return stroke[stroke_index[index]].ch;
 }
 
 jint stroke_getFrequency(int index)
