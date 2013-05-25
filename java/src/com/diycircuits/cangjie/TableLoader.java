@@ -15,6 +15,7 @@ public class TableLoader {
 
     public final static int QUICK   = 0;
     public final static int CANGJIE = 1;
+    public final static int STROKE  = 2;
 
     public native void setPath(byte[] path);
     public native void initialize();

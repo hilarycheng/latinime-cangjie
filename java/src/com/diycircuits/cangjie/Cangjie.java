@@ -18,6 +18,7 @@ public class Cangjie implements CandidateListener {
 
     public final static int QUICK   = 0;
     public final static int CANGJIE = 1;
+    public final static int STROKE  = 2;
 
     private Context mContext = null;
     private char mCodeInput[] = new char[5];
@@ -27,7 +28,7 @@ public class Cangjie implements CandidateListener {
     // private char mMatchChar[] = new char[21529];
     private char mPhrase[] = new char[256];
     private int  mTotalMatch = 0;
-    private int  mMode = CANGJIE;
+    // private int  mMode = CANGJIE;
     private TableLoader mTable = new TableLoader();
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
@@ -176,15 +177,19 @@ public class Cangjie implements CandidateListener {
 	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
 	if (value.compareTo("1") == 0) {
 	    mTable.setInputMethod(TableLoader.QUICK);
-	    mMode = QUICK;
+	    // mMode = QUICK;
+	} else if (value.compareTo("3") == 0) {
+	    mTable.setInputMethod(TableLoader.STROKE);
+	    mTable.enableHongKongChar(true);
+	    // mMode = STROKE;
 	} else if (value.compareTo("2") == 0) {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(true);
-	    mMode = CANGJIE;
+	    // mMode = CANGJIE;
 	} else {
 	    mTable.setInputMethod(TableLoader.CANGJIE);
 	    mTable.enableHongKongChar(false);
-	    mMode = CANGJIE;
+	    // mMode = CANGJIE;
 	}
     }
     
