@@ -314,12 +314,14 @@ public class Cangjie implements CandidateListener {
 	//     Log.i("Cangjie", "Code Count " + (int) mCodeInputNearest[mCodeCount][count]);
 	// }
 	mCodeInput[mCodeCount] = code;
-
+	mCodeCount++;
 	if (matchCangjie()) {
 	    mCangjieCode.append((char) primaryCode);
-	    mCodeCount++;
+	    // Log.i("Cangjie", "Match Cangjie " + mCodeCount);
 	    return true;
 	}
+
+	mCodeCount--;
 	mCodeInput[mCodeCount] = 0;
 	for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++)
 	    mCodeInputNearest[mCodeCount][count] = 0;
@@ -332,6 +334,7 @@ public class Cangjie implements CandidateListener {
 
 	mCodeCount--;
 	mCodeInput[mCodeCount] = 0;
+	// Log.i("Cangjie", "Delete Last Code Cangjie " + mCodeCount);
 	for (int count = 0; count < mCodeInputNearest[mCodeCount].length; count++)
 	    mCodeInputNearest[mCodeCount][count] = 0;
 	if (mCangjieCode.length() > 0) {
@@ -359,8 +362,20 @@ public class Cangjie implements CandidateListener {
 	boolean res;
 
 	if (mMode == STROKE) {
-	    if (mTable.trySearchWord(mCodeInput, mCodeCount + 1)) {
-		mTable.searchWord(mCodeInput, mCodeCount + 1);
+           // StringBuffer sb = new StringBuffer();
+           // for (int count = 0; count < 64; count++) {
+           //  if (mCodeInput[count] >= '1' && mCodeInput[count] <= '5') {
+           //      sb.append(mCodeInput[count]);
+           //      sb.append(' ');
+           //  } else {
+           //      sb.append('0');
+           //      sb.append(' ');
+           //  }
+           // }
+           // Log.i("Cangjie", "Stroke Input " + sb.toString());
+
+	    if (mTable.trySearchWord(mCodeInput, mCodeCount)) {
+		mTable.searchWord(mCodeInput, mCodeCount);
 		mSelect.updateTable(mTable);
 		return true;
 	    }

@@ -130,6 +130,7 @@ void stroke_searchWordArray(jchar *key, int len)
 
 jboolean stroke_tryMatchWordArray(jchar *key, int len)
 {
+  /* LOGE("Try Match Word : %d %d", key[0] - '1', len); */
   int index = 0, count;
   for (count = 0; count < len; count++) stroke_char[count] = key[count];
 
