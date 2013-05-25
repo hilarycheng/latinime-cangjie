@@ -359,6 +359,17 @@ public class Cangjie implements CandidateListener {
 	boolean res;
 
 	if (mMode == STROKE) {
+	    StringBuffer sb = new StringBuffer();
+	    for (int count = 0; count < 64; count++) {
+		if (mCodeInput[count] >= '1' && mCodeInput[count] <= '5') {
+		    sb.append(mCodeInput[count]);
+		    sb.append(' ');
+		} else {
+		    sb.append('0');
+		    sb.append(' ');
+		}
+	    }
+	    Log.i("Cangjie", "Stroke Input " + sb.toString());
 	    mTable.searchWord(mCodeInput, mCodeCount + 1);
 	    return true;
 	}

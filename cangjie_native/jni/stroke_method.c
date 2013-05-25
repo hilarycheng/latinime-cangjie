@@ -10,6 +10,9 @@
 #define  LOGE(...)
 #endif
 
+char stroke_char[STROKE_MAXKEY + 1];
+int stroke_index[STROKE_TOTAL];
+
 void stroke_init(char *path)
 {
   stroke_func.mTotalMatch = 0;
@@ -117,7 +120,15 @@ void stroke_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, j
 
 void stroke_searchWordArray(jchar *key, int len)
 {
-  LOGE("Stroke Word Array %d", len);
+  int index = 0, count;
+  LOGE("Stroke Word Array %d %c %c %c %c", len, key[0], key[1], key[2], key[3]);
+  for (count = 0; count < len; count++) stroke_char[count] = key[count];
+  for (count = 0; count < STROKE_TOTAL; count++) {
+    if (memcmp(stroke[count].stroke, stroke_char, len) == 0) {
+      stroke_index[index++] = count;
+    }
+  }
+  LOGE("Stroke Total Match %d", index);
 }
 
 int stroke_totalMatch(void)
