@@ -8,8 +8,9 @@
 #endif
 
 typedef enum {
-  QUICK = 0,
+  QUICK   = 0,
   CANGJIE = 1,
+  STROKE  = 2
 } INPUT_METHOD;
 
 struct _input_method {
@@ -34,6 +35,6 @@ struct _input_method {
   jboolean mEnableHK;
 };
 
-extern struct _input_method *input_method[3];
+extern struct _input_method *input_method[4];
 
 #endif

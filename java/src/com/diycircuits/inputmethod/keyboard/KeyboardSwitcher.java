@@ -298,6 +298,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 		else
 		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_NORMAL));
 	    }
+	} else if (value.compareTo("3") == 0) {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
 	} else {
 	    if (isFullSymbol()) {
 		if (isCangjieEnglishKey()) 

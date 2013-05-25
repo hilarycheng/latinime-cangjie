@@ -22,10 +22,14 @@
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
     <Key
+        latin:keyXPos="15%p"
+        latin:keyWidth="22%p"
         latin:keyLabel="一" />
     <Key
+        latin:keyWidth="22%p"
         latin:keyLabel="丨" />
     <Key
+        latin:keyWidth="22%p"
         latin:keyLabel="丿" />
 
 </merge>

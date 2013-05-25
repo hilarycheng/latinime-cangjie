@@ -23,10 +23,13 @@
 >
 
     <Key
+        latin:keyWidth="22%p"
         latin:keyLabel="丶" />
     <Key
+        latin:keyWidth="22%p"
         latin:keyLabel="乛" />
     <Key
+        latin:keyWidth="22%p"
         latin:keyLabel="＊" />
 
 </merge>

@@ -23,22 +23,16 @@
 >
     <include
         latin:keyboardLayout="@xml/key_styles_common" />
-    <Row
-        latin:keyWidth="10%p"
-    >
+    <Row>
         <include
             latin:keyboardLayout="@xml/rowkeys_stroke1" />
     </Row>
-    <Row
-        latin:keyWidth="10%p"
-    >
+    <Row>
         <include
             latin:keyboardLayout="@xml/rowkeys_stroke2"
             latin:keyXPos="5%p" />
     </Row>
-    <Row
-        latin:keyWidth="10%p"
-    >
+    <Row>
         <Key
             latin:keyStyle="toMoreSymbolKeyStyle"
             latin:keyWidth="15%p"
