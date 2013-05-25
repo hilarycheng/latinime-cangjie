@@ -483,6 +483,7 @@ struct _input_method cangjie_func =
   .searchWordArray = 0,
   .tryMatchWord    = cangjie_tryMatchWord,
   .tryMatchWordMore = cangjie_tryMatchWordMore,
+  .tryMatchWordArray = 0,
   .enableHongKongChar = cangjie_enableHongKongChar,
   .totalMatch      = cangjie_totalMatch,
   .updateFrequency = cangjie_updateFrequency,

@@ -12,6 +12,8 @@
 
 char stroke_char[STROKE_MAXKEY + 1];
 int stroke_index[STROKE_TOTAL];
+int stroke_index_temp[STROKE_TOTAL];
+int _mTotalMatch;
 
 void stroke_init(char *path)
 {
@@ -120,6 +122,14 @@ void stroke_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, j
 
 void stroke_searchWordArray(jchar *key, int len)
 {
+  if (_mTotalMatch > 0) {
+    stroke_func.mTotalMatch = _mTotalMatch;
+    memcpy(stroke_index, stroke_index_temp, _mTotalMatch * sizeof(int));
+  }
+}
+
+jboolean stroke_tryMatchWordArray(jchar *key, int len)
+{
   int index = 0, count;
   for (count = 0; count < len; count++) stroke_char[count] = key[count];
 
@@ -128,11 +138,13 @@ void stroke_searchWordArray(jchar *key, int len)
   
   for (count = start; count < end; count++) {
     if (memcmp(stroke[count].stroke, stroke_char, len) == 0) {
-      stroke_index[index++] = count;
+      stroke_index_temp[index++] = count;
     }
   }
 
-  stroke_func.mTotalMatch = count;
+  _mTotalMatch = index;
+
+  return _mTotalMatch > 0;
 }
 
 int stroke_totalMatch(void)
@@ -214,6 +226,7 @@ jint stroke_getFrequency(int index)
 void stroke_reset(void)
 {
   stroke_func.mTotalMatch = 0;
+  _mTotalMatch = 0;
 }
 
 void stroke_saveMatch(void)
@@ -259,6 +272,7 @@ struct _input_method stroke_func =
   .searchWordArray = stroke_searchWordArray,
   .tryMatchWord    = stroke_tryMatchWord,
   .tryMatchWordMore = stroke_tryMatchWordMore,
+  .tryMatchWordArray = stroke_tryMatchWordArray,
   .enableHongKongChar = stroke_enableHongKongChar,
   .totalMatch      = stroke_totalMatch,
   .updateFrequency = stroke_updateFrequency,

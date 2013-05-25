@@ -216,6 +216,7 @@ struct _input_method quick_func =
   .searchWordArray = 0,
   .tryMatchWord    = quick_tryMatchWord,
   .tryMatchWordMore = quick_tryMatchWordMore,
+  .tryMatchWordArray = 0,
   .enableHongKongChar = quick_enableHongKongChar,
   .totalMatch      = quick_totalMatch,
   .updateFrequency = quick_updateFrequency,

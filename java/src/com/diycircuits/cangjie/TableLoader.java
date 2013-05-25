@@ -30,6 +30,7 @@ public class TableLoader {
     public native void searchCangjieMore(char[] index0, char[] index1, char[] index2, char[] index3, char[] index4);
     public native boolean tryMatchCangjie(char index0, char index1, char index2, char index3, char index4);
     public native boolean tryMatchCangjieMore(char[] index0, char[] index1, char[] index2, char[] index3, char[] index4);
+    public native boolean trySearchWord(char[] key, int len);
     public native int totalMatch();
     public native char getMatchChar(int index);
     public native int getFrequency(int index);

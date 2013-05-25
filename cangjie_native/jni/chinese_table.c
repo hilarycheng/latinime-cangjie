@@ -116,6 +116,17 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjie(JNIEnv* env, j
   return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4);
 }
  
+jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, jobject thiz, jcharArray key, jint len)
+{
+  memset(keyStorage, 0, sizeof(keyStorage));
+  (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
+
+  if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
+    return input_method[mCurrentIm]->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
+  else if (mCurrentIm == STROKE)
+    return input_method[mCurrentIm]->tryMatchWordArray(keyStorage, len);
+}
+
 void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject thiz, jcharArray key, jint len)
 {
   memset(keyStorage, 0, sizeof(keyStorage));
