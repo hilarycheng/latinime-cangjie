@@ -10,6 +10,7 @@
 #define  LOGE(...)
 #endif
 
+/* char dbg[2048]; */
 char stroke_char[STROKE_MAXKEY + 1];
 int stroke_index[STROKE_TOTAL];
 int stroke_index_temp[STROKE_TOTAL];
@@ -42,16 +43,63 @@ void stroke_searchWordArray(jchar *key, int len)
   }
 }
 
+int smemcmp(char *s, char *d, int len)
+{
+  int count = 0;
+  for (count = 0; count < len; count++) {
+    /* LOGE("smemcmp : %d %02X %02X", count, s[count], d[count]); */
+    if ((d[count] & 0x0F) == 0) {
+      /* LOGE("smemcmp0"); */
+      if ((s[count] & 0xF0) != d[count]) {
+	/* LOGE("smemcmp1"); */
+	return 1;
+      }
+    } else {
+      /* LOGE("smemcmp2"); */
+      if (s[count] != d[count]) {
+	/* LOGE("smemcmp3"); */
+	return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
 jboolean stroke_tryMatchWordArray(jchar *key, int len)
 {
   int index = 0, count;
-  for (count = 0; count < len; count++) stroke_char[count] = key[count];
+  int _len = (len & ~0x01) + ((len & 0x01) << 1);
+  char pair = 0;
+
+  memset(stroke_char, 0, sizeof(stroke_char));
+  index = 0;
+  for (count = 0; count < _len; count++) {
+    pair = pair << 4;
+    if (count < len) {
+      if (key[count] < '0' || key[count] > '5')
+	continue;
+      pair = pair | ((key[count] - '0') & 0x000F);
+      if ((count & 0x01) == 0)
+	continue;
+    }
+    stroke_char[index++] = pair;
+    pair = 0;
+  }
+  /* dbg[0] = 0; */
+  /* for (count = 0; count < (_len >> 1); count++) { */
+  /*   sprintf(dbg + strlen(dbg), "%02X ", stroke_char[count]); */
+  /* } */
+  /* LOGE("Stroke Compressed : %s", dbg); */
 
   int start = stroke_map[key[0] - '1'].index;
   int end   = stroke_map[key[0] - '1'].count + start;
-  
+
+  index = 0;
   for (count = start; count < end; count++) {
-    if (memcmp(stroke[count].stroke, stroke_char, len) == 0) {
+    if (len > stroke[count].num)
+      continue;
+    if (smemcmp(stroke[count].stroke, stroke_char, _len >> 1) == 0) {
       stroke_index_temp[index++] = count;
     }
   }
