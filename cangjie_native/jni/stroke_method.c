@@ -10,7 +10,6 @@
 #define  LOGE(...)
 #endif
 
-/* char dbg[2048]; */
 char stroke_char[STROKE_MAXKEY + 1];
 int stroke_index[STROKE_TOTAL];
 int stroke_index_temp[STROKE_TOTAL];
@@ -86,11 +85,6 @@ jboolean stroke_tryMatchWordArray(jchar *key, int len)
     stroke_char[index++] = pair;
     pair = 0;
   }
-  /* dbg[0] = 0; */
-  /* for (count = 0; count < (_len >> 1); count++) { */
-  /*   sprintf(dbg + strlen(dbg), "%02X ", stroke_char[count]); */
-  /* } */
-  /* LOGE("Stroke Compressed : %s", dbg); */
 
   int start = stroke_map[key[0] - '1'].index;
   int end   = stroke_map[key[0] - '1'].count + start;
