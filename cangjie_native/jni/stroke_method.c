@@ -170,6 +170,7 @@ int stroke_totalMatch(void)
 
 int stroke_updateFrequency(jchar ch)
 {
+#if 0
   int total = STROKE_TOTAL;
   int count = 0;
   int max = 0;
@@ -198,6 +199,9 @@ int stroke_updateFrequency(jchar ch)
   }
   
   return stroke_frequency[index];
+#endif
+
+  return 0;
 }
 
 void stroke_clearFrequency(void)
