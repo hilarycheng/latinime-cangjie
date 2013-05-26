@@ -29,8 +29,7 @@
     </Row>
     <Row>
         <include
-            latin:keyboardLayout="@xml/rowkeys_stroke2"
-            latin:keyXPos="5%p" />
+            latin:keyboardLayout="@xml/rowkeys_stroke2" />
     </Row>
     <Row>
         <Key

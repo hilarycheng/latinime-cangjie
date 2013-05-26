@@ -22,7 +22,9 @@
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
 >
     <Key
-        latin:keyXPos="15%p"
+        latin:keyWidth="15%p"
+        latin:keyLabel="!text/keylabel_for_symbols_question" />
+    <Key
         latin:keyWidth="22%p"
         latin:keyLabel="一" />
     <Key
@@ -31,5 +33,9 @@
     <Key
         latin:keyWidth="22%p"
         latin:keyLabel="丿" />
+    <Key
+        latin:keyLabel="!" 
+        latin:keyWidth="fillRight"
+        latin:visualInsetsLeft="1%p" />
 
 </merge>

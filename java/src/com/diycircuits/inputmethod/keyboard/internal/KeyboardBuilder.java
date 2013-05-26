@@ -689,10 +689,6 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                     KeyboardId.elementIdToName(id.mElementId));
             final boolean modeMatched = matchTypedValue(a,
                     R.styleable.Keyboard_Case_mode, id.mMode, KeyboardId.modeName(id.mMode));
-            final boolean isCangjieMatched = matchBoolean(a,
-                    R.styleable.Keyboard_Case_isCangjie, id.isCangjie());
-            final boolean isPunctuationSwapMatched = matchBoolean(a,
-                    R.styleable.Keyboard_Case_isPunctuationSwap, id.isPunctuationSwap());
             final boolean navigateNextMatched = matchBoolean(a,
                     R.styleable.Keyboard_Case_navigateNext, id.navigateNext());
             final boolean navigatePreviousMatched = matchBoolean(a,
@@ -723,8 +719,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                     && clobberSettingsKeyMatched && shortcutKeyEnabledMatched
                     && hasShortcutKeyMatched && languageSwitchKeyEnabledMatched
                     && isMultiLineMatched && imeActionMatched && localeCodeMatched
-                    && languageCodeMatched && countryCodeMatched 
-		    && isCangjieMatched && isPunctuationSwapMatched;
+		    && languageCodeMatched && countryCodeMatched;
 
             if (DEBUG) {
                 startTag("<%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s>%s", TAG_CASE,
