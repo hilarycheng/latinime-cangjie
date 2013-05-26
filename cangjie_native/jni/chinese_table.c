@@ -179,6 +179,7 @@ void Java_com_diycircuits_cangjie_TableLoader_saveMatch(JNIEnv* env, jobject thi
 {
   input_method[QUICK]->saveMatch();
   input_method[CANGJIE]->saveMatch();
+  input_method[STROKE]->saveMatch();
   save_phrase();
 }
 
@@ -186,6 +187,7 @@ void Java_com_diycircuits_cangjie_TableLoader_clearAllFrequency(JNIEnv *env, job
 {
   input_method[QUICK]->clearFrequency();
   input_method[CANGJIE]->clearFrequency();
+  input_method[STROKE]->clearFrequency();
   clear_phrase();
 }
 
