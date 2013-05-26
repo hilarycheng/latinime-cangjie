@@ -10,7 +10,9 @@
 #define  LOGE(...)
 #endif
 
+char dbg[2048];
 char stroke_char[STROKE_MAXKEY + 1];
+char stroke_char_second[STROKE_MAXKEY + 1];
 int stroke_index[STROKE_TOTAL];
 int stroke_index_temp[STROKE_TOTAL];
 int stroke_frequency[STROKE_TOTAL];
@@ -106,12 +108,25 @@ jboolean stroke_tryMatchWordArray(jchar *key, int len)
 {
   int index = 0, count;
   int _len = (len & ~0x01) + ((len & 0x01) << 1);
+  int firstlen = 0;
   char pair = 0;
+  int found = 0;
 
+  for (count = 0; count < len; count++) {
+    if (key[count] == '*') found++;
+  }
+
+  if (found > 1)
+    return 0;
+  
   memset(stroke_char, 0, sizeof(stroke_char));
   index = 0;
   for (count = 0; count < _len; count++) {
     pair = pair << 4;
+    if (key[count] == '*') {
+      stroke_char[index++] = pair;
+      break;
+    }
     if (count < len) {
       if (key[count] < '0' || key[count] > '5')
 	continue;
@@ -122,6 +137,14 @@ jboolean stroke_tryMatchWordArray(jchar *key, int len)
     stroke_char[index++] = pair;
     pair = 0;
   }
+
+  /* if (stroke_char[index] == 0 && index > 0) index--; */
+  /* firstlen = index + 1; */
+  dbg[0] = 0;
+  for (count = 0; count < 32; count++) {
+    sprintf(dbg + strlen(dbg), "%02X ", stroke_char[count]);
+  }
+  LOGE("Stroke : %d %d %s", firstlen, index, dbg);
 
   int start = stroke_map[key[0] - '1'].index;
   int end   = stroke_map[key[0] - '1'].count + start;
