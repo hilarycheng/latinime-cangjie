@@ -81,6 +81,7 @@ public class CandidateView extends LinearLayout {
 	    mSelectWidget.setVisibility(View.GONE);
 	    mSelectList = (HorizontalVariableListView) findViewById(R.id.candidateList);
 	    mSelectList.setVisibility(View.VISIBLE);
+	    mSelectList.setSelectionMode(HorizontalVariableListView.SelectionMode.Single);
          
 	    mRightArrow = (ImageButton) findViewById(R.id.arrow_right);
 	    mRightArrow.setVisibility(View.GONE);

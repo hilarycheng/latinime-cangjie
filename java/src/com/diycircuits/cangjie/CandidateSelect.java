@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.util.TypedValue;
 import android.util.Log;
+import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,14 +109,24 @@ public class CandidateSelect {
 	if (isCandidatePopup(mContext)) mSelectWidget.setCandidateListener(listen);
     }
 
-    class ListAdapter extends ArrayAdapter<String> {
+    class ListAdapter extends ArrayAdapter<String> implements View.OnTouchListener {
 
 	private StringBuffer sb = new StringBuffer();
 	
 	public ListAdapter(Context context, int item) { //, List<String> mItemObject) {
 	    super(context, R.layout.candidateitem); // , mItemObject);
 	}
-	
+
+	public boolean onTouch(View v, MotionEvent event) {
+	    Log.i("Cangjie", "ListAdapter onTouch");
+	    if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+		v.setBackgroundColor(0xff33B5E5);
+	    } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+		v.setBackgroundColor(0x00000000);
+	    }
+	    return false;
+	}
+
 	@Override
         public int getItemViewType( int position ) {
 	    return position & 1;
@@ -168,6 +179,8 @@ public class CandidateSelect {
 
 	    if (type == 0) {
 		TextView text = (TextView) view.findViewById(R.id.text);
+		text.setOnTouchListener(this);
+
 		if (mLoader.getFrequency(position >> 1) > 0) 
 		    text.setTextColor(0xffff9000);
 		else

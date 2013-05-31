@@ -44,7 +44,7 @@
       <it.sephiroth.android.library.widget.HorizontalVariableListView
           android:id="@+id/candidateList"
           android:layout_width="match_parent"
-          android:layout_height="@dimen/suggestions_strip_height" 
+          android:layout_height="@dimen/suggestions_strip_height"
 	  android:layout_marginLeft="5dp"
           android:layout_marginRight="5dp"
           android:layout_weight="0.53" />
