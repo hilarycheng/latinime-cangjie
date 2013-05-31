@@ -80,7 +80,7 @@ import com.diycircuits.inputmethod.latin.suggestions.SuggestionStripView;
 import com.diycircuits.cangjie.Cangjie;
 import com.diycircuits.cangjie.CandidateView;
 import com.diycircuits.cangjie.CandidateSelect;
-import com.diycircuits.cangjie.CandidateSelect.CandidateListener;
+import com.diycircuits.cangjie.CandidateListener;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -599,7 +599,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
 	// Cangjie View
 	mCandidateView      = (CandidateView)   view.findViewById(R.id.candidateView);
-	mCandidateSelect    = (CandidateSelect) view.findViewById(R.id.match_view);
+	// mCandidateSelect    = (CandidateSelect) view.findViewById(R.id.match_view);
+	mCandidateSelect    = mCandidateView.getCandidateSelect();
+	mCandidateSelect.setContext(this);
 	mCandidateContainer = view.findViewById(R.id.candidate_container);
 	mCangjie.setCandidateSelect(mCandidateSelect);
 	mCangjie.setCandidateListener(this);

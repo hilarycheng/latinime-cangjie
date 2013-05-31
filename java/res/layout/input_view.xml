@@ -41,9 +41,17 @@
 	android:layout_margin="0dp"
         android:orientation="horizontal" >
 
-      <com.diycircuits.cangjie.CandidateSelect
+      <it.sephiroth.android.library.widget.HorizontalVariableListView
+          android:id="@+id/candidateList"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/suggestions_strip_height" 
+	  android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp"
+          android:layout_weight="0.53" />
+
+      <com.diycircuits.cangjie.CandidateSelectWidget
           android:id="@+id/match_view"
-          android:layout_width="224dp"
+          android:layout_width="match_parent"
           android:layout_height="@dimen/suggestions_strip_height"
           android:layout_weight="0.53" />
 

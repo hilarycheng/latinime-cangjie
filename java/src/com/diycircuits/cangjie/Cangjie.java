@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
-import com.diycircuits.cangjie.CandidateSelect.CandidateListener;
+import com.diycircuits.cangjie.CandidateListener;
 import com.diycircuits.inputmethod.keyboard.ProximityInfo;
 
 public class Cangjie implements CandidateListener {
