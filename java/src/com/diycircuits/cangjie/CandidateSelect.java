@@ -83,9 +83,7 @@ public class CandidateSelect {
     }
     
     public static boolean isCandidatePopup(Context mContext) {
-	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
-
-	return value.compareTo("1") == 0;
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("candidate_popup", true);
     }
 
     public void updateTable(TableLoader loader) {

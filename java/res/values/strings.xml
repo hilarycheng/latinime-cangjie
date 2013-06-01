@@ -23,6 +23,8 @@
     <string name="language_mode">預設語言</string>
     <string name="language_mode_summary">選擇英文或中文, 為首選的顯示的鍵盤</string>
     <string name="cangjie_mode">中文輸入法</string>
+    <string name="candidate_popup">選字行 Popup 視窗</string>
+    <string name="candidate_popup_summary">選擇 - 使用 Popup 視窗 , 否 - 使用撗向選字</string>
     <string name="cangjie_autocorrection_mode">倉頡 Auto Correction</string>
     <string name="prefs_cangjie_english_key">倉頡速成英文鍵</string>
     <string name="prefs_clear_often_used_title">清洗常用字記錄</string>

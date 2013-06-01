@@ -64,6 +64,12 @@
             android:defaultValue="true"
             android:persistent="true" />
         <CheckBoxPreference
+            android:key="candidate_popup"
+            android:title="@string/candidate_popup"
+            android:summary="@string/candidate_popup_summary"
+            android:defaultValue="true"
+            android:persistent="true" />
+        <CheckBoxPreference
             android:key="vibrate_on"
             android:title="@string/vibrate_on_keypress"
             android:defaultValue="@bool/config_default_vibration_enabled"
