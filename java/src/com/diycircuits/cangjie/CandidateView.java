@@ -103,6 +103,7 @@ public class CandidateView extends LinearLayout {
 	    mSelectList = (HorizontalVariableListView) findViewById(R.id.candidateList);
 	    mSelectList.setVisibility(View.VISIBLE);
 	    mSelectList.setSelectionMode(HorizontalVariableListView.SelectionMode.Single);
+	    mSelectList.setBackgroundColor(0xff272727);
          
 	    mRightArrow = (ImageButton) findViewById(R.id.arrow_right);
 	    mRightArrow.setVisibility(View.GONE);

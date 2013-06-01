@@ -146,10 +146,10 @@ public class CandidateSelect {
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
-	    if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+	    if (event.getAction() == MotionEvent.ACTION_DOWN) {
 		v.setBackgroundColor(0xff33B5E5);
 	    } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-		v.setBackgroundColor(0x00000000);
+		v.setBackgroundColor(0xff272727);
 	    }
 	    return false;
 	}
