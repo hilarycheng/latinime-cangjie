@@ -185,9 +185,9 @@ public class CandidateSelect {
 	public int getCount() {
 	    if (mLoader != null) {
 		if (mState == CHARACTER_MODE) {
-		    return mLoader.totalMatch();
+		    return mLoader.totalMatch() * 2;
 		} else if (mState == PHRASE_MODE) {
-		    return mLoader.getPhraseCount();
+		    return mLoader.getPhraseCount() * 2;
 		}
 	    }
 
