@@ -432,7 +432,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			synchronized ( HorizontalVariableListView.this ) {
 				mAdapterItemCount = mAdapter.getCount();
 			}
-			Log.i( LOG_TAG, "onAdded: " + mAdapterItemCount );
+			// Log.i( LOG_TAG, "onAdded: " + mAdapterItemCount );
 			mDataChanged = true;
 			mMaxX = Integer.MAX_VALUE;
 			requestLayout();
@@ -446,7 +446,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 		@Override
 		public void onChanged() {
 			mAdapterItemCount = mAdapter.getCount();
-			Log.i( LOG_TAG, "onChange: " + mAdapterItemCount );
+			// Log.i( LOG_TAG, "onChange: " + mAdapterItemCount );
 			reset();
 			requestLayout();
 		};
@@ -465,7 +465,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			synchronized ( HorizontalVariableListView.this ) {
 				mAdapterItemCount = mAdapter.getCount();
 			}
-			Log.i( LOG_TAG, "onChanged(2): " + mAdapterItemCount );
+			// Log.i( LOG_TAG, "onChanged(2): " + mAdapterItemCount );
 			invalidate();
 			reset();
 		}
@@ -473,7 +473,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 		@Override
 		public void onInvalidated() {
 			mAdapterItemCount = mAdapter.getCount();
-			Log.i( LOG_TAG, "onInvalidated(2): " + mAdapterItemCount );
+			// Log.i( LOG_TAG, "onInvalidated(2): " + mAdapterItemCount );
 			invalidate();
 			reset();
 		}
