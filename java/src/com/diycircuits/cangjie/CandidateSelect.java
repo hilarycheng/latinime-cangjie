@@ -88,7 +88,7 @@ public class CandidateSelect {
 
     public void updateTable(TableLoader loader) {
 	if (isCandidatePopup(mContext)) {
-	    mSelectWidget.updatePhrase(loader);
+	    mSelectWidget.updateTable(loader);
 	} else {
 	    mLoader = loader;
 	    mState = CHARACTER_MODE;

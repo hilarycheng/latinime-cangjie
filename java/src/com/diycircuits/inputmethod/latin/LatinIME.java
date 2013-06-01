@@ -1496,6 +1496,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	if (isCangjieMode()) {
 	    mCandidateView.bringToFront();
 	    mCandidateView.invalidate();
+	    mCandidateView.updateCandidate();
 	    mSuggestionsContainer.invalidate();
 	    mCandidateContainer.invalidate();
 	} else {

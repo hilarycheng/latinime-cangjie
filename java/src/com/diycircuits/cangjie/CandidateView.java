@@ -63,11 +63,8 @@ public class CandidateView extends LinearLayout {
     public CandidateSelect getCandidateSelect() {
 	return mSelect;
     }
-    
-    @Override
-    protected void onFinishInflate() {
-	super.onFinishInflate();
 
+    public void updateCandidate() {
 	if (CandidateSelect.isCandidatePopup(mContext)) {
 	    mSelectWidget = (CandidateSelectWidget) findViewById(R.id.match_view);
 	    mSelectWidget.setVisibility(View.VISIBLE);
@@ -90,6 +87,13 @@ public class CandidateView extends LinearLayout {
 	mSelect.setContext(mContext);
 	mSelect.setCandidateSelectWidget(mSelectWidget);
 	mSelect.setCandidateList(mSelectList);
+    }
+    
+    @Override
+    protected void onFinishInflate() {
+	super.onFinishInflate();
+
+	updateCandidate();
 	
 	if (mRightArrow != null) {
 	    mRightArrow.setOnClickListener(new View.OnClickListener() {

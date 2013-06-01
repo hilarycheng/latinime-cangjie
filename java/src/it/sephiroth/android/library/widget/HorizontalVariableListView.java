@@ -737,6 +737,9 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			int childWidth = mChildWidths.get( viewType );
 			int childHeight = mChildHeights.get( viewType );
 
+			childWidth = child.getMeasuredWidth();
+			childHeight = child.getMeasuredHeight();
+
 			layoutChild( child, leftEdge - childWidth, leftEdge, childHeight );
 
 			leftEdge -= childWidth;
