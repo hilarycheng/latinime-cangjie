@@ -75,7 +75,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 	public static final int OVER_SCROLL_IF_CONTENT_SCROLLS = 1;
 	public static final int OVER_SCROLL_NEVER = 2;
 
-	protected static final String LOG_TAG = "horizontal-variable-list";
+        protected static final String LOG_TAG = "Cangjie";
 
 	private static final float WIDTH_THRESHOLD = 1.1f;
 
@@ -421,6 +421,10 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 		mOnItemClicked = listener;
 	}
 
+        public void setDataChanged(boolean ch) {
+	    mDataChanged = ch;
+        }
+    
 	private DataSetObserverExtended mDataObserverExtended = new DataSetObserverExtended() {
 
 		@Override
@@ -444,6 +448,7 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			mAdapterItemCount = mAdapter.getCount();
 			Log.i( LOG_TAG, "onChange: " + mAdapterItemCount );
 			reset();
+			requestLayout();
 		};
 
 		@Override
@@ -624,13 +629,13 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 	@Override
 	protected void onLayout( boolean changed, int left, int top, int right, int bottom ) {
 		super.onLayout( changed, left, top, right, bottom );
-		
+
 		if ( mAdapter == null ) {
 			return;
 		}
 
 		if ( !changed && !mDataChanged ) {
-			layoutChildren();
+		    layoutChildren();
 		}
 
 		mHeight = bottom - top;
@@ -679,8 +684,6 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			left = child.getLeft();
 			right = child.getRight();
 
-			Log.i("Cangjie", "Layout child " + left + " " + right);
-			
 			int childHeight = child.getHeight();
 
 			layoutChild( child, left, right, childHeight );
@@ -734,8 +737,6 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			int childWidth = mChildWidths.get( viewType );
 			int childHeight = mChildHeights.get( viewType );
 
-			Log.i("Cangjie", "Fill List Left " + positionX + " " + child.getWidth());
-			
 			layoutChild( child, leftEdge - childWidth, leftEdge, childHeight );
 
 			leftEdge -= childWidth;
@@ -831,13 +832,16 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 			int childWidth = mChildWidths.get( viewType );
 			int childHeight = mChildHeights.get( viewType );
 
-			if ( childWidth == -1 ) {
-				childWidth = child.getMeasuredWidth();
-				childHeight = child.getMeasuredHeight();
+			childWidth = child.getMeasuredWidth();
+			childHeight = child.getMeasuredHeight();
 
-				mChildWidths.set( viewType, childWidth );
-				mChildHeights.set( viewType, childHeight );
-			}
+			// if ( childWidth == -1 ) {
+			// 	childWidth = child.getMeasuredWidth();
+			// 	childHeight = child.getMeasuredHeight();
+
+			// 	mChildWidths.set( viewType, childWidth );
+			// 	mChildHeights.set( viewType, childHeight );
+			// }
 
 			if ( firstChild ) {
 				if ( mEdgesHeight == -1 ) {
@@ -965,7 +969,6 @@ public class HorizontalVariableListView extends HorizontalListView implements On
 	private int getChildAtPosition( float x, float y ) {
 		Rect viewRect = new Rect();
 
-		Log.i("Cangjie", "Get Child At Position " + x + " " + y);
 		for ( int i = 0; i < getChildCount(); i++ ) {
 			View child = getChildAt( i );
 			int left = child.getLeft();
