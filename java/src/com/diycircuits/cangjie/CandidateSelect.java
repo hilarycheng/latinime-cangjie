@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.util.TypedValue;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Gravity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class CandidateSelect {
     private HorizontalVariableListView mSelectList = null;
     private TableLoader mLoader = null;
     private ListAdapter mAdapter = null;
+    private char[] mPhrase = null;
+    private StringBuffer phraseBuffer = new StringBuffer();
 
     public void setContext(Context context) {
 	mContext = context;
@@ -47,6 +50,15 @@ public class CandidateSelect {
     public void setCandidateSelectWidget(CandidateSelectWidget widget) {
 	mSelectWidget = widget;
     }
+
+    private String getPhrase(int index) {
+	phraseBuffer.setLength(0);
+
+	int len = mLoader.getPhraseArray(mLoader.getPhraseIndex() + index, mPhrase);
+	phraseBuffer.append(mPhrase, 0, len);
+
+	return phraseBuffer.toString();
+    }
     
     public void setCandidateList(HorizontalVariableListView list) {
 	mSelectList = list;
@@ -56,7 +68,13 @@ public class CandidateSelect {
 
 		@Override
 		public boolean onItemClick( AdapterView<?> parent, View view, int position, long id ) {
-		    Log.i("Cangjie", "onItemClick: " + position + " " + mLoader.getMatchChar(position >> 1));
+		    if (mState == CHARACTER_MODE) {
+			Log.i("Cangjie", "onItemClick: " + position + " " + mLoader.getMatchChar(position >> 1));
+			if (mListener != null) mListener.characterSelected(mLoader.getMatchChar(position >> 1), position >> 1);
+		    } else if (mState == PHRASE_MODE) {
+			Log.i("Cangjie", "onItemClick: " + position + " " + getPhrase(position >> 1));
+			if (mListener != null) mListener.phraseSelected(getPhrase(position >> 1), mLoader.getPhraseIndex() + (position >> 1));
+		    }
 
 		    return true;
 		}
@@ -87,6 +105,7 @@ public class CandidateSelect {
 	    mSelectWidget.updatePhrase(loader);
 	} else {
 	    mLoader = loader;
+	    mPhrase = new char[mLoader.getAllPhraseMax()];
 	    mState = PHRASE_MODE;
 	    mSelectList.setAdapter(mAdapter);
 	}
@@ -140,8 +159,12 @@ public class CandidateSelect {
 	@Override
 	public String getItem(int pos) {
 	    Log.i("Cangjie", "List Adapter Get Item " + pos);
-	    sb.setLength(0);
-	    if (mLoader != null) sb.append(mLoader.getMatchChar(pos));
+	    if (mState == CHARACTER_MODE) {
+		sb.setLength(0);
+		if (mLoader != null) sb.append(mLoader.getMatchChar(pos >> 1));
+	    } else if (mState == PHRASE_MODE) {
+		return getPhrase(pos >> 1);
+	    }
 
 	    return sb.toString();
 	}
@@ -156,9 +179,14 @@ public class CandidateSelect {
 	public int getCount() {
 	    if (mLoader != null) {
 		Log.i("Cangjie", "List Adapter Get Count " + mLoader.totalMatch());
-		return mLoader.totalMatch();
-	    } else
-		return 0;
+		if (mState == CHARACTER_MODE) {
+		    return mLoader.totalMatch();
+		} else if (mState == PHRASE_MODE) {
+		    return mLoader.getPhraseCount();
+		}
+	    }
+
+	    return 0;
 	}
 
 	@Override
@@ -179,17 +207,27 @@ public class CandidateSelect {
 
 	    if (type == 0) {
 		TextView text = (TextView) view.findViewById(R.id.text);
+		text.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 		text.setOnTouchListener(this);
 
-		if (mLoader.getFrequency(position >> 1) > 0) 
-		    text.setTextColor(0xffff9000);
-		else
-		    text.setTextColor(0xff33B5E5);
-		text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
-		sb.setLength(0);
-		if (mLoader != null) sb.append(mLoader.getMatchChar(position >> 1));
-		Log.i("Cangjie", "Get View " + sb.toString());
-		text.setText(sb.toString());
+		if (mState == CHARACTER_MODE) {
+		    if (mLoader.getFrequency(position >> 1) > 0) 
+			text.setTextColor(0xffff9000);
+		    else
+			text.setTextColor(0xff33B5E5);
+		    text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
+		    sb.setLength(0);
+		    if (mLoader != null) sb.append(mLoader.getMatchChar(position >> 1));
+		    Log.i("Cangjie", "Get View " + sb.toString());
+		    text.setText(sb.toString());
+		} else if (mState == PHRASE_MODE) {
+		    if (mLoader.getPhraseFrequency(mLoader.getPhraseIndex() + (position >> 1)) > 0) 
+			text.setTextColor(0xffff9000);
+		    else
+			text.setTextColor(0xff33B5E5);
+		    text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
+		    text.setText(getPhrase(position >> 1));
+		}
 	    }
 
 	    return view;
