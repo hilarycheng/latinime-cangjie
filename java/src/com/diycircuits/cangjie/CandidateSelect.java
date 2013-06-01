@@ -62,7 +62,10 @@ public class CandidateSelect {
     
     public void setCandidateList(HorizontalVariableListView list) {
 	mSelectList = list;
-	mSelectList.setAdapter(mAdapter);
+	if (mSelectList != null) {
+	    mSelectList.setDataChanged(true);
+	    mSelectList.setAdapter(mAdapter);
+	}
 
 	mSelectList.setOnItemClickedListener( new OnItemClickedListener() {
 
@@ -96,7 +99,11 @@ public class CandidateSelect {
 	Log.i("Cangjie", "Update Table 1 " + mSelectList);
 	    mLoader = loader;
 	    mState = CHARACTER_MODE;
-	    if (mSelectList != null) mSelectList.setAdapter(mAdapter);
+	    if (mSelectList != null) {
+		mSelectList.setDataChanged(true);
+		mSelectList.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
+	    }
 	}
     }
 
@@ -107,7 +114,11 @@ public class CandidateSelect {
 	    mLoader = loader;
 	    mPhrase = new char[mLoader.getAllPhraseMax()];
 	    mState = PHRASE_MODE;
-	    mSelectList.setAdapter(mAdapter);
+	    if (mSelectList != null) {
+		mSelectList.setDataChanged(true);
+		mSelectList.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
+	    }
 	}
     }
 
