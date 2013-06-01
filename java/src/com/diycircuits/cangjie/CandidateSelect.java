@@ -72,10 +72,8 @@ public class CandidateSelect {
 		@Override
 		public boolean onItemClick( AdapterView<?> parent, View view, int position, long id ) {
 		    if (mState == CHARACTER_MODE) {
-			Log.i("Cangjie", "onItemClick: " + position + " " + mLoader.getMatchChar(position >> 1));
 			if (mListener != null) mListener.characterSelected(mLoader.getMatchChar(position >> 1), position >> 1);
 		    } else if (mState == PHRASE_MODE) {
-			Log.i("Cangjie", "onItemClick: " + position + " " + getPhrase(position >> 1));
 			if (mListener != null) mListener.phraseSelected(getPhrase(position >> 1), mLoader.getPhraseIndex() + (position >> 1));
 		    }
 
@@ -91,12 +89,9 @@ public class CandidateSelect {
     }
 
     public void updateTable(TableLoader loader) {
-	Log.i("Cangjie", "Update Table");
 	if (isCandidatePopup(mContext)) {
-	Log.i("Cangjie", "Update Table 0");
 	    mSelectWidget.updatePhrase(loader);
 	} else {
-	Log.i("Cangjie", "Update Table 1 " + mSelectList);
 	    mLoader = loader;
 	    mState = CHARACTER_MODE;
 	    if (mSelectList != null) {
@@ -148,7 +143,6 @@ public class CandidateSelect {
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
-	    Log.i("Cangjie", "ListAdapter onTouch");
 	    if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
 		v.setBackgroundColor(0xff33B5E5);
 	    } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
@@ -169,7 +163,6 @@ public class CandidateSelect {
 
 	@Override
 	public String getItem(int pos) {
-	    Log.i("Cangjie", "List Adapter Get Item " + pos);
 	    if (mState == CHARACTER_MODE) {
 		sb.setLength(0);
 		if (mLoader != null) sb.append(mLoader.getMatchChar(pos >> 1));
@@ -182,14 +175,12 @@ public class CandidateSelect {
 
 	@Override
 	public long getItemId(int pos) {
-	    Log.i("Cangjie", "List Adapter Get Item Id " + pos);
 	    return pos;
 	}
 
 	@Override
 	public int getCount() {
 	    if (mLoader != null) {
-		Log.i("Cangjie", "List Adapter Get Count " + mLoader.totalMatch());
 		if (mState == CHARACTER_MODE) {
 		    return mLoader.totalMatch();
 		} else if (mState == PHRASE_MODE) {
@@ -203,8 +194,6 @@ public class CandidateSelect {
 	@Override
 	public View getView( int position, View convertView, ViewGroup parent ) {
 
-	    Log.i("Cangjie", "List Adapter Get View " + position);
-	    
 	    View view;
 	    int type = getItemViewType(position);
 	    
@@ -229,7 +218,6 @@ public class CandidateSelect {
 		    text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
 		    sb.setLength(0);
 		    if (mLoader != null) sb.append(mLoader.getMatchChar(position >> 1));
-		    Log.i("Cangjie", "Get View " + sb.toString());
 		    text.setText(sb.toString());
 		} else if (mState == PHRASE_MODE) {
 		    if (mLoader.getPhraseFrequency(mLoader.getPhraseIndex() + (position >> 1)) > 0) 
