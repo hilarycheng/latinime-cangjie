@@ -15,6 +15,9 @@ import android.util.Log;
 
 public class CandidateView extends LinearLayout {
 
+    private final static int STARTING_FONT_SIZE = 12;
+    private final static int ENDING_FONT_SIZE   = 128;
+
     private int width = 0;
     private int height = 0;
     private char match[] = null;
@@ -30,10 +33,18 @@ public class CandidateView extends LinearLayout {
     private int mHeight = 0;
     private View mParent = null;
     private CandidateSelect mSelect = new CandidateSelect();
+    private Paint paint = null;
+    private float mFontSize = 50.0f;
 
     public CandidateView(Context context, AttributeSet attrs) {
 	super(context, attrs);
 	mContext = context;
+
+	paint = new Paint();
+	paint.setColor(Color.BLACK);
+	paint.setAntiAlias(true);
+	paint.setTextSize(mFontSize);
+	paint.setStrokeWidth(0);
     }
 
     public void setParent(View view) {
@@ -53,6 +64,19 @@ public class CandidateView extends LinearLayout {
 	mHeight = h;
 
 	mSelectWidget.setParentWidth(mWidth);
+
+	for (int fontsize = STARTING_FONT_SIZE; fontsize < ENDING_FONT_SIZE; fontsize += 2) {
+	    paint.setTextSize(fontsize);
+
+	    Paint.FontMetrics metrics = paint.getFontMetrics();
+	    int totalHeight = (int) (metrics.bottom - metrics.top);
+
+	    if (totalHeight > mHeight) {
+		mFontSize = (float) (fontsize - 8);
+		if (mSelect != null) mSelect.setFontSize((int) mFontSize);
+		break;
+	    }
+	}
     }
 
     public void setReferenceSize(int w, int h) {
@@ -87,6 +111,7 @@ public class CandidateView extends LinearLayout {
 	mSelect.setContext(mContext);
 	mSelect.setCandidateSelectWidget(mSelectWidget);
 	mSelect.setCandidateList(mSelectList);
+	mSelect.setFontSize((int) mFontSize);
     }
     
     @Override

@@ -40,11 +40,16 @@ public class CandidateSelect {
     private ListAdapter mAdapter = null;
     private char[] mPhrase = null;
     private StringBuffer phraseBuffer = new StringBuffer();
+    private int mFontSize = 32;
 
     public void setContext(Context context) {
 	mContext = context;
 
 	if (mAdapter == null) mAdapter = new ListAdapter(context, 0); // , mItemObject);
+    }
+
+    public void setFontSize(int size) {
+	mFontSize = size;
     }
     
     public void setCandidateSelectWidget(CandidateSelectWidget widget) {
@@ -213,7 +218,7 @@ public class CandidateSelect {
 			text.setTextColor(0xffff9000);
 		    else
 			text.setTextColor(0xff33B5E5);
-		    text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
+		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
 		    sb.setLength(0);
 		    if (mLoader != null) sb.append(mLoader.getMatchChar(position >> 1));
 		    text.setText(sb.toString());
@@ -222,7 +227,7 @@ public class CandidateSelect {
 			text.setTextColor(0xffff9000);
 		    else
 			text.setTextColor(0xff33B5E5);
-		    text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32);
+		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
 		    text.setText(getPhrase(position >> 1));
 		}
 	    }
