@@ -391,6 +391,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mPrefs = prefs;
         LatinImeLogger.init(this, prefs);
+
         // if (ProductionFlag.IS_EXPERIMENTAL) {
         //     ResearchLogger.getInstance().init(this, prefs);
         // }
