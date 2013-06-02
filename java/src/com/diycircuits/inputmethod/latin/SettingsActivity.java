@@ -32,7 +32,7 @@ import android.os.IBinder;
 
 public final class SettingsActivity extends PreferenceActivity {
     private static final String DEFAULT_FRAGMENT = Settings.class.getName();
-
+    /*
     private IInAppBillingService mService = null;
 
     private ServiceConnection mServiceConn = new ServiceConnection() {
@@ -82,7 +82,8 @@ public final class SettingsActivity extends PreferenceActivity {
 		}
 	    }
 	};
-
+    */
+    
     @Override
     public Intent getIntent() {
         final Intent intent = super.getIntent();
@@ -92,7 +93,7 @@ public final class SettingsActivity extends PreferenceActivity {
         intent.putExtra(EXTRA_NO_HEADERS, true);
         return intent;
     }
-
+    /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,5 +136,5 @@ public final class SettingsActivity extends PreferenceActivity {
         Log.d("Cangjie", "Showing alert dialog: " + message);
         bld.create().show();
     }   
-
+    */
 }
