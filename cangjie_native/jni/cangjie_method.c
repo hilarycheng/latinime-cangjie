@@ -507,7 +507,6 @@ void cangjie_enableHongKongChar(jboolean hk)
 
 void cangjie_setSortingMethod(int method)
 {
-  LOGE("Cangjie Set Sorting Method : %d", method);
   cangjie_func.mSortingMethod = method;
 }
 
