@@ -53,6 +53,9 @@ public class Cangjie implements CandidateListener {
 	}
 
 	mTable.initialize();
+
+	boolean sorting = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_sorting_mode", true);
+	mTable.setSortingMethod(sorting ? 0 : 1);
 	
 	loadCangjieKey();
     }
@@ -174,6 +177,11 @@ public class Cangjie implements CandidateListener {
     }
 
     public void resetState() {
+	boolean sorting = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_sorting_method", true);
+	mTable.setSortingMethod(sorting ? 0 : 1);
+
+	Log.i("Cangjie", "Cangjie Sorting Method : " + sorting);
+
 	mCangjieCode.setLength(0);
 	mTable.reset();
 	for (int count = 0; count < mCodeInput.length; count++) {

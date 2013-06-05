@@ -41,6 +41,12 @@
             android:title="@string/prefs_cangjie_english_key"
 	    android:defaultValue="false"
             android:persistent="true"/>
+	<CheckBoxPreference
+            android:key="cangjie_sorting_method"
+            android:title="@string/prefs_cangjie_sorting_method_key"
+            android:summary="@string/prefs_cangjie_sorting_method_summary_key"
+	    android:defaultValue="true"
+            android:persistent="true"/>
         <CheckBoxPreference
             android:key="cangjie_autocorrection_mode"
             android:title="@string/cangjie_autocorrection_mode"

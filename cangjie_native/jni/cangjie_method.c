@@ -24,7 +24,7 @@ void cangjie_init(char *path)
   int count = 0;
   char key[8];
 
-  cangjie_func.mSortingMethod = 1;
+  cangjie_func.mSortingMethod = 0;
   cangjie_func.mSaved = 0;
 
   strncpy(cangjie_func.mPath,           path, sizeof(cangjie_func.mPath));
@@ -507,6 +507,7 @@ void cangjie_enableHongKongChar(jboolean hk)
 
 void cangjie_setSortingMethod(int method)
 {
+  LOGE("Cangjie Set Sorting Method : %d", method);
   cangjie_func.mSortingMethod = method;
 }
 

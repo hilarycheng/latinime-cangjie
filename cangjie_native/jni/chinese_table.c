@@ -303,3 +303,10 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseFrequency(JNIEnv *env, jo
 {
   return get_phrase_frequency(idx);
 }
+
+void Java_com_diycircuits_cangjie_TableLoader_setSortingMethod(JNIEnv *env, jobject thiz, jint method)
+{
+  input_method[QUICK]->setSortingMethod(method);
+  input_method[CANGJIE]->setSortingMethod(method);
+  input_method[STROKE]->setSortingMethod(method);
+}
