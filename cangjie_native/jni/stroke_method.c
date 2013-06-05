@@ -263,6 +263,11 @@ void stroke_enableHongKongChar(jboolean hk)
   stroke_func.mEnableHK = (hk != 0);
 }
 
+void stroke_setSortingMethod(int method)
+{
+  stroke_func.mSortingMethod = method;
+}
+
 struct _input_method stroke_func =
 {
   .init            = stroke_init,
@@ -280,5 +285,6 @@ struct _input_method stroke_func =
   .getMatchChar    = stroke_getMatchChar,
   .getFrequency    = stroke_getFrequency,
   .reset           = stroke_reset,
-  .saveMatch       = stroke_saveMatch
+  .saveMatch       = stroke_saveMatch,
+  .setSortingMethod = stroke_setSortingMethod
 };

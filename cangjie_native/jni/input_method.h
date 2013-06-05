@@ -27,12 +27,14 @@ struct _input_method {
   int   (*updateFrequency)(jchar c0);
   void  (*clearFrequency)(void);
   void  (*reset)(void);
+  void  (*setSortingMethod)(int method);
   jchar (*getMatchChar)(int index);
   jint  (*getFrequency)(int index);
   void  (*saveMatch)(void);
   char  mPath[1024];
   char  mBuffer[8];
   int   mTotalMatch;
+  int   mSortingMethod;
   int   mSaved;
   jboolean mEnableHK;
 };

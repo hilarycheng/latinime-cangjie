@@ -207,6 +207,11 @@ void quick_enableHongKongChar(jboolean hk)
   quick_func.mEnableHK = (hk != 0);
 }
 
+void quick_setSortingMethod(int method)
+{
+  quick_func.mSortingMethod = method;
+}
+
 struct _input_method quick_func =
 {
   .init            = quick_init,
@@ -224,5 +229,6 @@ struct _input_method quick_func =
   .getMatchChar    = quick_getMatchChar,
   .getFrequency    = quick_getFrequency,
   .reset           = quick_reset,
-  .saveMatch       = quick_saveMatch
+  .saveMatch       = quick_saveMatch,
+  .setSortingMethod = quick_setSortingMethod
 };

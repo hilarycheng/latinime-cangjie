@@ -24,7 +24,9 @@ void cangjie_init(char *path)
   int count = 0;
   char key[8];
 
+  cangjie_func.mSortingMethod = 1;
   cangjie_func.mSaved = 0;
+
   strncpy(cangjie_func.mPath,           path, sizeof(cangjie_func.mPath));
   strncat(cangjie_func.mPath, "/cangjie.dat", sizeof(cangjie_func.mPath));
 
@@ -349,15 +351,44 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
   _mTotalMatch = loop;
   if (loop > 0) {
     int swap = 1;
+    int start = 0;
+    if (cangjie_func.mSortingMethod == 1) {
+      while (swap) {
+	swap = 0;
+	for (i = 0; i < loop - 1; i++) {
+	  if (cangjie[cangjie_index_temp[i]][7] > 1 && cangjie[cangjie_index_temp[i + 1]][7] == 1) {
+	    int temp = cangjie_index_temp[i];
+	    cangjie_index_temp[i] = cangjie_index_temp[i + 1];
+	    cangjie_index_temp[i + 1] = temp;
+	    swap = 1;
+	  }
+	}
+      }
+      for (i = 0; i < loop - 1; i++) {
+	if (cangjie[cangjie_index_temp[i]][7] == 1) start = i;
+	else break;
+      }
+      start++;
+    }
+    swap = 1;
     while (swap) {
       swap = 0;
-      for (i = 0; i < loop - 1; i++) {
-	if (cangjie_frequency[cangjie_index_temp[i]] < cangjie_frequency[cangjie_index_temp[i + 1]] &&
-	    cangjie[cangjie_index_temp[i]][7] >= cangjie[cangjie_index_temp[i + 1]][7]) {
-	  int temp = cangjie_index_temp[i];
-	  cangjie_index_temp[i] = cangjie_index_temp[i + 1];
-	  cangjie_index_temp[i + 1] = temp;
-	  swap = 1;
+      for (i = start; i < loop - 1; i++) {
+	if (cangjie_func.mSortingMethod == 0) {
+	  if (cangjie_frequency[cangjie_index_temp[i]] < cangjie_frequency[cangjie_index_temp[i + 1]] &&
+	      cangjie[cangjie_index_temp[i]][7] >= cangjie[cangjie_index_temp[i + 1]][7]) {
+	    int temp = cangjie_index_temp[i];
+	    cangjie_index_temp[i] = cangjie_index_temp[i + 1];
+	    cangjie_index_temp[i + 1] = temp;
+	    swap = 1;
+	  }
+	} else if (cangjie_func.mSortingMethod == 1) {
+	  if (cangjie_frequency[cangjie_index_temp[i]] < cangjie_frequency[cangjie_index_temp[i + 1]]) {
+	    int temp = cangjie_index_temp[i];
+	    cangjie_index_temp[i] = cangjie_index_temp[i + 1];
+	    cangjie_index_temp[i + 1] = temp;
+	    swap = 1;
+	  }
 	}
       }
     }
@@ -474,6 +505,11 @@ void cangjie_enableHongKongChar(jboolean hk)
   cangjie_func.mEnableHK = (hk != 0);
 }
 
+void cangjie_setSortingMethod(int method)
+{
+  cangjie_func.mSortingMethod = method;
+}
+
 struct _input_method cangjie_func =
 {
   .init            = cangjie_init,
@@ -491,5 +527,6 @@ struct _input_method cangjie_func =
   .getMatchChar    = cangjie_getMatchChar,
   .getFrequency    = cangjie_getFrequency,
   .reset           = cangjie_reset,
-  .saveMatch       = cangjie_saveMatch
+  .saveMatch       = cangjie_saveMatch,
+  .setSortingMethod = cangjie_setSortingMethod
 };
