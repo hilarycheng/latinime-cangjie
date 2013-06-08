@@ -16,12 +16,38 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-# LOCAL_ARM_MODE := arm
+# LOCAL_ARM_MODE  := arm
 
 LOCAL_MODULE    := chinese_table
-LOCAL_SRC_FILES := chinese_table.c input_method.c phrase.c quick_method.c cangjie_method.c stroke_method.c 
+LOCAL_SRC_FILES := chinese_table.c input_method.c phrase.c 
 
-# LOCAL_LDLIBS    := -lm -llog -landroid
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+# LOCAL_ARM_MODE  := arm
+LOCAL_MODULE    := quick
+LOCAL_SRC_FILES := quick_method.c
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+# LOCAL_ARM_MODE  := arm
+LOCAL_MODULE    := cangjie3
+LOCAL_SRC_FILES := cangjie_method.c
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+# LOCAL_ARM_MODE  := arm
+LOCAL_MODULE    := stroke
+LOCAL_SRC_FILES := stroke_method.c
 LOCAL_LDLIBS    := -lm -llog 
 
 include $(BUILD_SHARED_LIBRARY)

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <jni.h>
 #include <android/log.h>
+#include <dlfcn.h>
 #define  LOG_TAG    "Cangjie"
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
@@ -10,13 +11,46 @@
 
 int mTotalMatch = 0;
 int mSaved = 0;
-int mCurrentIm = CANGJIE;
+int mCurrentIm = -1;
 jboolean mEnableHK = 0;
 char data_path[1024] = "0";
 char quick_data[1024] = "0";
 char cangjie_data[1024] = "0";
 char cangjie_hk_data[1024] = "0";
 jchar keyStorage[64];
+
+void  *inputMethodHandle = 0;
+char *inputMethodList[4] = {
+  "/data/data/com.diycircuits.inputmethod.latin/lib/libquick.so",
+  "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",
+  "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",
+  0
+};
+char *inputMethodFunc[4] = {
+  "quick_func",
+  "cangjie_func",
+  "stroke_func",
+  0
+};
+struct _input_method *input_method = NULL;
+
+__attribute__((constructor)) static void onDlOpen(void)
+{
+  inputMethodHandle = 0;
+}
+
+static void loadInputMethod(INPUT_METHOD method)
+{
+  if (inputMethodHandle == NULL) {
+    inputMethodHandle = dlopen(inputMethodList[method], RTLD_NOW | RTLD_GLOBAL);
+  } else {
+    if (input_method != NULL) input_method->saveMatch();
+    dlclose(inputMethodHandle);
+    inputMethodHandle = dlopen(inputMethodList[method], RTLD_NOW | RTLD_GLOBAL);
+  }
+  input_method = (struct _input_method *) dlsym(inputMethodHandle, inputMethodFunc[method]);
+  input_method->init(quick_data);
+}
 
 void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz, jbyteArray path)
 {
@@ -32,18 +66,19 @@ void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz,
 
 void Java_com_diycircuits_cangjie_TableLoader_initialize(JNIEnv* env, jobject thiz)
 {
-  input_method[QUICK]->init(quick_data);  
-  input_method[CANGJIE]->init(quick_data);
-  input_method[STROKE]->init(quick_data);
+  /* input_method[QUICK]->init(quick_data);   */
+  /* input_method[CANGJIE]->init(quick_data); */
+  /* input_method[STROKE]->init(quick_data); */
   init_phrase();
   load_phrase(quick_data);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_reset(JNIEnv* env, jobject thiz)
 {
-  input_method[QUICK]->reset();
-  input_method[CANGJIE]->reset();
-  input_method[STROKE]->reset();
+  /* input_method[QUICK]->reset(); */
+  /* input_method[CANGJIE]->reset(); */
+  /* input_method[STROKE]->reset(); */
+  if (input_method != NULL) input_method->reset(); 
 }
  
 jchar Java_com_diycircuits_cangjie_TableLoader_getChar(JNIEnv* env, jobject thiz)
@@ -75,17 +110,22 @@ jchar Java_com_diycircuits_cangjie_TableLoader_passCharArray(JNIEnv* env, jobjec
 
 jint Java_com_diycircuits_cangjie_TableLoader_getMaxKey(JNIEnv* env, jobject thiz)
 {
-  return input_method[mCurrentIm]->maxKey();
+  /* return input_method[mCurrentIm]->maxKey(); */
+  if (input_method == NULL) return 0;
+
+  return input_method->maxKey();
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_setInputMethod(JNIEnv* env, jobject thiz, jint im)
 {
+  if (mCurrentIm != im) loadInputMethod(im);
   mCurrentIm = im;
 }
  
 void Java_com_diycircuits_cangjie_TableLoader_searchCangjie(JNIEnv* env, jobject thiz, jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
-  input_method[mCurrentIm]->searchWord(key0, key1, key2, key3, key4);
+  /* input_method[mCurrentIm]->searchWord(key0, key1, key2, key3, key4); */
+  if (input_method != NULL) input_method->searchWord(key0, key1, key2, key3, key4);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_searchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
@@ -102,18 +142,21 @@ void Java_com_diycircuits_cangjie_TableLoader_searchCangjieMore(JNIEnv* env, job
   (*env)->GetCharArrayRegion(env, key3, 0, 6, key3array);
   (*env)->GetCharArrayRegion(env, key4, 0, 6, key4array);
   
-  input_method[mCurrentIm]->searchWordMore(key0array, key1array, key2array, key3array, key4array);
+  /* input_method[mCurrentIm]->searchWordMore(key0array, key1array, key2array, key3array, key4array); */
+  if (input_method != NULL) input_method->searchWordMore(key0array, key1array, key2array, key3array, key4array);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_enableHongKongChar(JNIEnv* env, jobject thiz, jboolean hk)
 {
   mEnableHK = hk;
-  input_method[mCurrentIm]->enableHongKongChar(mEnableHK);
+  /* input_method[mCurrentIm]->enableHongKongChar(mEnableHK); */
+  if (input_method != NULL) input_method->enableHongKongChar(mEnableHK);
 }
 
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjie(JNIEnv* env, jobject thiz, jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
-  return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4);
+  /* return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4); */
+  return input_method->tryMatchWord(key0, key1, key2, key3, key4);
 }
  
 jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, jobject thiz, jcharArray key, jint len)
@@ -121,10 +164,16 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, job
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
+  /* if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
+  /*   return input_method[mCurrentIm]->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
+  /* else if (mCurrentIm == STROKE) */
+  /*   return input_method[mCurrentIm]->tryMatchWordArray(keyStorage, len); */
+  if (input_method == NULL) return 0;
+  
   if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
-    return input_method[mCurrentIm]->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
+    return input_method->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
   else if (mCurrentIm == STROKE)
-    return input_method[mCurrentIm]->tryMatchWordArray(keyStorage, len);
+    return input_method->tryMatchWordArray(keyStorage, len);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject thiz, jcharArray key, jint len)
@@ -132,10 +181,16 @@ void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject th
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
-  if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
-    input_method[mCurrentIm]->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
-  else if (mCurrentIm == STROKE)
-    input_method[mCurrentIm]->searchWordArray(keyStorage, len);
+  /* if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
+  /*   input_method[mCurrentIm]->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
+  /* else if (mCurrentIm == STROKE) */
+  /*   input_method[mCurrentIm]->searchWordArray(keyStorage, len); */
+  if (input_method != NULL) {
+    if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
+      input_method->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
+    else if (mCurrentIm == STROKE)
+      input_method->searchWordArray(keyStorage, len);
+  }
 }
 
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
@@ -152,42 +207,54 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjieMore(JNIEnv* en
   (*env)->GetCharArrayRegion(env, key3, 0, 6, key3array);
   (*env)->GetCharArrayRegion(env, key4, 0, 6, key4array);
   
-  return input_method[mCurrentIm]->tryMatchWordMore(key0array, key1array, key2array, key3array, key4array);
+  /* return input_method[mCurrentIm]->tryMatchWordMore(key0array, key1array, key2array, key3array, key4array); */
+  if (input_method == NULL) return 0;
+  return input_method->tryMatchWordMore(key0array, key1array, key2array, key3array, key4array);
 }
  
 jint Java_com_diycircuits_cangjie_TableLoader_totalMatch(JNIEnv* env, jobject thiz)
 {
-  return input_method[mCurrentIm]->totalMatch();
+  /* return input_method[mCurrentIm]->totalMatch(); */
+  if (input_method == NULL) return 0;
+  return input_method->totalMatch();
 }
  
 jchar Java_com_diycircuits_cangjie_TableLoader_getMatchChar(JNIEnv* env, jobject thiz, jint index)
 {
-  return input_method[mCurrentIm]->getMatchChar(index);
+  /* return input_method[mCurrentIm]->getMatchChar(index); */
+  if (input_method == NULL) return 0;
+  return input_method->getMatchChar(index);
 }
  
 jint Java_com_diycircuits_cangjie_TableLoader_getFrequency(JNIEnv* env, jobject thiz, jint index)
 {
-  return input_method[mCurrentIm]->getFrequency(index);
+  /* return input_method[mCurrentIm]->getFrequency(index); */
+  if (input_method == NULL) return 0;
+  return input_method->getFrequency(index);
 }
  
 jint Java_com_diycircuits_cangjie_TableLoader_updateFrequency(JNIEnv* env, jobject thiz, jchar ch)
 {
-  return input_method[mCurrentIm]->updateFrequency(ch);
+  /* return input_method[mCurrentIm]->updateFrequency(ch); */
+  if (input_method == NULL) return 0;
+  return input_method->updateFrequency(ch);
 }
 			
 void Java_com_diycircuits_cangjie_TableLoader_saveMatch(JNIEnv* env, jobject thiz)
 {
-  input_method[QUICK]->saveMatch();
-  input_method[CANGJIE]->saveMatch();
-  input_method[STROKE]->saveMatch();
+  /* input_method[QUICK]->saveMatch(); */
+  /* input_method[CANGJIE]->saveMatch(); */
+  /* input_method[STROKE]->saveMatch(); */
+  if (input_method != NULL) input_method->saveMatch();
   save_phrase();
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_clearAllFrequency(JNIEnv *env, jobject thiz)
 {
-  input_method[QUICK]->clearFrequency();
-  input_method[CANGJIE]->clearFrequency();
-  input_method[STROKE]->clearFrequency();
+  /* input_method[QUICK]->clearFrequency(); */
+  /* input_method[CANGJIE]->clearFrequency(); */
+  /* input_method[STROKE]->clearFrequency(); */
+  if (input_method != NULL) input_method->clearFrequency();
   clear_phrase();
 }
 
@@ -306,7 +373,8 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseFrequency(JNIEnv *env, jo
 
 void Java_com_diycircuits_cangjie_TableLoader_setSortingMethod(JNIEnv *env, jobject thiz, jint method)
 {
-  input_method[QUICK]->setSortingMethod(method);
-  input_method[CANGJIE]->setSortingMethod(method);
-  input_method[STROKE]->setSortingMethod(method);
+  /* input_method[QUICK]->setSortingMethod(method); */
+  /* input_method[CANGJIE]->setSortingMethod(method); */
+  /* input_method[STROKE]->setSortingMethod(method); */
+  if (input_method != NULL) input_method->setSortingMethod(method);
 }

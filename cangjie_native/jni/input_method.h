@@ -39,6 +39,6 @@ struct _input_method {
   jboolean mEnableHK;
 };
 
-extern struct _input_method *input_method[4];
+/* extern struct _input_method *input_method[4]; */
 
 #endif

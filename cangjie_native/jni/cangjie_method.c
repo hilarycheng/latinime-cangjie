@@ -15,10 +15,10 @@ typedef struct {
   int index[sizeof(cangjie_index)];
 } CANGJIE_SORT;
 
-CANGJIE_SORT cangjie_sort[5];
-int _mTotalMatch = 0;
+static CANGJIE_SORT cangjie_sort[5];
+static int _mTotalMatch = 0;
 
-void cangjie_init(char *path)
+static void cangjie_init(char *path)
 {
   int clear = 0;
   int count = 0;
@@ -62,12 +62,12 @@ void cangjie_init(char *path)
   }
 }
 
-int cangjie_maxKey(void)
+static int cangjie_maxKey(void)
 {
   return 5;
 }
 
-inline int cangjie_memcmp(jchar *word, jchar **key, int len)
+static inline int cangjie_memcmp(jchar *word, jchar **key, int len)
 {
   int count = 0;
   int result = 0;
@@ -92,7 +92,7 @@ inline int cangjie_memcmp(jchar *word, jchar **key, int len)
 }
 
   /* char buffer[1024]; */
-jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4, int updateindex)
+static jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4, int updateindex)
 {
   jchar *src[6];
   jchar empty[6] = { 0, 0, 0, 0, 0, 0 };
@@ -256,7 +256,7 @@ jboolean cangjie_searchingMore(jchar* key0, jchar* key1, jchar* key2, jchar* key
   return 1;
 }
 
-jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4, int updateindex)
+static jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4, int updateindex)
 {
   jchar src[6];
   int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
@@ -400,19 +400,19 @@ jboolean cangjie_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar
   return (loop > 0) ? 1 : 0;
 }
 
-void cangjie_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
+static void cangjie_searchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
   cangjie_func.mTotalMatch = _mTotalMatch;
   memcpy(cangjie_index, cangjie_index_temp, _mTotalMatch * sizeof(jint));
 }
 
-void cangjie_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
+static void cangjie_searchWordMore(jchar *key0, jchar *key1, jchar *key2, jchar *key3, jchar *key4)
 {
   cangjie_func.mTotalMatch = _mTotalMatch;
   memcpy(cangjie_index, cangjie_index_temp, _mTotalMatch * sizeof(jint));
 }
 
-int cmp(jchar *s, jchar *d, int n) {
+static int cmp(jchar *s, jchar *d, int n) {
   int c = 0, l = 0;
   for (c = 0; c < n; c++) {
     if (s[c] != d[c]) l++;
@@ -420,22 +420,22 @@ int cmp(jchar *s, jchar *d, int n) {
   return l;
 }
 
-jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
+static jboolean cangjie_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
   return cangjie_searching(key0, key1, key2, key3, key4, 0);
 }
 
-jboolean cangjie_tryMatchWordMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4)
+static jboolean cangjie_tryMatchWordMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4)
 {
   return cangjie_searchingMore(key0, key1, key2, key3, key4, 0);
 }
 
-int cangjie_totalMatch(void)
+static int cangjie_totalMatch(void)
 {
   return cangjie_func.mTotalMatch;
 }
 
-int cangjie_updateFrequency(jchar ch)
+static int cangjie_updateFrequency(jchar ch)
 {
   int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
   int count = 0;
@@ -451,7 +451,7 @@ int cangjie_updateFrequency(jchar ch)
   return 0;
 }
 
-void cangjie_clearFrequency(void)
+static void cangjie_clearFrequency(void)
 {
   int count = 0;
   
@@ -462,7 +462,7 @@ void cangjie_clearFrequency(void)
   remove(cangjie_func.mPath);
 }
 
-jchar cangjie_getMatchChar(int index)
+static jchar cangjie_getMatchChar(int index)
 {
   int total = sizeof(cangjie) / (sizeof(jchar) * CANGJIE_COLUMN);
 
@@ -472,18 +472,18 @@ jchar cangjie_getMatchChar(int index)
   return cangjie[cangjie_index[index]][5];
 }
 
-jint cangjie_getFrequency(int index)
+static jint cangjie_getFrequency(int index)
 {
   return cangjie_frequency[cangjie_index[index]];
 }
 
-void cangjie_reset(void)
+static void cangjie_reset(void)
 {
   cangjie_func.mTotalMatch = 0;
   _mTotalMatch = 0;
 }
 
-void cangjie_saveMatch(void)
+static void cangjie_saveMatch(void)
 {
   char key[8];
 
@@ -500,7 +500,7 @@ void cangjie_saveMatch(void)
   }
 }
 
-void cangjie_enableHongKongChar(jboolean hk)
+static void cangjie_enableHongKongChar(jboolean hk)
 {
   cangjie_func.mEnableHK = (hk != 0);
 }
@@ -530,3 +530,13 @@ struct _input_method cangjie_func =
   .saveMatch       = cangjie_saveMatch,
   .setSortingMethod = cangjie_setSortingMethod
 };
+
+__attribute__((constructor)) static void onDlOpen(void)
+{
+  LOGE(" Constructor Open ");
+}
+
+__attribute__((destructor)) static void onDlClose(void)
+{
+  LOGE(" Constructor Close ");
+}
