@@ -401,5 +401,6 @@
     
     <string name="fullsymbol_chinesekeyboard">在中文鍵盤使用全形符號</string>
 
-    <string name="myownsource">有關本軟件開源碼 http://github.com/hilarycheng/ </string>
+    <string name="prefs_candidate_font_size">選字行/頁字型大小</string>
+
 </resources>
