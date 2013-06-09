@@ -26,13 +26,29 @@ char *inputMethodList[4] = {
   "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",
   0
 };
+
 char *inputMethodFunc[4] = {
   "quick_func",
   "cangjie_func",
   "stroke_func",
   0
 };
+
 struct _input_method *input_method = NULL;
+
+struct _INPUT_METHOD_LIST {
+  char *library_path;
+  char *function_name;
+  char *name;
+} InputMethodList[8] = {
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libquick.so",     "quick_func",     "速成" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3(香港字)" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie5.so",  "cangjie5_func",  "倉頡5" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",    "stroke_func",    "筆劃" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libdayi3.so",     "dayi3_func",     "大易三碼" },
+  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcantonese.so", "cantonese_func", "廣東話拼音" },
+};
 
 __attribute__((constructor)) static void onDlOpen(void)
 {
