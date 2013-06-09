@@ -235,6 +235,10 @@
           android:summary="http://www.gnu.org/licenses/gpl-2.0.html"
           android:title="Open Sources License" />
       <Preference
+          android:key="iconlicense"
+          android:summary="Thanks for Muthar Suggestion"
+          android:title="Icon / Various Color Design" />
+      <Preference
           android:key="cangjie3license"
           android:summary="https://github.com/definite/ibus-table-chinese/tree/master/tables/"
           android:title="Cangjie3, Quick Reference" />
