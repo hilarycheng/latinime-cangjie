@@ -69,6 +69,11 @@
             android:summary="@string/candidate_popup_summary"
             android:defaultValue="true"
             android:persistent="true" />
+        <com.diycircuits.widgets.SeekBarPreference
+            android:defaultValue="100"
+            android:key="candidate_font_size"
+            android:max="200"
+            android:title="@string/prefs_candidate_font_size" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/general_category"
@@ -114,7 +119,6 @@
             android:key="portrait_height"
             android:max="999"
             android:title="@string/prefs_keyboard_portrait_height" />
-
         <com.diycircuits.widgets.SeekBarPreference
             android:defaultValue="460"
             android:key="landscape_height"
@@ -246,5 +250,13 @@
           android:key="strokelicense"
           android:summary="Thanks for Ashin/Dreamlifer, http://maemo.org/packages/source/view/fremantle_extras-devel_free_source/strokeorder/0.6-1/"
           android:title="Stroke Reference" />
+      <Preference
+          android:key="seekbarreference"
+          android:summary="http://www.flatworld.eu/slider/"
+          android:title="SeekBar Source Reference" />
+      <Preference
+          android:key="horizontallistviewreference"
+          android:summary="https://github.com/sephiroth74/HorizontalVariableListView/"
+          android:title="Horizontal List View Reference" />
     </PreferenceCategory>
 </PreferenceScreen>
