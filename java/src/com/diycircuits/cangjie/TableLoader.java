@@ -48,6 +48,9 @@ public class TableLoader {
     public native void updatePhraseFrequency(int idx);
     public native int getPhraseFrequency(int idx);
     public native void setSortingMethod(int method);
+    public native void setupOnce();
+    public native int getInputMethodCount();
+    public native String[] getInputMethodNameList();
 
     static {
 	System.loadLibrary("chinese_table");

@@ -52,7 +52,13 @@ public class Cangjie implements CandidateListener {
 	} catch (UnsupportedEncodingException ex) {
 	}
 
+	mTable.setupOnce();
 	mTable.initialize();
+
+	// Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
+	// for (int count = 0; count < mTable.getInputMethodCount(); count++) {
+	//     Log.i("Cangjie", "Input Method Name " + count + " " + mTable.getInputMethodNameList()[count]);
+	// }
 
 	boolean sorting = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_sorting_mode", true);
 	mTable.setSortingMethod(sorting ? 0 : 1);

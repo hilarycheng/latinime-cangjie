@@ -40,7 +40,7 @@ struct _INPUT_METHOD_LIST {
   char *library_path;
   char *function_name;
   char *name;
-} InputMethodList[8] = {
+} InputMethodList[16] = {
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libquick.so",     "quick_func",     "速成" },
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3" },
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3(香港字)" },
@@ -48,7 +48,12 @@ struct _INPUT_METHOD_LIST {
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",    "stroke_func",    "筆劃" },
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libdayi3.so",     "dayi3_func",     "大易三碼" },
   { "/data/data/com.diycircuits.inputmethod.latin/lib/libcantonese.so", "cantonese_func", "廣東話拼音" },
+  { 0, 0, 0}
 };
+
+int inputMethodCount = 0;
+jobjectArray inputMethodNameList = NULL;
+jobject _inputMethodNameList = NULL;
 
 __attribute__((constructor)) static void onDlOpen(void)
 {
@@ -66,6 +71,21 @@ static void loadInputMethod(INPUT_METHOD method)
   }
   input_method = (struct _input_method *) dlsym(inputMethodHandle, inputMethodFunc[method]);
   input_method->init(quick_data);
+}
+
+void Java_com_diycircuits_cangjie_TableLoader_setupOnce(JNIEnv *env, jobject thiz)
+{
+  int count = 0;
+
+  while (InputMethodList[count].library_path != NULL) count++;
+  inputMethodCount = count;
+
+  inputMethodNameList = (*env)->NewObjectArray(env, (jsize) inputMethodCount, (jclass) (*env)->FindClass(env, "java/lang/String"), (jobject) NULL);
+  for (count = 0; count < inputMethodCount; count++) {
+    jstring str = (*env)->NewStringUTF(env, InputMethodList[count].name);
+    (*env)->SetObjectArrayElement(env, inputMethodNameList, count, str);
+  }
+  _inputMethodNameList = (*env)->NewGlobalRef(env, inputMethodNameList);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz, jbyteArray path)
@@ -393,4 +413,14 @@ void Java_com_diycircuits_cangjie_TableLoader_setSortingMethod(JNIEnv *env, jobj
   /* input_method[CANGJIE]->setSortingMethod(method); */
   /* input_method[STROKE]->setSortingMethod(method); */
   if (input_method != NULL) input_method->setSortingMethod(method);
+}
+
+jint Java_com_diycircuits_cangjie_TableLoader_getInputMethodCount(JNIEnv *env, jobject thiz)
+{
+  return inputMethodCount;
+}
+
+jobject Java_com_diycircuits_cangjie_TableLoader_getInputMethodNameList(JNIEnv *env, jobject thiz)
+{
+  return _inputMethodNameList;
 }
