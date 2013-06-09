@@ -37,9 +37,11 @@ import android.view.inputmethod.InputMethodSubtype;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.util.Log;
 
 import com.diycircuits.inputmethod.latin.define.ProductionFlag;
 import com.android.inputmethodcommon.InputMethodSettingsFragment;
+import com.diycircuits.cangjie.TableLoader;
 
 public final class Settings extends InputMethodSettingsFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -249,6 +251,16 @@ public final class Settings extends InputMethodSettingsFragment
             updateKeypressSoundVolumeSummary(prefs, res);
         }
         refreshEnablingsOfKeypressSoundAndVibrationSettings(prefs, res);
+
+	TableLoader mTable = TableLoader.mInstance;
+	Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
+	for (int count = 0; count < mTable.getInputMethodCount(); count++) {
+	    Log.i("Cangjie", "Input Method Name " + count + " " + mTable.getInputMethodNameList()[count]);
+	}
+
+	final ListPreference inputList = (ListPreference) findPreference("cangjie_mode");
+	inputList.setEntries(mTable.getInputMethodNameList());
+	inputList.setEntryValues(mTable.getInputMethodIndexList());
     }
 
     @Override
@@ -274,6 +286,8 @@ public final class Settings extends InputMethodSettingsFragment
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
+	Log.i("Cangjie", "On Shared Preference " + key);
+	
         (new BackupManager(getActivity())).dataChanged();
         if (key.equals(PREF_POPUP_ON)) {
             setPreferenceEnabled(findPreference(PREF_KEY_PREVIEW_POPUP_DISMISS_DELAY),

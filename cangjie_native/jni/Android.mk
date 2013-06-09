@@ -36,7 +36,17 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
+LOCAL_CFLAGS    += -DCANGJIE5
+LOCAL_MODULE    := cangjie5
+LOCAL_SRC_FILES := cangjie_method.c
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
 # LOCAL_ARM_MODE  := arm
+LOCAL_CFLAGS    += -DCANGJIE3
 LOCAL_MODULE    := cangjie3
 LOCAL_SRC_FILES := cangjie_method.c
 LOCAL_LDLIBS    := -lm -llog 

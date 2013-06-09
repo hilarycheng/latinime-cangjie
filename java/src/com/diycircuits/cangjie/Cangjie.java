@@ -29,7 +29,7 @@ public class Cangjie implements CandidateListener {
     private char mPhrase[] = new char[256];
     private int  mTotalMatch = 0;
     private int  mMode = CANGJIE;
-    private TableLoader mTable = new TableLoader();
+    private TableLoader mTable = TableLoader.mInstance;
     private CandidateSelect mSelect = null;
     private CandidateListener mListener = null;
     private StringBuffer mCangjieCode = new StringBuffer();
@@ -52,7 +52,6 @@ public class Cangjie implements CandidateListener {
 	} catch (UnsupportedEncodingException ex) {
 	}
 
-	mTable.setupOnce();
 	mTable.initialize();
 
 	// Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
@@ -201,18 +200,22 @@ public class Cangjie implements CandidateListener {
 	}
 	String value = PreferenceManager.getDefaultSharedPreferences(mContext).getString("cangjie_mode", "0");
 	if (value.compareTo("1") == 0) {
-	    mTable.setInputMethod(TableLoader.QUICK);
+	    mTable.setInputMethod('1');
 	    mMode = QUICK;
 	} else if (value.compareTo("3") == 0) {
-	    mTable.setInputMethod(TableLoader.STROKE);
+	    mTable.setInputMethod('3');
 	    mTable.enableHongKongChar(true);
 	    mMode = STROKE;
 	} else if (value.compareTo("2") == 0) {
-	    mTable.setInputMethod(TableLoader.CANGJIE);
+	    mTable.setInputMethod('2');
 	    mTable.enableHongKongChar(true);
 	    mMode = CANGJIE;
+	} else if (value.compareTo("4") == 0) {
+	    mTable.setInputMethod('4');
+	    mTable.enableHongKongChar(false);
+	    mMode = CANGJIE;
 	} else {
-	    mTable.setInputMethod(TableLoader.CANGJIE);
+	    mTable.setInputMethod('0');
 	    mTable.enableHongKongChar(false);
 	    mMode = CANGJIE;
 	}

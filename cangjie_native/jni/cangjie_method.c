@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include "cangjie_method.h"
+
+#ifdef CANGJIE3
 #include "cangjie.h"
+#endif
+#ifdef CANGJIE5
+#include "cangjie5.h"
+#endif
+
 #ifndef X86
 #include <android/log.h>
 #define  LOG_TAG    "Cangjie"
@@ -28,7 +35,12 @@ static void cangjie_init(char *path)
   cangjie_func.mSaved = 0;
 
   strncpy(cangjie_func.mPath,           path, sizeof(cangjie_func.mPath));
+#ifdef CANGJIE3
   strncat(cangjie_func.mPath, "/cangjie.dat", sizeof(cangjie_func.mPath));
+#endif  
+#ifdef CANGJIE5
+  strncat(cangjie_func.mPath, "/cangjie5.dat", sizeof(cangjie_func.mPath));
+#endif  
 
   for (count = 0; count < sizeof(cangjie_index) / sizeof(jint); count++) {
     cangjie_index[count] = -1;
@@ -510,7 +522,12 @@ void cangjie_setSortingMethod(int method)
   cangjie_func.mSortingMethod = method;
 }
 
+#ifdef CANGJIE3
 struct _input_method cangjie_func =
+#endif
+#ifdef CANGJIE5
+struct _input_method cangjie5_func =
+#endif
 {
   .init            = cangjie_init,
   .maxKey          = cangjie_maxKey,

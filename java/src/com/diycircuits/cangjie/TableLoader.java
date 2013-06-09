@@ -17,6 +17,8 @@ public class TableLoader {
     public final static int CANGJIE = 1;
     public final static int STROKE  = 2;
 
+    public static TableLoader mInstance = null;
+
     public native void setPath(byte[] path);
     public native void initialize();
     public native char getChar();
@@ -24,7 +26,7 @@ public class TableLoader {
     public native char passCharArray(char[] array);
     public native int  updateFrequency(char ch);
     public native void enableHongKongChar(boolean hk);
-    public native void setInputMethod(int im);
+    public native void setInputMethod(char im);
     public native void searchWord(char[] key, int len);
     public native void searchCangjie(char index0, char index1, char index2, char index3, char index4);
     public native void searchCangjieMore(char[] index0, char[] index1, char[] index2, char[] index3, char[] index4);
@@ -51,9 +53,13 @@ public class TableLoader {
     public native void setupOnce();
     public native int getInputMethodCount();
     public native String[] getInputMethodNameList();
+    public native String[] getInputMethodIndexList();
 
     static {
 	System.loadLibrary("chinese_table");
+	mInstance = new TableLoader();
+	mInstance.setupOnce();
+	Log.i("Cangjie", "Table Loader Initialize");
     }
 
 }

@@ -286,6 +286,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     public void setCangjieKeyboard() {
 	mIsCangjieMode = true;
 	String value = PreferenceManager.getDefaultSharedPreferences(mThemeContext).getString("cangjie_mode", "0");
+	Log.i("Cangjie" , "Set Cangjie Keyboard " + value);
 	if (value.compareTo("1") == 0) {
 	    if (isFullSymbol()) {
 		if (isCangjieEnglishKey()) 
@@ -300,7 +301,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 	    }
 	} else if (value.compareTo("3") == 0) {
 	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
-	} else {
+	} else if (value.compareTo("0") == 0 || value.compareTo("2") == 0 || value.compareTo("4") == 0) {
 	    if (isFullSymbol()) {
 		if (isCangjieEnglishKey()) 
 		    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_CANGJIE_ENGLISH));

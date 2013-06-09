@@ -11,7 +11,7 @@
 
 int mTotalMatch = 0;
 int mSaved = 0;
-int mCurrentIm = -1;
+jchar mCurrentIm = -1;
 jboolean mEnableHK = 0;
 char data_path[1024] = "0";
 char quick_data[1024] = "0";
@@ -37,55 +37,76 @@ char *inputMethodFunc[4] = {
 struct _input_method *input_method = NULL;
 
 struct _INPUT_METHOD_LIST {
+  char *index;
   char *library_path;
   char *function_name;
   char *name;
 } InputMethodList[16] = {
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libquick.so",     "quick_func",     "速成" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3(香港字)" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie5.so",  "cangjie5_func",  "倉頡5" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",    "stroke_func",    "筆劃" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libdayi3.so",     "dayi3_func",     "大易三碼" },
-  { "/data/data/com.diycircuits.inputmethod.latin/lib/libcantonese.so", "cantonese_func", "廣東話拼音" },
+  { "1", "/data/data/com.diycircuits.inputmethod.latin/lib/libquick.so",     "quick_func",     "速成" },
+  { "0", "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3" },
+  { "2", "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie3.so",  "cangjie_func",   "倉頡3(香港字)" },
+  { "4", "/data/data/com.diycircuits.inputmethod.latin/lib/libcangjie5.so",  "cangjie5_func",  "倉頡5" },
+  { "3", "/data/data/com.diycircuits.inputmethod.latin/lib/libstroke.so",    "stroke_func",    "筆劃" },
+  { "5", "/data/data/com.diycircuits.inputmethod.latin/lib/libdayi3.so",     "dayi3_func",     "大易三碼" },
+  { "6", "/data/data/com.diycircuits.inputmethod.latin/lib/libcantonese.so", "cantonese_func", "廣東話拼音" },
   { 0, 0, 0}
 };
 
 int inputMethodCount = 0;
 jobjectArray inputMethodNameList = NULL;
 jobject _inputMethodNameList = NULL;
+jobjectArray inputMethodIndexList = NULL;
+jobject _inputMethodIndexList = NULL;
 
 __attribute__((constructor)) static void onDlOpen(void)
 {
   inputMethodHandle = 0;
 }
 
-static void loadInputMethod(INPUT_METHOD method)
+static void loadInputMethod(jchar m)
 {
+  int count = 0; int method = -1;
+  while (InputMethodList[count].index != NULL) {
+    if (InputMethodList[count].index[0] == m) {
+      method = count;
+      break;
+    } 
+    count++;   
+  }
+  if (method == -1) return;
+
   if (inputMethodHandle == NULL) {
-    inputMethodHandle = dlopen(inputMethodList[method], RTLD_NOW | RTLD_GLOBAL);
+    inputMethodHandle = dlopen(InputMethodList[method].library_path, RTLD_NOW | RTLD_GLOBAL);
   } else {
     if (input_method != NULL) input_method->saveMatch();
     dlclose(inputMethodHandle);
-    inputMethodHandle = dlopen(inputMethodList[method], RTLD_NOW | RTLD_GLOBAL);
+    inputMethodHandle = dlopen(InputMethodList[method].library_path, RTLD_NOW | RTLD_GLOBAL);
   }
-  input_method = (struct _input_method *) dlsym(inputMethodHandle, inputMethodFunc[method]);
+  input_method = (struct _input_method *) dlsym(inputMethodHandle, InputMethodList[method].function_name);
   input_method->init(quick_data);
+  LOGE("Load Input Method : %d %s ", method, InputMethodList[method].name);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_setupOnce(JNIEnv *env, jobject thiz)
 {
   int count = 0;
+  jstring str;
 
   while (InputMethodList[count].library_path != NULL) count++;
   inputMethodCount = count;
 
   inputMethodNameList = (*env)->NewObjectArray(env, (jsize) inputMethodCount, (jclass) (*env)->FindClass(env, "java/lang/String"), (jobject) NULL);
+  inputMethodIndexList = (*env)->NewObjectArray(env, (jsize) inputMethodCount, (jclass) (*env)->FindClass(env, "java/lang/String"), (jobject) NULL);
   for (count = 0; count < inputMethodCount; count++) {
-    jstring str = (*env)->NewStringUTF(env, InputMethodList[count].name);
+    str = (*env)->NewStringUTF(env, InputMethodList[count].name);
     (*env)->SetObjectArrayElement(env, inputMethodNameList, count, str);
+
+    str = (*env)->NewStringUTF(env, InputMethodList[count].index);
+    (*env)->SetObjectArrayElement(env, inputMethodIndexList, count, str);
   }
+
   _inputMethodNameList = (*env)->NewGlobalRef(env, inputMethodNameList);
+  _inputMethodIndexList = (*env)->NewGlobalRef(env, inputMethodIndexList);
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_setPath(JNIEnv *env, jobject thiz, jbyteArray path)
@@ -152,7 +173,7 @@ jint Java_com_diycircuits_cangjie_TableLoader_getMaxKey(JNIEnv* env, jobject thi
   return input_method->maxKey();
 }
 
-void Java_com_diycircuits_cangjie_TableLoader_setInputMethod(JNIEnv* env, jobject thiz, jint im)
+void Java_com_diycircuits_cangjie_TableLoader_setInputMethod(JNIEnv* env, jobject thiz, jchar im)
 {
   if (mCurrentIm != im) loadInputMethod(im);
   mCurrentIm = im;
@@ -423,4 +444,9 @@ jint Java_com_diycircuits_cangjie_TableLoader_getInputMethodCount(JNIEnv *env, j
 jobject Java_com_diycircuits_cangjie_TableLoader_getInputMethodNameList(JNIEnv *env, jobject thiz)
 {
   return _inputMethodNameList;
+}
+
+jobject Java_com_diycircuits_cangjie_TableLoader_getInputMethodIndexList(JNIEnv *env, jobject thiz)
+{
+  return _inputMethodIndexList;
 }
