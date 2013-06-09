@@ -2,6 +2,8 @@ This is an Open Source Android Chinese Input Method. It is based 4.1 AOSP Englis
 
 You can get the offical binaries from https://play.google.com/store/apps/details?id=com.diycircuits.inputmethod.latin
 
+For the Launcher Icon & Various Color Design, Thanks for Muthar
+
 Cangjie3 and Quick Input Table Reference - https://github.com/definite/ibus-table-chinese/tree/master/tables/
 
 Stroke Reference - Thanks for Ashin/DreamLifer, http://maemo.org/packages/source/view/fremantle_extras-devel_free_source/strokeorder/0.6-1/
