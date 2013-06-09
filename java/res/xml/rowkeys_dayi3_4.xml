@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+**
+** Copyright 2012, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<merge
+    xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
+>
+    <Key
+        latin:keyLabel="心"
+        latin:keyHintLabel="Z"
+        latin:additionalMoreKeys="Z" />
+    <Key
+        latin:keyLabel="水"
+        latin:keyHintLabel="X"
+        latin:additionalMoreKeys="X" />
+    <Key
+        latin:keyLabel="鹿"
+        latin:keyHintLabel="C"
+        latin:additionalMoreKeys="C" />
+    <Key
+        latin:keyLabel="禾" 
+        latin:keyHintLabel="V"
+        latin:additionalMoreKeys="V" />
+    <Key
+        latin:keyLabel="馬"
+        latin:keyHintLabel="B"
+        latin:additionalMoreKeys="B" />
+    <Key
+        latin:keyLabel="魚"
+        latin:keyHintLabel="N"
+        latin:additionalMoreKeys="N" />
+    <Key
+        latin:keyLabel="雨"
+        latin:keyHintLabel="M"
+        latin:additionalMoreKeys="M" />
+    <Key
+        latin:keyLabel="力"
+        latin:keyHintLabel=","
+        latin:additionalMoreKeys="," />
+    <Key
+        latin:keyLabel="舟"
+        latin:keyHintLabel="."
+        latin:additionalMoreKeys="." />
+    <Key
+        latin:keyLabel="竹"
+        latin:keyHintLabel="/"
+        latin:additionalMoreKeys="/" />
+
+</merge>

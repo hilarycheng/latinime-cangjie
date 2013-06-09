@@ -66,4 +66,7 @@
     <Element
         latin:elementName="quick_english_normal"
         latin:elementKeyboard="@xml/kbd_cangjie_english_normal" />
+    <Element
+        latin:elementName="dayi3"
+        latin:elementKeyboard="@xml/kbd_dayi3" />
 </KeyboardLayoutSet>
