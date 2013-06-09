@@ -19,8 +19,8 @@
     android:title="@string/english_ime_settings"
     android:key="english_ime_settings">
     <PreferenceCategory
-        android:title="@string/general_category"
-        android:key="general_settings">
+        android:title="@string/chinese_category"
+        android:key="chinese_settings">
         <ListPreference
             android:key="language_mode"
             android:title="@string/language_mode"
@@ -59,12 +59,6 @@
 	    android:defaultValue="false"
             android:persistent="true"/>
         <CheckBoxPreference
-            android:key="auto_cap"
-            android:title="@string/auto_cap"
-            android:summary="@string/auto_cap_summary"
-            android:persistent="true"
-            android:defaultValue="true" />
-        <CheckBoxPreference
             android:key="fullsymbol_chinesekeyboard"
             android:title="@string/fullsymbol_chinesekeyboard"
             android:defaultValue="true"
@@ -75,6 +69,16 @@
             android:summary="@string/candidate_popup_summary"
             android:defaultValue="true"
             android:persistent="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/general_category"
+        android:key="general_settings">
+        <CheckBoxPreference
+            android:key="auto_cap"
+            android:title="@string/auto_cap"
+            android:summary="@string/auto_cap_summary"
+            android:persistent="true"
+            android:defaultValue="true" />
         <CheckBoxPreference
             android:key="vibrate_on"
             android:title="@string/vibrate_on_keypress"
@@ -105,7 +109,6 @@
             android:entryValues="@array/voice_input_modes_values"
             android:entries="@array/voice_input_modes"
             android:defaultValue="@string/voice_mode_main" />
-
         <com.diycircuits.widgets.SeekBarPreference
             android:defaultValue="618"
             android:key="portrait_height"
@@ -117,7 +120,6 @@
             android:key="landscape_height"
             android:max="999"
             android:title="@string/prefs_keyboard_landscape_height" />
-
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/correction_category"
@@ -220,5 +222,25 @@
                 android:key="pref_keypress_sound_volume"
                 android:title="@string/prefs_keypress_sound_volume_settings" />
         </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/opensource_category"
+        android:key="opensource_settings">
+      <Preference
+          android:key="visit"
+          android:summary="http://github.com/hilarycheng"
+          android:title="Visit developer website" />
+      <Preference
+          android:key="opensourcelicense"
+          android:summary="http://www.gnu.org/licenses/gpl-2.0.html"
+          android:title="Open Sources License" />
+      <Preference
+          android:key="cangjie3license"
+          android:summary="https://github.com/definite/ibus-table-chinese/tree/master/tables/"
+          android:title="Cangjie3, Quick Reference" />
+      <Preference
+          android:key="strokelicense"
+          android:summary="Thanks for Ashin/Dreamlifer, http://maemo.org/packages/source/view/fremantle_extras-devel_free_source/strokeorder/0.6-1/"
+          android:title="Stroke Reference" />
     </PreferenceCategory>
 </PreferenceScreen>

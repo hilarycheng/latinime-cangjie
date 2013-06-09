@@ -70,6 +70,12 @@
 
     <!-- Category title for misc options  -->
     <string name="misc_category">Other options</string>
+    
+    <!-- Category title for chinese options  -->
+    <string name="chinese_category">中文</string>
+
+    <!-- Category title for Open Source -->
+    <string name="opensource_category">Open Source Reference</string>
 
     <!-- Option name for advanced settings screen [CHAR LIMIT=25] -->
     <string name="advanced_settings">Advanced settings</string>
@@ -395,4 +401,5 @@
     
     <string name="fullsymbol_chinesekeyboard">在中文鍵盤使用全形符號</string>
 
+    <string name="myownsource">有關本軟件開源碼 http://github.com/hilarycheng/ </string>
 </resources>
