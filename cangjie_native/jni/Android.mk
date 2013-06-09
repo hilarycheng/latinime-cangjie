@@ -61,3 +61,11 @@ LOCAL_SRC_FILES := stroke_method.c
 LOCAL_LDLIBS    := -lm -llog 
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := cantonese
+LOCAL_SRC_FILES := cantonese_method.c
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)

@@ -16,9 +16,10 @@ import com.diycircuits.inputmethod.keyboard.ProximityInfo;
 
 public class Cangjie implements CandidateListener {
 
-    public final static int QUICK   = 0;
-    public final static int CANGJIE = 1;
-    public final static int STROKE  = 2;
+    public final static int QUICK     = 0;
+    public final static int CANGJIE   = 1;
+    public final static int STROKE    = 2;
+    public final static int CANTONESE = 3;
 
     private Context mContext = null;
     private char mCodeInput[] = new char[64];
@@ -154,7 +155,7 @@ public class Cangjie implements CandidateListener {
 	    return false;
 	}
 
-	if (isCangjieEnglishKey()) {
+	if (isCangjieEnglishKey() || mMode == CANTONESE) {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return true;
 	    }
@@ -214,6 +215,10 @@ public class Cangjie implements CandidateListener {
 	    mTable.setInputMethod('4');
 	    mTable.enableHongKongChar(false);
 	    mMode = CANGJIE;
+	} else if (value.compareTo("6") == 0) {
+	    mTable.setInputMethod('6');
+	    mTable.enableHongKongChar(false);
+	    mMode = CANTONESE;
 	} else {
 	    mTable.setInputMethod('0');
 	    mTable.enableHongKongChar(false);
@@ -259,7 +264,7 @@ public class Cangjie implements CandidateListener {
 	    if ((char) primaryCode == '＊')
 		return '*';
 	}
-	if (isCangjieEnglishKey()) {
+	if (isCangjieEnglishKey() || mMode == CANTONESE) {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return (char) (primaryCode | 0x20);
 	    }
@@ -397,14 +402,14 @@ public class Cangjie implements CandidateListener {
 	    return false;
 	}
 	
-	if (autocorrection) {
+	if (autocorrection && mMode != CANTONESE) {
 	    res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	} else {
 	    res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
 	}
 
 	if (res) {
-	    if (autocorrection) {
+	    if (autocorrection && mMode != CANTONESE) {
 		mTable.searchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	    } else {
 		mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
