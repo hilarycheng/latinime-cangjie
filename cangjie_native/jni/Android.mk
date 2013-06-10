@@ -69,3 +69,11 @@ LOCAL_SRC_FILES := cantonese_method.c
 LOCAL_LDLIBS    := -lm -llog 
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := dayi3
+LOCAL_SRC_FILES := dayi3_method.c
+LOCAL_LDLIBS    := -lm -llog 
+
+include $(BUILD_SHARED_LIBRARY)

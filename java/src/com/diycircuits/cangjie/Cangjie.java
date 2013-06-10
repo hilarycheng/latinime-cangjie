@@ -20,12 +20,14 @@ public class Cangjie implements CandidateListener {
     public final static int CANGJIE   = 1;
     public final static int STROKE    = 2;
     public final static int CANTONESE = 3;
+    public final static int DAYI3     = 4;
 
     private Context mContext = null;
     private char mCodeInput[] = new char[64];
     private char mCodeInputNearest[][] = new char[64][6];
     private int  mCodeCount = 0;
     private char mCodeMap[]   = new char[27 * 2];
+    private char mDayi3CodeMap[]   = new char[40 * 2];
     // private char mMatchChar[] = new char[21529];
     private char mPhrase[] = new char[256];
     private int  mTotalMatch = 0;
@@ -64,6 +66,7 @@ public class Cangjie implements CandidateListener {
 	mTable.setSortingMethod(sorting ? 0 : 1);
 	
 	loadCangjieKey();
+	loadDayi3Key();
     }
 
     public boolean hasMatch() {
@@ -142,6 +145,7 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isCode(int primaryCode) {
+	Log.i("Cangjie", "Is Code " + primaryCode);
 	if (mMode == STROKE) {
 	    if ((char) primaryCode == '一' ||
 		(char) primaryCode == '丨' ||
@@ -159,6 +163,15 @@ public class Cangjie implements CandidateListener {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return true;
 	    }
+	}
+	if (mMode == DAYI3) {
+	Log.i("Cangjie", "Is Code0 " + primaryCode);
+	    for (int count = 0; count < mDayi3CodeMap.length; count += 2) {
+		if (mDayi3CodeMap[count] == primaryCode)
+		    return true;
+	    }
+	Log.i("Cangjie", "Is Code1 " + primaryCode);
+	    return false;
 	}
 	for (int count = 0; count < mCodeMap.length; count += 2) {
 	    if (mCodeMap[count] == primaryCode)
@@ -219,6 +232,10 @@ public class Cangjie implements CandidateListener {
 	    mTable.setInputMethod('6');
 	    mTable.enableHongKongChar(false);
 	    mMode = CANTONESE;
+	} else if (value.compareTo("5") == 0) {
+	    mTable.setInputMethod('5');
+	    mTable.enableHongKongChar(false);
+	    mMode = DAYI3;
 	} else {
 	    mTable.setInputMethod('0');
 	    mTable.enableHongKongChar(false);
@@ -249,6 +266,28 @@ public class Cangjie implements CandidateListener {
 	}
     }
 
+    private void loadDayi3Key() {
+	try {
+	    InputStream is = mContext.getResources().openRawResource(R.raw.dayi3_key);
+	    InputStreamReader input = new InputStreamReader(is, "UTF-8");
+	    BufferedReader reader = new BufferedReader(input);
+	    String str = null;
+	    int count = 0, index = 0;
+	
+	    do {
+		str = reader.readLine();
+		mDayi3CodeMap[count + 1] = str.charAt(0);
+		mDayi3CodeMap[count    ] = str.charAt(2);
+		count += 2;
+	    } while (str != null && count < mDayi3CodeMap.length);
+		    
+	    reader.close();
+
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+    }
+
     private char convertPrimaryCode(int primaryCode) {
 	if (mMode == STROKE) {
 	    if ((char) primaryCode == '一')
@@ -268,6 +307,14 @@ public class Cangjie implements CandidateListener {
 	    if (primaryCode >= 'A' && primaryCode <= 'Z') {
 		return (char) (primaryCode | 0x20);
 	    }
+	}
+	if (mMode == DAYI3) {
+	    for (int count = 0; count < mDayi3CodeMap.length; count += 2) {
+		Log.i("Cangjie", "Daiyi Convert " + mDayi3CodeMap[count] + " " + primaryCode + " " + mDayi3CodeMap[count + 1]);
+		if (mDayi3CodeMap[count] == primaryCode)
+		    return mDayi3CodeMap[count + 1];
+	    }
+	    return 0;
 	}
 	for (int count = 0; count < mCodeMap.length; count += 2) {
 	    if (mCodeMap[count] == primaryCode)
@@ -293,11 +340,20 @@ public class Cangjie implements CandidateListener {
 		}
 	    }
 	    if (!changed) {
-		for (int count = 0; count < mCodeMap.length; count += 2) {
-		    if (mCodeMap[count] == key[i]) {
-			output[i] = mCodeMap[count + 1];
+		if (mMode == DAYI3) {
+		    for (int count = 0; count < mDayi3CodeMap.length; count += 2) {
+			if (mDayi3CodeMap[count] == key[i])
+			    output[i] = mDayi3CodeMap[count + 1];
 			changed = true;
 			break;
+		    }
+		} else {
+		    for (int count = 0; count < mCodeMap.length; count += 2) {
+			if (mCodeMap[count] == key[i]) {
+			    output[i] = mCodeMap[count + 1];
+			    changed = true;
+			    break;
+			}
 		    }
 		}
 	    }
@@ -402,14 +458,19 @@ public class Cangjie implements CandidateListener {
 	    return false;
 	}
 	
-	if (autocorrection && mMode != CANTONESE) {
+	if (autocorrection && mMode != CANTONESE && mMode != DAYI3) {
 	    res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	} else {
+	    Log.i("Cangjie", "Try Match  " +
+		  mCodeInput[0] + " " +
+		  mCodeInput[1] + " " +
+		  mCodeInput[2] + " " +
+		  mCodeInput[3] + " ");
 	    res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
 	}
 
 	if (res) {
-	    if (autocorrection && mMode != CANTONESE) {
+	    if (autocorrection && mMode != CANTONESE && mMode != DAYI3) {
 		mTable.searchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	    } else {
 		mTable.searchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
