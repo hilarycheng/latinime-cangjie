@@ -20,6 +20,9 @@
 
 <Keyboard
     xmlns:latin="http://schemas.android.com/apk/res/com.diycircuits.inputmethod.latin"
+    latin:rowHeight="20%p"
+    latin:verticalGap="@fraction/key_bottom_gap_5row"
+    latin:keyLetterSize="@fraction/key_letter_ratio_5row"
 >
     <include
         latin:keyboardLayout="@xml/rows_dayi3" />

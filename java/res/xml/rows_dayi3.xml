@@ -39,8 +39,7 @@
         latin:keyWidth="10%p"
     >
         <include
-            latin:keyboardLayout="@xml/rowkeys_dayi3_3"
-            latin:keyXPos="5%p" />
+            latin:keyboardLayout="@xml/rowkeys_dayi3_3" />
     </Row>
     <Row
         latin:keyWidth="10%p"
@@ -57,5 +56,5 @@
             latin:visualInsetsLeft="1%p" />
     </Row>
     <include
-        latin:keyboardLayout="@xml/row_cangjie4" />
+        latin:keyboardLayout="@xml/row_dayi3_4" />
 </merge>

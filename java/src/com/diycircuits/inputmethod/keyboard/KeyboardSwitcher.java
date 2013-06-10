@@ -303,6 +303,8 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
 	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_STROKE));
 	} else if (value.compareTo("6") == 0) {
 	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_QUICK_ENGLISH));
+	} else if (value.compareTo("5") == 0) {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_DAYI3));
 	} else if (value.compareTo("0") == 0 || value.compareTo("2") == 0 || value.compareTo("4") == 0) {
 	    if (isFullSymbol()) {
 		if (isCangjieEnglishKey()) 

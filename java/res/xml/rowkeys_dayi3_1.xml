@@ -42,15 +42,15 @@
         latin:keyHintLabel="5"
         latin:additionalMoreKeys="5" />
     <Key
-        latin:keyLabel="車"
+        latin:keyLabel="門"
         latin:keyHintLabel="6"
         latin:additionalMoreKeys="6" />
     <Key
-        latin:keyLabel="四"
+        latin:keyLabel="田"
         latin:keyHintLabel="7"
         latin:additionalMoreKeys="7" />
     <Key
-        latin:keyLabel="八"
+        latin:keyLabel="米"
         latin:keyHintLabel="8"
         latin:additionalMoreKeys="8" />
     <Key

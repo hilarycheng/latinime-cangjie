@@ -63,6 +63,7 @@ public final class KeyboardId {
     public static final int ELEMENT_CANGJIE_ENGLISH_NORMAL = 16;
     public static final int ELEMENT_QUICK_NORMAL = 17;
     public static final int ELEMENT_QUICK_ENGLISH_NORMAL = 18;
+    public static final int ELEMENT_DAYI3 = 19;
 
     public static final int FORM_FACTOR_PHONE = 0;
     public static final int FORM_FACTOR_TABLET7 = 1;
@@ -155,7 +156,7 @@ public final class KeyboardId {
 	     mElementId == ELEMENT_CANGJIE_ENGLISH || mElementId == ELEMENT_QUICK_ENGLISH ||
 	     mElementId == ELEMENT_CANGJIE_ENGLISH_NORMAL || mElementId == ELEMENT_QUICK_ENGLISH_NORMAL ||
 	     mElementId == ELEMENT_CANGJIE_NORMAL || mElementId == ELEMENT_QUICK_NORMAL ||
-	     mElementId == ELEMENT_STROKE);
+	     mElementId == ELEMENT_STROKE || mElementId == ELEMENT_DAYI3);
     }
 
     public boolean navigateNext() {
@@ -253,6 +254,7 @@ public final class KeyboardId {
         case ELEMENT_CANGJIE_ENGLISH_NORMAL: return "cangjie_english_normal";
         case ELEMENT_QUICK_NORMAL: return "quick_normal";
         case ELEMENT_QUICK_ENGLISH_NORMAL: return "quick_english_normal";
+        case ELEMENT_DAYI3: return "dayi3";
         default: return null;
         }
     }

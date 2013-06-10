@@ -49,6 +49,7 @@
         latin:keyLabel="雨"
         latin:keyHintLabel="M"
         latin:additionalMoreKeys="M" />
+    <!--
     <Key
         latin:keyLabel="力"
         latin:keyHintLabel=","
@@ -61,5 +62,5 @@
         latin:keyLabel="竹"
         latin:keyHintLabel="/"
         latin:additionalMoreKeys="/" />
-
+    -->
 </merge>
