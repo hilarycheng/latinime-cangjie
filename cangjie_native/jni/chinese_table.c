@@ -77,7 +77,7 @@ static void loadInputMethod(jchar m)
 
   inputMethodIndex = method;  
 
-  LOGE("Load Input Method : %d", method);
+  /* LOGE("Load Input Method : %d", method); */
   
   if (inputMethodHandle == NULL) {
     inputMethodHandle = dlopen(InputMethodList[method].library_path, RTLD_NOW | RTLD_GLOBAL);
@@ -88,7 +88,7 @@ static void loadInputMethod(jchar m)
   }
   input_method = (struct _input_method *) dlsym(inputMethodHandle, InputMethodList[method].function_name);
   input_method->init(quick_data);
-  LOGE("Load Input Method : %d %s ", method, InputMethodList[method].name);
+  /* LOGE("Load Input Method : %d %s ", method, InputMethodList[method].name); */
 }
 
 void Java_com_diycircuits_cangjie_TableLoader_setupOnce(JNIEnv *env, jobject thiz)
@@ -218,7 +218,7 @@ void Java_com_diycircuits_cangjie_TableLoader_enableHongKongChar(JNIEnv* env, jo
 
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjie(JNIEnv* env, jobject thiz, jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
 {
-  LOGE("Try Match Cangjie");
+  /* LOGE("Try Match Cangjie"); */
   /* return input_method[mCurrentIm]->tryMatchWord(key0, key1, key2, key3, key4); */
   return input_method->tryMatchWord(key0, key1, key2, key3, key4);
 }
@@ -228,7 +228,7 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, job
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
-  LOGE("Search Word : %d", inputMethodIndex);
+  /* LOGE("Search Word : %d", inputMethodIndex); */
   
   /* if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
   /*   return input_method[mCurrentIm]->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
@@ -250,7 +250,7 @@ void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject th
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
-  LOGE("Search Word Array : %d", inputMethodIndex);
+  /* LOGE("Search Word Array : %d", inputMethodIndex); */
   
   if (input_method == NULL || inputMethodIndex < 0) return 0;
 
