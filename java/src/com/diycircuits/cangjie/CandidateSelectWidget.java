@@ -297,6 +297,11 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 	topOffset += (height - mRect.height()) / 2;
     }
 
+
+    public boolean displaySeparator() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_candidate_separator", true);	
+    }
+    
     @Override
     protected void onDraw(Canvas canvas) {
 	super.onDraw(canvas);
@@ -330,7 +335,7 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		}
 		start = start + (int) textWidth + (spacing / 2);
-		paint.setColor(0xffcccccc);
+		paint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);
 		canvas.drawLine(start, 5, start, height - 10, paint);
 		paint.setColor(0xff33B5E5);
 		start = start + (spacing / 2);
@@ -355,7 +360,7 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 		    paint.setColor(0xff33B5E5);
 		canvas.drawText(mPhraseArray, 0, plen, start, topOffset, paint);
 		start += (plen * textWidth) + ((plen - 1) * textFontSpacing) + (spacing / 2);
-		paint.setColor(0xffcccccc);
+		paint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);
 		canvas.drawLine(start, 5, start, height - 10, paint);
 		start += (spacing / 2);
 		index++;

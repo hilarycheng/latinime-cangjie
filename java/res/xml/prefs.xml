@@ -87,6 +87,11 @@
             android:max="2000"
             app:min="500"
             android:title="@string/prefs_candidate_font_size" />
+	<CheckBoxPreference
+            android:key="show_candidate_separator"
+            android:title="@string/prefs_show_candidate_separator"
+	    android:defaultValue="true"
+            android:persistent="true"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/general_category"

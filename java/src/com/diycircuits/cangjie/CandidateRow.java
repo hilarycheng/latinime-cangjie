@@ -1,6 +1,7 @@
 package com.diycircuits.cangjie;
 
 import com.diycircuits.inputmethod.latin.R;
+import android.preference.PreferenceManager;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.*;
@@ -285,7 +286,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
 
 		    if (count < (mOffset + mTotal - 1)) {
-			mPaint.setColor(0xffcccccc);
+			mPaint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);
 			canvas.drawLine(spacing + (cspacing / 2) + mTextWidth, 5,
 					spacing + (cspacing / 2) + mTextWidth, getHeight() - 10, mPaint);
 		    }
@@ -326,7 +327,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    spacing += (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
 		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);
 		    if (count < (mTotal - 1)) {
-			mPaint.setColor(0xffcccccc);
+			mPaint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);
 			canvas.drawLine(spacing, 5, spacing, getHeight() - 10, mPaint);
 		    }
 		    // canvas.clipRect(0, 0, mWidth, mHeight, Region.Op.REPLACE);
@@ -337,4 +338,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.restore();
     }
 
+    public boolean displaySeparator() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_candidate_separator", true);	
+    }
+    
 }
