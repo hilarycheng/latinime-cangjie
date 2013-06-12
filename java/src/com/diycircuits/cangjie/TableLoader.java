@@ -59,7 +59,7 @@ public class TableLoader {
 	System.loadLibrary("chinese_table");
 	mInstance = new TableLoader();
 	mInstance.setupOnce();
-	Log.i("Cangjie", "Table Loader Initialize");
+	// Log.i("Cangjie", "Table Loader Initialize");
     }
 
 }

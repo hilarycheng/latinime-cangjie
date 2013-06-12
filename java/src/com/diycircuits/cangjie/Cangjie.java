@@ -78,7 +78,7 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isFull() {
-	Log.i("Cangjie", "Cangjie is Full " + mCodeCount + " " + mTable.getMaxKey());
+	// Log.i("Cangjie", "Cangjie is Full " + mCodeCount + " " + mTable.getMaxKey());
 	return mCodeCount >= mTable.getMaxKey();
     }
     
@@ -441,7 +441,7 @@ public class Cangjie implements CandidateListener {
 	boolean autocorrection = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("cangjie_autocorrection_mode", false);
 	boolean res;
 
-	if (mMode == STROKE) {
+	if (mMode == STROKE || mMode == CANTONESE) {
            // StringBuffer sb = new StringBuffer();
            // for (int count = 0; count < 64; count++) {
            //  if (mCodeInput[count] >= '1' && mCodeInput[count] <= '5') {

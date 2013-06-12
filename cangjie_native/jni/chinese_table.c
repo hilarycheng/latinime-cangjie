@@ -241,7 +241,8 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, job
       InputMethodList[inputMethodIndex].index[0] == '4' ||
       InputMethodList[inputMethodIndex].index[0] == '0')
     return input_method->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
-  if (InputMethodList[inputMethodIndex].index[0] == '3')
+  if (InputMethodList[inputMethodIndex].index[0] == '3' ||
+      InputMethodList[inputMethodIndex].index[0] == '6')
     return input_method->tryMatchWordArray(keyStorage, len);
 }
 
@@ -267,7 +268,8 @@ void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject th
       InputMethodList[inputMethodIndex].index[0] == '4' ||
       InputMethodList[inputMethodIndex].index[0] == '0')
       input_method->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); 
-  if (InputMethodList[inputMethodIndex].index[0] == '3')
+  if (InputMethodList[inputMethodIndex].index[0] == '3' ||
+      InputMethodList[inputMethodIndex].index[0] == '6')
       input_method->searchWordArray(keyStorage, len);
 }
 

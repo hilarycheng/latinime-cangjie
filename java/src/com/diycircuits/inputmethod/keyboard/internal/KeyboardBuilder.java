@@ -184,7 +184,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
         } finally {
             parser.close();
         }
-	Log.i("Cangjie", "Total Row " + mTotalRow);
+	// Log.i("Cangjie", "Total Row " + mTotalRow);
         return this;
     }
 

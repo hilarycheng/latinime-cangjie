@@ -65,7 +65,7 @@ static void cantonese_init(char *path)
 
 static int cantonese_maxKey(void)
 {
-  return 5;
+  return 6;
 }
 
 static inline int cantonese_memcmp(jchar *word, jchar **key, int len)
@@ -257,9 +257,9 @@ static jboolean cantonese_searchingMore(jchar* key0, jchar* key1, jchar* key2, j
   return 1;
 }
 
-static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4, int updateindex)
+static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4, jchar key5, int updateindex)
 {
-  jchar src[6];
+  jchar src[7];
   int total = sizeof(cantonese) / (sizeof(jchar) * CANTONESE_COLUMN);
   int loop  = 0;
   int found = 0;
@@ -273,10 +273,11 @@ static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar ke
   src[2] = key2 != 0 ? (key2 | 0x40) : 0;
   src[3] = key3 != 0 ? (key3 | 0x40) : 0;
   src[4] = key4 != 0 ? (key4 | 0x40) : 0;
-  src[5] = 0;
+  src[5] = key5 != 0 ? (key5 | 0x40) : 0;
+  src[6] = 0;
 
   found = 0;
-  for (count0 = 0; count0 < 5; count0++) {
+  for (count0 = 0; count0 < 6; count0++) {
     if (src[count0] == '*') found++;
   }
 
@@ -288,7 +289,7 @@ static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar ke
   }
 
   // Clear End Star Match
-  for (count0 = 0; count0 < 5; count0++) {
+  for (count0 = 0; count0 < 6; count0++) {
     if (src[count0] == '*' && src[count0 + 1] == 0) {
       src[count0] = 0;
       break;
@@ -296,7 +297,7 @@ static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar ke
   }
 
   state = 0; firstlen = 0; secondlen = 0; 
-  for (count0 = 0; count0 < 5; count0++) {
+  for (count0 = 0; count0 < 6; count0++) {
     if (src[count0] == 0)
       break;
     if (src[count0] == '*')
@@ -316,7 +317,7 @@ static jboolean cantonese_searching(jchar key0, jchar key1, jchar key2, jchar ke
     if (memcmp(cantonese[count0], src, firstlen * sizeof(jchar)) == 0) {
       state = 1;
       firstmatch++;
-      if (secondlen == 0 && (cantonese_func.mEnableHK != 0 || cantonese[count0][6] == 0)) {
+      if (secondlen == 0) {
 	ismatch = 1;
       } else {
 	if (firstlen + secondlen <= cantonese[count0][8]) {
@@ -420,15 +421,15 @@ static int cmp(jchar *s, jchar *d, int n) {
   return l;
 }
 
-static jboolean cantonese_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
-{
-  return cantonese_searching(key0, key1, key2, key3, key4, 0);
-}
+/* static jboolean cantonese_tryMatchWord(jchar key0, jchar key1, jchar key2, jchar key3, jchar key4) */
+/* { */
+/*   return cantonese_searching(key0, key1, key2, key3, key4, 0); */
+/* } */
 
-static jboolean cantonese_tryMatchWordMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4)
-{
-  return cantonese_searchingMore(key0, key1, key2, key3, key4, 0);
-}
+/* static jboolean cantonese_tryMatchWordMore(jchar* key0, jchar* key1, jchar* key2, jchar* key3, jchar* key4) */
+/* { */
+/*   return cantonese_searchingMore(key0, key1, key2, key3, key4, 0); */
+/* } */
 
 static int cantonese_totalMatch(void)
 {
@@ -500,6 +501,32 @@ static void cantonese_saveMatch(void)
   }
 }
 
+static jboolean cantonese_tryMatchWordArray(jchar *key, int len)
+{
+  return cantonese_searching(key[0], key[1], key[2], key[3], key[4], key[5], 0);
+}
+
+static void cantonese_searchWordArray(jchar *key, int len)
+{
+  if (_mTotalMatch > 0) {
+    cantonese_func.mTotalMatch = _mTotalMatch;
+    memcpy(cantonese_index, cantonese_index_temp, _mTotalMatch * sizeof(int));
+
+    int swap = 1, i;
+    while (swap) {
+      swap = 0;
+      for (i = 0; i < _mTotalMatch - 1; i++) {
+	if (cantonese_frequency[cantonese_index[i]] < cantonese_frequency[cantonese_index[i + 1]]) {
+	  int temp = cantonese_index[i];
+	  cantonese_index[i] = cantonese_index[i + 1];
+	  cantonese_index[i + 1] = temp;
+	  swap = 1;
+	}
+      }
+    }
+  }
+}
+
 static void cantonese_enableHongKongChar(jboolean hk)
 {
   cantonese_func.mEnableHK = (hk != 0);
@@ -514,12 +541,12 @@ struct _input_method cantonese_func =
 {
   .init            = cantonese_init,
   .maxKey          = cantonese_maxKey,
-  .searchWord      = cantonese_searchWord,
-  .searchWordMore  = cantonese_searchWordMore,
-  .searchWordArray = 0,
-  .tryMatchWord    = cantonese_tryMatchWord,
-  .tryMatchWordMore = cantonese_tryMatchWordMore,
-  .tryMatchWordArray = 0,
+  .searchWord      = 0,
+  .searchWordMore  = 0,
+  .searchWordArray = cantonese_searchWordArray,
+  .tryMatchWord    = 0,
+  .tryMatchWordMore = 0,
+  .tryMatchWordArray = cantonese_tryMatchWordArray,
   .enableHongKongChar = cantonese_enableHongKongChar,
   .totalMatch      = cantonese_totalMatch,
   .updateFrequency = cantonese_updateFrequency,
