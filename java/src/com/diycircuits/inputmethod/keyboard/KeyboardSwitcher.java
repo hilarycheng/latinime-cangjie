@@ -235,7 +235,9 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     @Override
     public void setAlphabetKeyboard() {
 	mIsCangjieMode = false;
-        setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET));
+	if (mKeyboardLayoutSet != null && mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET) != null) {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET));
+	}
     }
 
     // Implements {@link KeyboardState.SwitchActions}.
@@ -249,7 +251,9 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     @Override
     public void setAlphabetAutomaticShiftedKeyboard() {
 	mIsCangjieMode = false;
-        setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED));
+	if (mKeyboardLayoutSet != null && mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED) != null) {
+	    setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED));
+	}
     }
 
     // Implements {@link KeyboardState.SwitchActions}.

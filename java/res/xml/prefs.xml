@@ -75,6 +75,11 @@
             android:summary="@string/prefs_candidate_button_summary"
 	    android:defaultValue="false"
             android:persistent="true"/>
+	<CheckBoxPreference
+            android:key="always_show_english_keyboard"
+            android:title="@string/prefs_always_show_english_keyboard"
+	    android:defaultValue="false"
+            android:persistent="true"/>
         <com.diycircuits.widgets.SeekBarPreference
             android:defaultValue="100"
             android:key="candidate_font_size"

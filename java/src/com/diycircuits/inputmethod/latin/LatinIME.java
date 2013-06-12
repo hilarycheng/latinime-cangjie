@@ -633,6 +633,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
+	if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("always_show_english_keyboard", false)) {
+	    if (mKeyboardSwitcher != null) mKeyboardSwitcher.resetKeyboardStateToAlphabet();
+	}
+
 	if (mCandidateView != null) mCandidateView.updateCandidate(isCangjieMode());
 	mCangjie.resetState();
 	checkCangjieFrequency();
