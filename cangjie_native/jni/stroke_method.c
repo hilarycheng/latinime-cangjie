@@ -153,6 +153,7 @@ jboolean stroke_tryMatchWordArray(jchar *key, int len)
   for (count = start; count < end; count++) {
     if (len > stroke[count].num)
       continue;
+
     if (smemcmp(stroke[count].stroke, stroke_char, _len >> 1) == 0) {
       stroke_index_temp[index++] = count;
     }

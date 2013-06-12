@@ -78,6 +78,7 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isFull() {
+	Log.i("Cangjie", "Cangjie is Full " + mCodeCount + " " + mTable.getMaxKey());
 	return mCodeCount >= mTable.getMaxKey();
     }
     
@@ -145,14 +146,16 @@ public class Cangjie implements CandidateListener {
     }
 
     public boolean isCode(int primaryCode) {
-	Log.i("Cangjie", "Is Code " + primaryCode);
+	// Log.i("Cangjie", "Is Code " + primaryCode);
 	if (mMode == STROKE) {
+	    // Log.i("Cangjie", "Convert isCode " + primaryCode);
 	    if ((char) primaryCode == '一' ||
 		(char) primaryCode == '丨' ||
 		(char) primaryCode == '丿' ||
 		(char) primaryCode == '丶' ||
 		(char) primaryCode == '乛' ||
 		(char) primaryCode == '＊') {
+	    // Log.i("Cangjie", "Convert isCode OK " + primaryCode);
 		return true;
 	    }
 
@@ -165,12 +168,12 @@ public class Cangjie implements CandidateListener {
 	    }
 	}
 	if (mMode == DAYI3) {
-	Log.i("Cangjie", "Is Code0 " + primaryCode);
+	// Log.i("Cangjie", "Is Code0 " + primaryCode);
 	    for (int count = 0; count < mDayi3CodeMap.length; count += 2) {
 		if (mDayi3CodeMap[count] == primaryCode)
 		    return true;
 	    }
-	Log.i("Cangjie", "Is Code1 " + primaryCode);
+	// Log.i("Cangjie", "Is Code1 " + primaryCode);
 	    return false;
 	}
 	for (int count = 0; count < mCodeMap.length; count += 2) {
@@ -290,6 +293,7 @@ public class Cangjie implements CandidateListener {
 
     private char convertPrimaryCode(int primaryCode) {
 	if (mMode == STROKE) {
+	    // Log.i("Cangjie", "Convert Primary Code " + primaryCode);
 	    if ((char) primaryCode == '一')
 		return '1';
 	    if ((char) primaryCode == '丨')
@@ -310,7 +314,7 @@ public class Cangjie implements CandidateListener {
 	}
 	if (mMode == DAYI3) {
 	    for (int count = 0; count < mDayi3CodeMap.length; count += 2) {
-		Log.i("Cangjie", "Daiyi Convert " + mDayi3CodeMap[count] + " " + primaryCode + " " + mDayi3CodeMap[count + 1]);
+		// Log.i("Cangjie", "Daiyi Convert " + mDayi3CodeMap[count] + " " + primaryCode + " " + mDayi3CodeMap[count + 1]);
 		if (mDayi3CodeMap[count] == primaryCode)
 		    return mDayi3CodeMap[count + 1];
 	    }
@@ -461,11 +465,11 @@ public class Cangjie implements CandidateListener {
 	if (autocorrection && mMode != CANTONESE && mMode != DAYI3) {
 	    res = mTable.tryMatchCangjieMore(mCodeInputNearest[0], mCodeInputNearest[1], mCodeInputNearest[2], mCodeInputNearest[3], mCodeInputNearest[4]);
 	} else {
-	    Log.i("Cangjie", "Try Match  " +
-		  mCodeInput[0] + " " +
-		  mCodeInput[1] + " " +
-		  mCodeInput[2] + " " +
-		  mCodeInput[3] + " ");
+	    // Log.i("Cangjie", "Try Match  " +
+	    // 	  mCodeInput[0] + " " +
+	    // 	  mCodeInput[1] + " " +
+	    // 	  mCodeInput[2] + " " +
+	    // 	  mCodeInput[3] + " ");
 	    res = mTable.tryMatchCangjie(mCodeInput[0], mCodeInput[1], mCodeInput[2], mCodeInput[3], mCodeInput[4]);
 	}
 

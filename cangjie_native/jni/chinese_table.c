@@ -52,7 +52,7 @@ struct _INPUT_METHOD_LIST {
   { 0, 0, 0}
 };
 
-int inputMethodCount = 0;
+int inputMethodCount = 0, inputMethodIndex = -1;
 jobjectArray inputMethodNameList = NULL;
 jobject _inputMethodNameList = NULL;
 jobjectArray inputMethodIndexList = NULL;
@@ -74,6 +74,8 @@ static void loadInputMethod(jchar m)
     count++;   
   }
   if (method == -1) return;
+
+  inputMethodIndex = method;  
 
   LOGE("Load Input Method : %d", method);
   
@@ -177,8 +179,10 @@ jint Java_com_diycircuits_cangjie_TableLoader_getMaxKey(JNIEnv* env, jobject thi
 
 void Java_com_diycircuits_cangjie_TableLoader_setInputMethod(JNIEnv* env, jobject thiz, jchar im)
 {
-  if (mCurrentIm != im) loadInputMethod(im);
-  mCurrentIm = im;
+  if (mCurrentIm != im) {
+    mCurrentIm = im;
+    loadInputMethod(im);
+  }
 }
  
 void Java_com_diycircuits_cangjie_TableLoader_searchCangjie(JNIEnv* env, jobject thiz, jchar key0, jchar key1, jchar key2, jchar key3, jchar key4)
@@ -224,15 +228,20 @@ jboolean Java_com_diycircuits_cangjie_TableLoader_trySearchWord(JNIEnv* env, job
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
+  LOGE("Search Word : %d", inputMethodIndex);
+  
   /* if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
   /*   return input_method[mCurrentIm]->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
   /* else if (mCurrentIm == STROKE) */
   /*   return input_method[mCurrentIm]->tryMatchWordArray(keyStorage, len); */
-  if (input_method == NULL) return 0;
+  if (input_method == NULL || inputMethodIndex < 0) return 0;
   
-  if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
+  if (InputMethodList[inputMethodIndex].index[0] == '1' ||
+      InputMethodList[inputMethodIndex].index[0] == '2' ||
+      InputMethodList[inputMethodIndex].index[0] == '4' ||
+      InputMethodList[inputMethodIndex].index[0] == '0')
     return input_method->tryMatchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
-  else if (mCurrentIm == STROKE)
+  if (InputMethodList[inputMethodIndex].index[0] == '3')
     return input_method->tryMatchWordArray(keyStorage, len);
 }
 
@@ -241,16 +250,25 @@ void Java_com_diycircuits_cangjie_TableLoader_searchWord(JNIEnv* env, jobject th
   memset(keyStorage, 0, sizeof(keyStorage));
   (*env)->GetCharArrayRegion(env, key, 0, 64, keyStorage);
 
+  LOGE("Search Word Array : %d", inputMethodIndex);
+  
+  if (input_method == NULL || inputMethodIndex < 0) return 0;
+
   /* if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
   /*   input_method[mCurrentIm]->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
   /* else if (mCurrentIm == STROKE) */
   /*   input_method[mCurrentIm]->searchWordArray(keyStorage, len); */
-  if (input_method != NULL) {
-    if (mCurrentIm == QUICK || mCurrentIm == CANGJIE)
-      input_method->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]);
-    else if (mCurrentIm == STROKE)
+  /* if (input_method != NULL) { */
+  /*   if (mCurrentIm == QUICK || mCurrentIm == CANGJIE) */
+  /*     input_method->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); */
+  /*   else if (mCurrentIm == STROKE) */
+  if (InputMethodList[inputMethodIndex].index[0] == '1' ||
+      InputMethodList[inputMethodIndex].index[0] == '2' ||
+      InputMethodList[inputMethodIndex].index[0] == '4' ||
+      InputMethodList[inputMethodIndex].index[0] == '0')
+      input_method->searchWord(keyStorage[0], keyStorage[1], keyStorage[2], keyStorage[3], keyStorage[4]); 
+  if (InputMethodList[inputMethodIndex].index[0] == '3')
       input_method->searchWordArray(keyStorage, len);
-  }
 }
 
 jboolean Java_com_diycircuits_cangjie_TableLoader_tryMatchCangjieMore(JNIEnv* env, jobject thiz, jcharArray key0, jcharArray key1, jcharArray key2, jcharArray key3, jcharArray key4)
