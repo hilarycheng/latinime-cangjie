@@ -4,6 +4,7 @@ import it.sephiroth.android.library.widget.HorizontalListView.OnLayoutChangeList
 import it.sephiroth.android.library.widget.HorizontalVariableListView;
 import it.sephiroth.android.library.widget.HorizontalVariableListView.OnItemClickedListener;
 import it.sephiroth.android.library.widget.HorizontalVariableListView.SelectionMode;
+import android.preference.PreferenceManager;
 import com.diycircuits.inputmethod.latin.R;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +14,7 @@ import android.graphics.*;
 import android.view.LayoutInflater;
 import android.util.Log;
 
-public class CandidateView extends LinearLayout {
+public class CandidateView extends LinearLayout implements View.OnClickListener {
 
     private final static int STARTING_FONT_SIZE = 12;
     private final static int ENDING_FONT_SIZE   = 128;
@@ -22,8 +23,6 @@ public class CandidateView extends LinearLayout {
     private int height = 0;
     private char match[] = null;
     private int total = 0;
-    private ImageButton mLeftArrow = null;
-    private ImageButton mRightArrow = null;
     private CandidateSelectWidget mSelectWidget = null;
     private HorizontalVariableListView mSelectList = null;
     private PopupWindow mPopup = null;
@@ -88,15 +87,26 @@ public class CandidateView extends LinearLayout {
 	return mSelect;
     }
 
-    public void updateCandidate() {
+    public void updateCandidate(boolean isCangjieMode) {
+	if (!isCangjieMode) {
+	    findViewById(R.id.arrow_left).setVisibility(View.GONE);
+	    findViewById(R.id.arrow_right).setVisibility(View.GONE);
+	    return;
+	}
+	
 	if (CandidateSelect.isCandidatePopup(mContext)) {
 	    mSelectWidget = (CandidateSelectWidget) findViewById(R.id.match_view);
 	    mSelectWidget.setVisibility(View.VISIBLE);
 	    mSelectList = (HorizontalVariableListView) findViewById(R.id.candidateList);
 	    mSelectList.setVisibility(View.GONE);
          
-	    mRightArrow = (ImageButton) findViewById(R.id.arrow_right);
-	    mRightArrow.setVisibility(View.VISIBLE);
+	    if (isLeftCandidateButton()) {
+		findViewById(R.id.arrow_left).setVisibility(View.VISIBLE);
+		findViewById(R.id.arrow_right).setVisibility(View.GONE);
+	    } else {
+		findViewById(R.id.arrow_left).setVisibility(View.GONE);
+		findViewById(R.id.arrow_right).setVisibility(View.VISIBLE);
+	    }
 	} else {
 	    mSelectWidget = (CandidateSelectWidget) findViewById(R.id.match_view);
 	    mSelectWidget.setVisibility(View.GONE);
@@ -105,32 +115,34 @@ public class CandidateView extends LinearLayout {
 	    mSelectList.setSelectionMode(HorizontalVariableListView.SelectionMode.Single);
 	    mSelectList.setBackgroundColor(0xff272727);
          
-	    mRightArrow = (ImageButton) findViewById(R.id.arrow_right);
-	    mRightArrow.setVisibility(View.GONE);
+	    findViewById(R.id.arrow_left).setVisibility(View.GONE);
+	    findViewById(R.id.arrow_right).setVisibility(View.GONE);
 	}
 
 	mSelect.setContext(mContext);
 	mSelect.setCandidateSelectWidget(mSelectWidget);
 	mSelect.setCandidateList(mSelectList);
 	mSelect.setFontSize((int) mFontSize);
+
+	findViewById(R.id.arrow_left).setOnClickListener(this);
+	findViewById(R.id.arrow_right).setOnClickListener(this);
     }
-    
+
+    private boolean isLeftCandidateButton() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("candidate_button", false);
+    }
+
+    public void onClick(View v) {
+	synchronized(mSelectWidget) {
+	    mSelectWidget.showCandidatePopup(mParent, mWidth, mHeight);
+	}
+    }
+
     @Override
     protected void onFinishInflate() {
 	super.onFinishInflate();
 
-	updateCandidate();
-	
-	if (mRightArrow != null) {
-	    mRightArrow.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
-			synchronized(mSelectWidget) {
-			    mSelectWidget.showCandidatePopup(mParent, mWidth, mHeight);
-			}
-		    }
-		});
-	}
-
+	updateCandidate(true);
     }
 
 }

@@ -49,6 +49,14 @@
           android:layout_marginRight="5dp"
           android:layout_weight="0.53" />
 
+      <ImageButton
+          android:id="@+id/arrow_right"
+          android:layout_width="48dp"
+          android:layout_height="@dimen/suggestions_strip_height"
+          android:background="@drawable/ab_solid_dark_holo"
+          android:clickable="true"
+          android:src="@drawable/arrow_right" />
+
       <com.diycircuits.cangjie.CandidateSelectWidget
           android:id="@+id/match_view"
           android:layout_width="match_parent"
@@ -56,7 +64,7 @@
           android:layout_weight="0.53" />
 
       <ImageButton
-          android:id="@+id/arrow_right"
+          android:id="@+id/arrow_left"
           android:layout_width="48dp"
           android:layout_height="@dimen/suggestions_strip_height"
           android:background="@drawable/ab_solid_dark_holo"

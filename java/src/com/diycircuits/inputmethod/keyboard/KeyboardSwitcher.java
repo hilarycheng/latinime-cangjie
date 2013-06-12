@@ -273,10 +273,6 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         setKeyboard(mKeyboardLayoutSet.getKeyboard(KeyboardId.ELEMENT_SYMBOLS));
     }
 
-    private boolean isLeftCandidateButton() {
-	return PreferenceManager.getDefaultSharedPreferences(mThemeContext).getBoolean("candidate_button", false);
-    }
-
     private boolean isFullSymbol() {
 	return PreferenceManager.getDefaultSharedPreferences(mThemeContext).getBoolean("fullsymbol_chinesekeyboard", false);
     }
@@ -441,9 +437,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
         }
 
         setContextThemeWrapper(mLatinIME, mKeyboardTheme);
-	int id = isLeftCandidateButton() ? R.layout.input_view_left : R.layout.input_view;
-        mCurrentInputView = (InputView)LayoutInflater.from(mThemeContext).inflate(
-                id, null);
+        mCurrentInputView = (InputView)LayoutInflater.from(mThemeContext).inflate(R.layout.input_view, null);
 
         mKeyboardView = (MainKeyboardView) mCurrentInputView.findViewById(R.id.keyboard_view);
         if (isHardwareAcceleratedDrawingEnabled) {

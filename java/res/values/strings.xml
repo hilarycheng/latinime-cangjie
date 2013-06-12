@@ -34,8 +34,8 @@
     <string name="prefs_keyboard_portrait_height">鍵盤直向高度 (總螢幕高度百份比)</string>
     <string name="prefs_keyboard_landscape_height">鍵盤撗向高度 (總螢幕高度百份比)</string>
     <string name="height_default">預設</string>
-    <string name="prefs_cangjie_button">選字按鍵位置</string>
-    <string name="prefs_cangjie_button_summary">選擇, 是: 左邊, 否: 右邊</string>
+    <string name="prefs_candidate_button">選字按鍵位置</string>
+    <string name="prefs_candidate_button_summary">選擇, 是: 左邊, 否: 右邊</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->

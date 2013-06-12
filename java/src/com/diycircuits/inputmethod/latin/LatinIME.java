@@ -633,6 +633,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
+	if (mCandidateView != null) mCandidateView.updateCandidate(isCangjieMode());
 	mCangjie.resetState();
 	checkCangjieFrequency();
 	mLastSuggestionEngOnly.setLength(0);
@@ -1498,7 +1499,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	if (isCangjieMode()) {
 	    mCandidateView.bringToFront();
 	    mCandidateView.invalidate();
-	    mCandidateView.updateCandidate();
+	    mCandidateView.updateCandidate(isCangjieMode());
 	    mSuggestionsContainer.invalidate();
 	    mCandidateContainer.invalidate();
 	} else {

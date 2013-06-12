@@ -70,9 +70,9 @@
             android:defaultValue="true"
             android:persistent="true" />
 	<CheckBoxPreference
-            android:key="cangjie_button"
-            android:title="@string/prefs_cangjie_button"
-            android:summary="@string/prefs_cangjie_button_summary"
+            android:key="candidate_button"
+            android:title="@string/prefs_candidate_button"
+            android:summary="@string/prefs_candidate_button_summary"
 	    android:defaultValue="false"
             android:persistent="true"/>
         <com.diycircuits.widgets.SeekBarPreference
