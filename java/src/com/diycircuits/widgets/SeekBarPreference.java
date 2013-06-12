@@ -59,18 +59,19 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     private void initPreference(Context context, AttributeSet attrs) {
-        // setValuesFromXml(attrs);
+	setValuesFromXml(attrs);
 	
 	mDefaultValue = attrs.getAttributeIntValue(ANDROIDNS, "defaultValue", 0);
-	boolean checked = true;
-	if (mDefaultValue == 460) 
-	    checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("landscape_height_default", true);
-	else
-	    checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("portrait_height_default", true);
+	if (getKey().compareTo("portrait_height") == 0 ||
+	    getKey().compareTo("landscape_height") == 0) {
+	    boolean checked = true;
+	    if (mDefaultValue == 460) 
+		checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("landscape_height_default", true);
+	    else
+		checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("portrait_height_default", true);
 
-	mDefaultChecked = checked;
-
-	// Log.i("Cangjie", " Init Preference Default " + mDefaultValue + " " + checked);
+	    mDefaultChecked = checked;
+	}
  
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
@@ -79,21 +80,25 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     public void onClick(View v) {
 	SharedPreferences.Editor edit = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).edit();
-	if (mDefaultValue == 460) 
-	    edit.putBoolean("landscape_height_default", mDefault.isChecked());
-	else
-	    edit.putBoolean("portrait_height_default", mDefault.isChecked());	
-	edit.putInt("keyboard_height_change", 1);
-	edit.commit();
+	if (getKey().compareTo("portrait_height") == 0 ||
+	    getKey().compareTo("landscape_height") == 0) {
+	    if (mDefaultValue == 460) 
+		edit.putBoolean("landscape_height_default", mDefault.isChecked());
+	    else
+		edit.putBoolean("portrait_height_default", mDefault.isChecked());	
+	    edit.putInt("keyboard_height_change", 1);
+	    edit.commit();
+	}
 
 	mDefaultChecked = mDefault.isChecked();
 	mStatusText.setEnabled(!mDefaultChecked);
 	mSeekBar.setEnabled(!mDefaultChecked);
     }
 
-    // private void setValuesFromXml(AttributeSet attrs) {
-    //     mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
-    //     mMinValue = attrs.getAttributeIntValue(FLATWORLDNS, "min", 0);
+    private void setValuesFromXml(AttributeSet attrs) {
+         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
+         mMinValue = attrs.getAttributeIntValue(FLATWORLDNS, "min", 0);
+	 Log.i("Cangjie", "Set Values " + mMaxValue + " " + mMinValue);
        
     //     try {
     //         String newInterval = attrs.getAttributeValue(FLATWORLDNS, "interval");
@@ -102,7 +107,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     //         Log.e(TAG, "Invalid interval value", e);
     //     }
        
-    // }
+    }
    
     private String getAttributeStringValue(AttributeSet attrs, String namespace, String name, String defaultValue) {
         String value = attrs.getAttributeValue(namespace, name);
@@ -200,9 +205,12 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             return;
         }
 
-	SharedPreferences.Editor edit = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).edit();
-	edit.putInt("keyboard_height_change", 1);
-	edit.commit();
+	if (getKey().compareTo("portrait_height") == 0 ||
+	    getKey().compareTo("landscape_height") == 0) {
+	    SharedPreferences.Editor edit = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).edit();
+	    edit.putInt("keyboard_height_change", 1);
+	    edit.commit();
+	}
 
         // change accepted, store it
         mCurrentValue = newValue;
@@ -226,46 +234,50 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	int swdp   = getContext().getResources().getConfiguration().smallestScreenWidthDp;
 
 	int defaultValue = ta.getInt(index, DEFAULT_VALUE);
-
-	if (defaultValue == 460) {
-	    if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
-		if (swdp >= 600 && swdp < 768) {
-		    return 460;
-		} else if (swdp >= 768) {
-		    return 460;
+	if (getKey() == null) return defaultValue;
+	
+	if (getKey().compareTo("portrait_height") == 0 ||
+	    getKey().compareTo("landscape_height") == 0) {
+	    if (defaultValue == 460) {
+		if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
+		    if (swdp >= 600 && swdp < 768) {
+			return 460;
+		    } else if (swdp >= 768) {
+			return 460;
+		    } else {
+			return 460;
+		    }
 		} else {
-		    return 460;
+		    if (swdp >= 600 && swdp < 768) {
+			return 460;
+		    } else if (swdp >= 768) {
+			return 460;
+		    } else {
+			return 460;
+		    }
 		}
-	    } else {
-		if (swdp >= 600 && swdp < 768) {
-		    return 460;
-		} else if (swdp >= 768) {
-		    return 460;
+	    } else if (defaultValue == 618) {
+		if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
+		    if (swdp >= 600 && swdp < 768) {
+			return 450;
+		    } else if (swdp >= 768) {
+			return 450;
+		    } else {
+			return 450;
+		    }
 		} else {
-		    return 460;
+		    if (swdp >= 600 && swdp < 768) {
+			return 350;
+		    } else if (swdp >= 768) {
+			return 350;
+		    } else {
+			return 618;
+		    }
 		}
 	    }
-	} else if (defaultValue == 618) {
-	    if (orient ==  Configuration.ORIENTATION_LANDSCAPE) {
-		if (swdp >= 600 && swdp < 768) {
-		    return 450;
-		} else if (swdp >= 768) {
-		    return 450;
-		} else {
-		    return 450;
-		}
-	    } else {
-		if (swdp >= 600 && swdp < 768) {
-		    return 350;
-		} else if (swdp >= 768) {
-		    return 350;
-		} else {
-		    return 618;
-		}
-	    }
-	} else {
-	    return defaultValue;
 	}
+
+	return defaultValue;
     }
 
     @Override
