@@ -32,7 +32,7 @@
     <string name="prefs_clear_often_used_title">清洗常用字記錄</string>
     <string name="prefs_clear_often_used_summary">如果常用字有問題，請按這個選項，下次鍵盤開啟時，將會重設．</string>
     <string name="prefs_keyboard_portrait_height">鍵盤直向高度 (總螢幕高度百份比)</string>
-    <string name="prefs_keyboard_landscape_height">鍵盤撗向高度 (總螢幕高度百份比)</string>
+    <string name="prefs_keyboard_landscape_height">鍵盤橫向高度 (總螢幕高度百份比)</string>
     <string name="height_default">預設</string>
     <string name="prefs_candidate_button">選字按鍵位置</string>
     <string name="prefs_candidate_button_summary">選擇, 是: 左邊, 否: 右邊</string>
