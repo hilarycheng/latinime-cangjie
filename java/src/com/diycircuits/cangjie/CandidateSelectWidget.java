@@ -1,6 +1,7 @@
 package com.diycircuits.cangjie;
 
 import com.diycircuits.inputmethod.latin.R;
+import android.preference.PreferenceManager;
 import android.content.Context;
 import android.app.Activity;
 import android.util.AttributeSet;
@@ -29,6 +30,7 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
     private float charWidth = 0;
     private int topOffset = 0;
     private float mFontSize = 50.0f;
+    private float mCalculatedFontSize = 50.0f;
     private Context context = null;
     private PopupWindow mPopup = null;
     private Handler mHandler = null;
@@ -57,6 +59,8 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 	mState = CandidateSelect.CHARACTER_MODE;
 	
 	mFontSize = 50.0f;
+	mCalculatedFontSize = 50.0f;
+
 	paint = new Paint();
 	paint.setColor(Color.BLACK);
 	paint.setAntiAlias(true);
@@ -269,18 +273,28 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 
 	    if (totalHeight > height) {
 		mFontSize = (float) (fontsize - 8);
-		paint.setTextSize(mFontSize);
-		paint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
-		textWidth = mRect.width();
-		spacing = ((int) textWidth) * 4 / 5;
+		mCalculatedFontSize = (float) (fontsize - 8);
 
-		topOffset = mRect.height() - mRect.bottom;
-		topOffset += (h - mRect.height()) / 2;
+		updateFontSize();
 
 		break;
 	    }
 	}
+    }
 
+    public void updateFontSize() {
+	mFontSize = mCalculatedFontSize;
+
+	int percent = PreferenceManager.getDefaultSharedPreferences(context).getInt("candidate_font_size", 1000);
+	mFontSize = (mFontSize * percent) / 1000;
+
+	paint.setTextSize(mFontSize);
+	paint.getTextBounds(context.getString(R.string.cangjie), 0, 1, mRect);
+	textWidth = mRect.width();
+	spacing = ((int) textWidth) * 4 / 5;
+
+	topOffset = mRect.height() - mRect.bottom;
+	topOffset += (height - mRect.height()) / 2;
     }
 
     @Override

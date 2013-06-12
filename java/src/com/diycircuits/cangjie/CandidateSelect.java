@@ -41,6 +41,7 @@ public class CandidateSelect {
     private char[] mPhrase = null;
     private StringBuffer phraseBuffer = new StringBuffer();
     private int mFontSize = 32;
+    private int mCalculatedFontSize = 32;
 
     public void setContext(Context context) {
 	mContext = context;
@@ -50,6 +51,18 @@ public class CandidateSelect {
 
     public void setFontSize(int size) {
 	mFontSize = size;
+	mCalculatedFontSize = size;
+
+    }
+
+    public void updateFontSize() {
+	mFontSize = mCalculatedFontSize;
+
+	int percent = PreferenceManager.getDefaultSharedPreferences(mContext).getInt("candidate_font_size",
+											 1000);
+	mFontSize = (mFontSize * percent) / 1000;
+
+	if (mSelectWidget != null) mSelectWidget.updateFontSize();
     }
     
     public void setCandidateSelectWidget(CandidateSelectWidget widget) {

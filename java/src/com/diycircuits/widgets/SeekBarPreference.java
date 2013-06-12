@@ -58,10 +58,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	this(context, null);
     }
 
-    private void initPreference(Context context, AttributeSet attrs) {
-	setValuesFromXml(attrs);
-	
-	mDefaultValue = attrs.getAttributeIntValue(ANDROIDNS, "defaultValue", 0);
+    private void updateValue() {
 	if (getKey().compareTo("portrait_height") == 0 ||
 	    getKey().compareTo("landscape_height") == 0) {
 	    boolean checked = true;
@@ -71,11 +68,25 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		checked = mContext.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).getBoolean("portrait_height_default", true);
 
 	    mDefaultChecked = checked;
+	} else {
+	    mDefaultChecked = (mCurrentValue == mDefaultValue);
 	}
+
+	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
+	if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
+	if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
+    }
+    
+    private void initPreference(Context context, AttributeSet attrs) {
+	setValuesFromXml(attrs);
+	
+	mDefaultValue = attrs.getAttributeIntValue(ANDROIDNS, "defaultValue", 0);
  
         mSeekBar = new SeekBar(context, attrs);
         mSeekBar.setMax(mMaxValue - mMinValue);
         mSeekBar.setOnSeekBarChangeListener(this);
+
+	updateValue();
     }
 
     public void onClick(View v) {
@@ -88,17 +99,26 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		edit.putBoolean("portrait_height_default", mDefault.isChecked());	
 	    edit.putInt("keyboard_height_change", 1);
 	    edit.commit();
+	} else {
+	    if (mDefault.isChecked()) {
+		mCurrentValue = mDefaultValue;
+		persistInt(mCurrentValue);
+
+		mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
+		mSeekBar.setProgress(mCurrentValue - mMinValue);
+	    }
 	}
 
 	mDefaultChecked = mDefault.isChecked();
-	mStatusText.setEnabled(!mDefaultChecked);
-	mSeekBar.setEnabled(!mDefaultChecked);
+	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
+	if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
+	if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
     }
 
     private void setValuesFromXml(AttributeSet attrs) {
          mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
          mMinValue = attrs.getAttributeIntValue(FLATWORLDNS, "min", 0);
-	 Log.i("Cangjie", "Set Values " + mMaxValue + " " + mMinValue);
+	 // Log.i("Cangjie", "Set Values " + mMaxValue + " " + mMinValue);
        
     //     try {
     //         String newInterval = attrs.getAttributeValue(FLATWORLDNS, "interval");
@@ -179,6 +199,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	    mDefault.setOnClickListener(this);
 
             mSeekBar.setProgress(mCurrentValue - mMinValue);
+	    
+	    updateValue();
 
 	    mStatusText.setEnabled(!mDefaultChecked);
 	    mSeekBar.setEnabled(!mDefaultChecked);
@@ -217,6 +239,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         mStatusText.setText(String.valueOf(((float) newValue / (float) 10)) + "%");
         persistInt(newValue);
 
+	// Log.i("Cangjie", " On Progress Changed " + newValue);
     }
 
     @Override

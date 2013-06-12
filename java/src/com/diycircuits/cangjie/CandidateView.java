@@ -123,6 +123,7 @@ public class CandidateView extends LinearLayout implements View.OnClickListener 
 	mSelect.setCandidateSelectWidget(mSelectWidget);
 	mSelect.setCandidateList(mSelectList);
 	mSelect.setFontSize((int) mFontSize);
+	mSelect.updateFontSize();
 
 	findViewById(R.id.arrow_left).setOnClickListener(this);
 	findViewById(R.id.arrow_right).setOnClickListener(this);
