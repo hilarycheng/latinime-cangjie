@@ -50,7 +50,7 @@
           android:layout_weight="0.53" />
 
       <ImageButton
-          android:id="@+id/arrow_right"
+          android:id="@+id/arrow_left"
           android:layout_width="48dp"
           android:layout_height="@dimen/suggestions_strip_height"
           android:background="@drawable/ab_solid_dark_holo"
@@ -64,7 +64,7 @@
           android:layout_weight="0.53" />
 
       <ImageButton
-          android:id="@+id/arrow_left"
+          android:id="@+id/arrow_right"
           android:layout_width="48dp"
           android:layout_height="@dimen/suggestions_strip_height"
           android:background="@drawable/ab_solid_dark_holo"
