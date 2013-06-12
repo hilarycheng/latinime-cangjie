@@ -69,6 +69,12 @@
             android:summary="@string/candidate_popup_summary"
             android:defaultValue="true"
             android:persistent="true" />
+	<CheckBoxPreference
+            android:key="cangjie_button"
+            android:title="@string/prefs_cangjie_button"
+            android:summary="@string/prefs_cangjie_button_summary"
+	    android:defaultValue="false"
+            android:persistent="true"/>
         <com.diycircuits.widgets.SeekBarPreference
             android:defaultValue="100"
             android:key="candidate_font_size"

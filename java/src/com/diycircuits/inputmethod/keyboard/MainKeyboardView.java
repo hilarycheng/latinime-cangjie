@@ -698,9 +698,16 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         final int oldPointerCount = mOldPointerCount;
         mOldPointerCount = pointerCount;
 
+	// Log.i("Cangjie", "processMotionEvent " + pointerCount);
+	
         // TODO: cleanup this code into a multi-touch to single-touch event converter class?
         // If the device does not have distinct multi-touch support panel, ignore all multi-touch
         // events except a transition from/to single-touch.
+
+	// if (pointerCount >= 2) {
+        //     return true;
+	// }
+	
         if (nonDistinctMultitouch && pointerCount > 1 && oldPointerCount > 1) {
             return true;
         }

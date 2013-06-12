@@ -151,6 +151,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
     private boolean mLeftEdge;
     private boolean mTopEdge;
     private Key mRightEdgeKey = null;
+    private int mTotalRow = 0;
 
     public KeyboardBuilder(final Context context, final KP params) {
         mContext = context;
@@ -169,6 +170,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
     }
 
     public KeyboardBuilder<KP> load(final int xmlId, final KeyboardId id) {
+	mTotalRow = 0;
         mParams.mId = id;
         final XmlResourceParser parser = mResources.getXml(xmlId);
         try {
@@ -182,6 +184,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
         } finally {
             parser.close();
         }
+	Log.i("Cangjie", "Total Row " + mTotalRow);
         return this;
     }
 
@@ -415,6 +418,7 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                         startRow(row);
                     }
                     parseRowContent(parser, row, skip);
+		    mTotalRow++;
                 } else if (TAG_INCLUDE.equals(tag)) {
                     parseIncludeKeyboardContent(parser, skip);
                 } else if (TAG_SWITCH.equals(tag)) {
