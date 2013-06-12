@@ -90,9 +90,9 @@ public class CandidateSelect {
 		@Override
 		public boolean onItemClick( AdapterView<?> parent, View view, int position, long id ) {
 		    if (mState == CHARACTER_MODE) {
-			if (mListener != null) mListener.characterSelected(mLoader.getMatchChar(position >> 1), position >> 1);
+			if (mListener != null) mListener.characterSelected(mLoader.getMatchChar(getPos(position)), getPos(position));
 		    } else if (mState == PHRASE_MODE) {
-			if (mListener != null) mListener.phraseSelected(getPhrase(position >> 1), mLoader.getPhraseIndex() + (position >> 1));
+			if (mListener != null) mListener.phraseSelected(getPhrase(getPos(position)), mLoader.getPhraseIndex() + getPos(position));
 		    }
 
 		    return true;
@@ -144,7 +144,18 @@ public class CandidateSelect {
 	    return mState;
 	}
     }
-
+    
+    public boolean displaySeparator() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("show_candidate_separator", true);	
+    }
+    
+    public int getPos(int pos) {
+	if (displaySeparator())
+	    return pos >> 1;
+	else
+	    return pos;
+    }
+	
     public void setCandidateListener(CandidateListener listen) {
 	mListener = listen;
 	if (isCandidatePopup(mContext)) mSelectWidget.setCandidateListener(listen);
@@ -169,21 +180,27 @@ public class CandidateSelect {
 
 	@Override
         public int getItemViewType( int position ) {
-	    return position & 1;
+	    if (displaySeparator())
+		return position & 1;
+	    else
+		return 0;
 	}
 
 	@Override
 	public int getViewTypeCount() {
-	    return 2;
+	    if (displaySeparator())
+		return 2;
+	    else
+		return 1;
 	}
 
 	@Override
 	public String getItem(int pos) {
 	    if (mState == CHARACTER_MODE) {
 		sb.setLength(0);
-		if (mLoader != null) sb.append(mLoader.getMatchChar(pos >> 1));
+		if (mLoader != null) sb.append(mLoader.getMatchChar(getPos(pos)));
 	    } else if (mState == PHRASE_MODE) {
-		return getPhrase(pos >> 1);
+		return getPhrase(getPos(pos));
 	    }
 
 	    return sb.toString();
@@ -197,10 +214,11 @@ public class CandidateSelect {
 	@Override
 	public int getCount() {
 	    if (mLoader != null) {
+		int multipler = displaySeparator() ? 2 : 1;
 		if (mState == CHARACTER_MODE) {
-		    return mLoader.totalMatch() * 2;
+		    return mLoader.totalMatch() * multipler;
 		} else if (mState == PHRASE_MODE) {
-		    return mLoader.getPhraseCount() * 2;
+		    return mLoader.getPhraseCount() * multipler;
 		}
 	    }
 
@@ -227,21 +245,21 @@ public class CandidateSelect {
 		text.setOnTouchListener(this);
 
 		if (mState == CHARACTER_MODE) {
-		    if (mLoader.getFrequency(position >> 1) > 0) 
+		    if (mLoader.getFrequency(getPos(position)) > 0) 
 			text.setTextColor(0xffff9000);
 		    else
 			text.setTextColor(0xff33B5E5);
 		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
 		    sb.setLength(0);
-		    if (mLoader != null) sb.append(mLoader.getMatchChar(position >> 1));
+		    if (mLoader != null) sb.append(mLoader.getMatchChar(getPos(position)));
 		    text.setText(sb.toString());
 		} else if (mState == PHRASE_MODE) {
-		    if (mLoader.getPhraseFrequency(mLoader.getPhraseIndex() + (position >> 1)) > 0) 
+		    if (mLoader.getPhraseFrequency(mLoader.getPhraseIndex() + (getPos(position))) > 0) 
 			text.setTextColor(0xffff9000);
 		    else
 			text.setTextColor(0xff33B5E5);
 		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
-		    text.setText(getPhrase(position >> 1));
+		    text.setText(getPhrase(getPos(position)));
 		}
 	    }
 
