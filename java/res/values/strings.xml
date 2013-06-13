@@ -408,4 +408,7 @@
 
     <string name="prefs_candidate_font_size">選字行/頁字型大小</string>
 
+    <!-- Color Picker Dialog -->
+    <string name="dialog_color_picker">Color Picker</string>
+    <string name="press_color_to_apply">Press on Color to apply</string>    
 </resources>
