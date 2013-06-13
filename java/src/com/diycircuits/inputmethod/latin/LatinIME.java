@@ -192,6 +192,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private CandidateSelect mCandidateSelect = null;
     private View mCandidateContainer = null;
     private StringBuffer mLastSuggestionEngOnly = new StringBuffer();
+
+    private boolean mLastSuggestionsShown = false;
     
     public final UIHandler mHandler = new UIHandler(this);
 
@@ -620,6 +622,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         return;
     }
 
+    private boolean alwaysShowSuggestions() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("always_show_suggestions", true);
+    }
+    
     private void checkCangjieFrequency() {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	boolean enabled = prefs.getBoolean("clear_often_used", false);
@@ -1049,20 +1055,27 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private void setSuggestionStripShownInternal(final boolean shown,
             final boolean needsInputViewShown) {
 
-	if (true) return;
+	mLastSuggestionsShown = shown;
+
+	if (alwaysShowSuggestions()) return;
 	
         // TODO: Modify this if we support suggestions with hard keyboard
         if (onEvaluateInputViewShown() && mSuggestionsContainer != null) {
             final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
             final boolean inputViewShown = (mainKeyboardView != null)
                     ? mainKeyboardView.isShown() : false;
-            final boolean shouldShowSuggestions = shown
+            boolean shouldShowSuggestions = shown
                     && (needsInputViewShown ? inputViewShown : true);
+            shouldShowSuggestions = shouldShowSuggestions | isCangjieMode();
             if (isFullscreenMode()) {
                 mSuggestionsContainer.setVisibility(
                         shouldShowSuggestions ? View.VISIBLE : View.GONE);
+		mCandidateView.setVisibility(
+                        shouldShowSuggestions ? View.VISIBLE : View.GONE);
             } else {
                 mSuggestionsContainer.setVisibility(
+                        shouldShowSuggestions ? View.VISIBLE : View.INVISIBLE);
+		mCandidateView.setVisibility(
                         shouldShowSuggestions ? View.VISIBLE : View.INVISIBLE);
             }
         }
@@ -1360,6 +1373,11 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private boolean isCangjieMode() {
+	if (mKeyboardSwitcher == null ||
+	    mKeyboardSwitcher.getMainKeyboardView() == null ||
+	    mKeyboardSwitcher.getMainKeyboardView().getKeyboard() == null ||
+	    mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId == null)
+	    return false;
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
 	return (mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_ENGLISH ||	
@@ -1513,6 +1531,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    mCandidateView.invalidate();
 	    mCandidateContainer.invalidate();
 	}
+	setSuggestionStripShown(mLastSuggestionsShown);
     }
 
     // Cangjie Candidate Selected

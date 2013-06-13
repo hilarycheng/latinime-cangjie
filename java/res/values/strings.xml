@@ -38,6 +38,7 @@
     <string name="prefs_candidate_button_summary">選擇, 是: 左邊, 否: 右邊</string>
     <string name="prefs_always_show_english_keyboard">先顯示英文鍵盤</string>
     <string name="prefs_show_candidate_separator">顯示選字頁分隔線?</string>
+    <string name="prefs_always_show_suggestions">永遠顯示選字行(英文)</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->

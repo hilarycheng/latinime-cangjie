@@ -92,6 +92,11 @@
             android:title="@string/prefs_show_candidate_separator"
 	    android:defaultValue="true"
             android:persistent="true"/>
+	<CheckBoxPreference
+            android:key="always_show_suggestions"
+            android:title="@string/prefs_always_show_suggestions"
+	    android:defaultValue="true"
+            android:persistent="true"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/general_category"
