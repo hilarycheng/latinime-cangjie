@@ -77,6 +77,14 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 	mHandler = new Handler(this);
     }
 
+    private int getNormalColor() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getInt("normal_character_color", 0xff33B5E5);
+    }
+    
+    private int getFrequentColor() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getInt("frequent_character_color", 0xffff9000);
+    }
+    
     public void setParentWidth(int w) {
 	mParentWidth = w;
 
@@ -313,31 +321,31 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 	    char c[] = new char[1];
 	    paint.setColor(0xff282828);
 	    canvas.drawRect(0, 0, width, height - 0, paint);
-	    paint.setColor(0xff33B5E5);
+	    paint.setColor(getNormalColor());
 	
 	    int start = spacing / 2, index = charOffset;
 	    while (start < width && index < total) {
 		if (mSelectIndex == index) {
 		    int x = start - (spacing / 2);
-		    paint.setColor(0xff33B5E5);
+		    paint.setColor(getNormalColor());
 		    canvas.drawRect(x, 0, x + textWidth + spacing, height, paint);
 		    c[0] = mTable.getMatchChar(index);
 		    int color = 0xff282828;
-		    if (mTable.getFrequency(index) > 0) color = 0xffff9000;
+		    if (mTable.getFrequency(index) > 0) color = getFrequentColor();
 		    paint.setColor(color);
 		    canvas.drawText(c, 0, 1, start, topOffset, paint);
-		    paint.setColor(0xff33B5E5);
+		    paint.setColor(getNormalColor());
 		} else {
 		    c[0] = mTable.getMatchChar(index);
-		    int color = 0xff33B5E5;
-		    if (mTable.getFrequency(index) > 0) color = 0xffff9000;
+		    int color = getNormalColor();
+		    if (mTable.getFrequency(index) > 0) color = getFrequentColor();
 		    paint.setColor(color);
 		    canvas.drawText(c, 0, 1, start, topOffset, paint);
 		}
 		start = start + (int) textWidth + (spacing / 2);
 		paint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);
 		canvas.drawLine(start, 5, start, height - 10, paint);
-		paint.setColor(0xff33B5E5);
+		paint.setColor(getNormalColor());
 		start = start + (spacing / 2);
 		index++;
 	    }
@@ -355,9 +363,9 @@ public class CandidateSelectWidget extends View implements Handler.Callback {
 	    while (start < width && index < mTable.getPhraseCount()) {
 		plen = mTable.getPhraseArray(mTable.getPhraseIndex() + index, mPhraseArray);
 		if (mTable.getPhraseFrequency(mTable.getPhraseIndex() + index) > 0)
-		    paint.setColor(0xffff9000);
+		    paint.setColor(getFrequentColor());
 		else
-		    paint.setColor(0xff33B5E5);
+		    paint.setColor(getNormalColor());
 		canvas.drawText(mPhraseArray, 0, plen, start, topOffset, paint);
 		start += (plen * textWidth) + ((plen - 1) * textFontSpacing) + (spacing / 2);
 		paint.setColor(displaySeparator() ? 0xffcccccc : 0xff272727);

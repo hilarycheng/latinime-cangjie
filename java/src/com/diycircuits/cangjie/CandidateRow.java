@@ -54,6 +54,14 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	setOnTouchListener(this);
     }
 
+    private int getNormalColor() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getInt("normal_character_color", 0xff33B5E5);
+    }
+    
+    private int getFrequentColor() {
+	return PreferenceManager.getDefaultSharedPreferences(context).getInt("frequent_character_color", 0xffff9000);
+    }
+
     public void setPreferredHeight(int height) {
 	mPreferredHeight = height;
     }
@@ -271,7 +279,7 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 	canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
 	mPaint.setColor(0xff282828);
 	canvas.drawRect(0, 0, getWidth(), getHeight() - 1, mPaint);
-	mPaint.setColor(0xffeeeeee);
+	mPaint.setColor(getNormalColor());
 	if (mTable != null) {
 	    if (mState == CHARACTER_MODE) {
 		char c[] = new char[1];
@@ -280,8 +288,8 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		topOffset = topOffset + ((mHeight - mRect.height()) / 2);
 		for (int count = mOffset; count < mOffset + mTotal; count++) {
 		    c[0] = mTable.getMatchChar(count);
-		    int color = 0xffeeeeee;
-		    if (mTable.getFrequency(count) > 0) color = 0xffff9000;
+		    int color = getNormalColor();
+		    if (mTable.getFrequency(count) > 0) color = getFrequentColor();
 		    mPaint.setColor(color);
 		    if (mSelectIndex != (count - mOffset)) canvas.drawText(c, 0, 1, spacing, topOffset, mPaint);
 
@@ -297,11 +305,11 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    spacing = mLeftOffset + mSelectIndex * (cspacing + mTextWidth);
 
 		    // canvas.clipRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, Region.Op.REPLACE);
-		    mPaint.setColor(0xff33B5E5);
+		    mPaint.setColor(getNormalColor());
 		    canvas.drawRect(spacing, 0, spacing + mTextWidth + cspacing, getHeight() - 1, mPaint);
 
 		    int color = 0xffffffff;
-		    if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = 0xffff9000;
+		    if (mTable.getFrequency(mOffset + mSelectIndex) > 0) color = getFrequentColor();
 		    mPaint.setColor(color);
 		    c[0] = mTable.getMatchChar(mOffset + mSelectIndex);
 		    canvas.drawText(c, 0, 1, spacing + (cspacing / 2), topOffset, mPaint);
@@ -320,9 +328,9 @@ public class CandidateRow extends View implements View.OnClickListener, View.OnT
 		    int len = mTable.getPhraseArray(mOffset + count, mPhrase);
 		    int mapoffset = (mOffset + count) - mTable.getPhraseIndex();
 		    if (mTable.getPhraseFrequency(mOffset + count) > 0)
-			mPaint.setColor(0xffff9000);
+			mPaint.setColor(getFrequentColor());
 		    else
-			mPaint.setColor(0xffeeeeee);
+			mPaint.setColor(getNormalColor());
 		    canvas.drawText(mPhrase, 0, len, spacing, topOffset, mPaint);
 		    spacing += (pspacing / 2) + (mTextWidth * len) + (mTextFontSpacing * (len - 1));
 		    // canvas.clipRect(spacing - 1, 0, spacing + 1, getHeight(), Region.Op.REPLACE);

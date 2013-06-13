@@ -49,6 +49,14 @@ public class CandidateSelect {
 	if (mAdapter == null) mAdapter = new ListAdapter(context, 0); // , mItemObject);
     }
 
+    private int getNormalColor() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("normal_character_color", 0xff33B5E5);
+    }
+    
+    private int getFrequentColor() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("frequent_character_color", 0xffff9000);
+    }
+    
     public void setFontSize(int size) {
 	mFontSize = size;
 	mCalculatedFontSize = size;
@@ -171,7 +179,7 @@ public class CandidateSelect {
 
 	public boolean onTouch(View v, MotionEvent event) {
 	    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-		v.setBackgroundColor(0xff33B5E5);
+		v.setBackgroundColor(getNormalColor());
 	    } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
 		v.setBackgroundColor(0xff272727);
 	    }
@@ -246,18 +254,18 @@ public class CandidateSelect {
 
 		if (mState == CHARACTER_MODE) {
 		    if (mLoader.getFrequency(getPos(position)) > 0) 
-			text.setTextColor(0xffff9000);
+			text.setTextColor(getFrequentColor());
 		    else
-			text.setTextColor(0xff33B5E5);
+			text.setTextColor(getNormalColor());
 		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
 		    sb.setLength(0);
 		    if (mLoader != null) sb.append(mLoader.getMatchChar(getPos(position)));
 		    text.setText(sb.toString());
 		} else if (mState == PHRASE_MODE) {
 		    if (mLoader.getPhraseFrequency(mLoader.getPhraseIndex() + (getPos(position))) > 0) 
-			text.setTextColor(0xffff9000);
+			text.setTextColor(getFrequentColor());
 		    else
-			text.setTextColor(0xff33B5E5);
+			text.setTextColor(getNormalColor());
 		    text.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSize);
 		    text.setText(getPhrase(getPos(position)));
 		}
