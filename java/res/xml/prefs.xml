@@ -283,5 +283,9 @@
           android:key="horizontallistviewreference"
           android:summary="https://github.com/sephiroth74/HorizontalVariableListView/"
           android:title="Horizontal List View Reference" />
+      <Preference
+          android:key="colorpickerpreference"
+          android:summary="https://github.com/attenzione/android-ColorPickerPreference"
+          android:title="Android Color Picker Preference Reference" />
     </PreferenceCategory>
 </PreferenceScreen>
