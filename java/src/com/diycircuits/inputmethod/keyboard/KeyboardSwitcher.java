@@ -290,7 +290,7 @@ public final class KeyboardSwitcher implements KeyboardState.SwitchActions {
     public void setCangjieKeyboard() {
 	mIsCangjieMode = true;
 	String value = PreferenceManager.getDefaultSharedPreferences(mThemeContext).getString("cangjie_mode", "0");
-	Log.i("Cangjie" , "Set Cangjie Keyboard " + value);
+	// Log.i("Cangjie" , "Set Cangjie Keyboard " + value);
 	if (value.compareTo("1") == 0) {
 	    if (isFullSymbol()) {
 		if (isCangjieEnglishKey()) 

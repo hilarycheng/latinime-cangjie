@@ -550,10 +550,10 @@ struct _input_method cangjie5_func =
 
 __attribute__((constructor)) static void onDlOpen(void)
 {
-  LOGE(" Constructor Open ");
+  /* LOGE(" Constructor Open "); */
 }
 
 __attribute__((destructor)) static void onDlClose(void)
 {
-  LOGE(" Constructor Close ");
+  /* LOGE(" Constructor Close "); */
 }

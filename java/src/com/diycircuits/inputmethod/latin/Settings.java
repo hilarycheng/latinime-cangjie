@@ -253,10 +253,10 @@ public final class Settings extends InputMethodSettingsFragment
         refreshEnablingsOfKeypressSoundAndVibrationSettings(prefs, res);
 
 	TableLoader mTable = TableLoader.mInstance;
-	Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
-	for (int count = 0; count < mTable.getInputMethodCount(); count++) {
-	    Log.i("Cangjie", "Input Method Name " + count + " " + mTable.getInputMethodNameList()[count]);
-	}
+	// Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
+	// for (int count = 0; count < mTable.getInputMethodCount(); count++) {
+	//     Log.i("Cangjie", "Input Method Name " + count + " " + mTable.getInputMethodNameList()[count]);
+	// }
 
 	final ListPreference inputList = (ListPreference) findPreference("cangjie_mode");
 	inputList.setEntries(mTable.getInputMethodNameList());
@@ -286,7 +286,7 @@ public final class Settings extends InputMethodSettingsFragment
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences prefs, final String key) {
-	Log.i("Cangjie", "On Shared Preference " + key);
+	// Log.i("Cangjie", "On Shared Preference " + key);
 	
         (new BackupManager(getActivity())).dataChanged();
         if (key.equals(PREF_POPUP_ON)) {
