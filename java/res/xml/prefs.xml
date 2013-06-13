@@ -97,6 +97,18 @@
             android:title="@string/prefs_always_show_suggestions"
 	    android:defaultValue="true"
             android:persistent="true"/>
+	<net.margaritov.preference.colorpicker.ColorPickerPreference
+	    android:key="normal_character_color"
+	    android:title="@string/pref_normal_character_color"
+	    android:defaultValue="@integer/COLOR_NORMAL"
+	    alphaSlider="false"
+	    />
+	<net.margaritov.preference.colorpicker.ColorPickerPreference
+	    android:key="frequent_character_color"
+	    android:title="@string/pref_frequent_character_color"
+	    android:defaultValue="@integer/COLOR_FREQUENT"
+	    alphaSlider="false"
+	    />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/general_category"
