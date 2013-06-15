@@ -20,6 +20,7 @@ jchar phrase_last_key = 0;
 jchar phrase_word[256][10];
 int   phrase_length[256];
 int   phrase_frequency[256];
+int   phrase_rowid[256];
 int counter = 0;
 char sql[1024];
 char utf[1024];
@@ -69,6 +70,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
   ptr[index + 0] = 0;
   ptr[index + 1] = 0;
   phrase_frequency[counter] = atoi(argv[1]);
+  phrase_rowid[counter]     = atoi(argv[2]);
   if (phrase_max < phrase_length[counter]) phrase_max = phrase_length[counter];
   
   /* sql[0] = 0; */
@@ -97,7 +99,7 @@ int search_phrase(jchar index)
 
   counter = 0;
   phrase_max   = 0;
-  snprintf(sql, 1024, "select phrase, frequency from phrase where key = %d order by frequency desc limit 256", index);
+  snprintf(sql, 1024, "select phrase, frequency, rowid from phrase where key = %d order by frequency desc limit 256", index);
   int rc = sqlite3_exec(db, sql, callback, 0, 0);
   if (rc != 0) return 0;
 
@@ -236,7 +238,8 @@ void update_phrase_frequency(int index)
   utf[i] = 0;
 
   sql[0] = 0;
-  snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where key = %d and phrase like '%s'", phrase_last_key, utf);
+  // snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where key = %d and phrase like '%s'", phrase_last_key, utf);
+  snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where rowid = %d", phrase_rowid[index]);
   LOGE("Update Frequency : %s", sql);
   
   int rc = sqlite3_exec(db, sql, 0, 0, 0);
