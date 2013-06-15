@@ -9,6 +9,10 @@ import android.preference.PreferenceManager;
 import java.util.HashMap;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.File;
+import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
 import com.diycircuits.cangjie.CandidateListener;
@@ -55,6 +59,23 @@ public class Cangjie implements CandidateListener {
 	} catch (UnsupportedEncodingException ex) {
 	}
 
+	try {
+	    File db = new File(appInfo.dataDir + "/phrase.db");
+	    if (!db.exists()) {
+		InputStream is = context.getAssets().open("phrase.db");
+		OutputStream os = new FileOutputStream(appInfo.dataDir + "/phrase.db");
+ 
+		byte[] buffer = new byte[1024];
+		while (is.read(buffer) > 0) {
+		    os.write(buffer);
+		}
+		os.flush();
+		os.close();
+		is.close();
+	    }
+	} catch (Exception ex) {
+	}
+ 
 	mTable.initialize();
 
 	// Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());

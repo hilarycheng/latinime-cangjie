@@ -7,6 +7,7 @@ public class Dict
 
     public static void main(String[] args) {
 	try {
+	    FileOutputStream fo = new FileOutputStream("./phrase.csv");
 	    Font font = new Font("Droid Sans Fallback", 16, Font.PLAIN);
 	    BufferedReader reader = new BufferedReader(new FileReader("./phrase.txt"));
 
@@ -17,6 +18,7 @@ public class Dict
 	    boolean canDisplay = true;
 	    String line = null;
 	    int total = 0;
+	    int max_phrase = 0;
 	    do {
 		line = reader.readLine();
 		if (line == null)
@@ -53,12 +55,19 @@ public class Dict
 		    clist.add(c);
 		}
 		int phraselen = phrase.length();
+		if (phraselen > max_phrase) max_phrase = phraselen;
 		if (maxphrase.containsKey(c)) {
 		    if (phraselen > maxphrase.get(c).intValue()) {
 			maxphrase.put(c, new Integer(phraselen));
 		    }
 		} else {
 		    maxphrase.put(c, new Integer(phraselen));
+		}
+		{
+		    String key = phrase.substring(0, 1);
+		    int value = (int) key.charAt(0);
+		    String other = phrase.substring(1);
+		    fo.write((value + "," + other + ",0\n").getBytes("UTF-8"));
 		}
 		String dw = phrase.substring(0, 2);
 		if (dw.length() >= 2) {
@@ -162,6 +171,9 @@ public class Dict
 	    // System.out.println(total);
 	    // System.out.println(d + " " + max);
 	    reader.close();
+	    fo.close();
+
+	    System.err.println("Max Phrase " + max_phrase);
 
 	} catch (Exception ex) {
 	    ex.printStackTrace();
