@@ -8,6 +8,7 @@ public class Dict
     public static void main(String[] args) {
 	try {
 	    FileOutputStream fo = new FileOutputStream("./phrase.csv");
+	    FileOutputStream fs = new FileOutputStream("./phrase_single.csv");
 	    Font font = new Font("Droid Sans Fallback", 16, Font.PLAIN);
 	    BufferedReader reader = new BufferedReader(new FileReader("./phrase.txt"));
 
@@ -67,7 +68,10 @@ public class Dict
 		    String key = phrase.substring(0, 1);
 		    int value = (int) key.charAt(0);
 		    String other = phrase.substring(1);
-		    fo.write((value + "," + other + ",0," + (phrase.length() - 1) + "\n").getBytes("UTF-8"));
+		    if (other.length() == 1) 
+			fs.write((value + "," + ((int) phrase.charAt(0)) + ",0,1\n").getBytes("UTF-8"));
+		    else
+			fo.write((value + "," + other + ",0," + (phrase.length() - 1) + "\n").getBytes("UTF-8"));
 		}
 		String dw = phrase.substring(0, 2);
 		if (dw.length() >= 2) {
@@ -172,6 +176,7 @@ public class Dict
 	    // System.out.println(d + " " + max);
 	    reader.close();
 	    fo.close();
+	    fs.close();
 
 	    System.err.println("Max Phrase " + max_phrase);
 

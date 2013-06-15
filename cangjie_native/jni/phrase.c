@@ -2,20 +2,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <android/log.h>
+#ifdef SQLITE
 #include "sqlite3.h"
+#endif
 
 #define  LOG_TAG    "Cangjie"
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-// #include "phrase_internal.h"
+#ifndef SQLITE
+#include "phrase_internal.h"
+#endif
 
 int phrase_count = 0;
 int phrase_index = 0;
 int phrase_max   = 0;
 int phrase_saved = 0;
-// int phrase_map[32768];
 char phrase_path[1024];
-// int phrase_freq[sizeof(phrase) / sizeof(struct PHRASE_INDEX)];
+#ifndef SQLITE
+int phrase_map[32768];
+int phrase_freq[sizeof(phrase) / sizeof(struct PHRASE_INDEX)];
+#endif
 
+#ifdef SQLITE
 jchar phrase_last_key = 0;
 jchar phrase_word[256][10];
 int   phrase_length[256];
@@ -26,27 +33,26 @@ int   phrase_exists = 0;
 char sql[1024];
 char utf[1024];
 static sqlite3 *db;
+#endif
 
 void init_phrase()
 {
-  /* memset((char *) phrase_map, 0, sizeof(phrase_map)); */
+#ifndef SQLITE
+  memset((char *) phrase_map, 0, sizeof(phrase_map));
+#endif
   phrase_count = 0;
   phrase_index = 0;
   phrase_max   = 0;
   phrase_saved = 0;
 }
 
+#ifdef SQLITE
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
   if (counter >= 256) return 0;
 
   unsigned char *ptr = (unsigned char *) &phrase_word[counter][0];
   int count, index = 0, state = 0, bits = 0;
-
-  /* utf[0] = 0; */
-  /* for (count = 0; count < strlen(argv[0]); count++) { */
-  /*   sprintf(utf + strlen(utf), "%02X ", argv[0][count] & 0x00FF); */
-  /* } */
 
   index = 0;
   for (count = 0; count < strlen(argv[0]);) {
@@ -86,10 +92,13 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
   
   return 0;
 }
+#endif
 
 int search_phrase(jchar index)
 {
-  /* int min = 0, max = sizeof(phraseindex) / sizeof(struct PHRASE_INDEX), mid = 0; */
+#ifndef SQLITE  
+  int min = 0, max = sizeof(phraseindex) / sizeof(struct PHRASE_INDEX), mid = 0;
+#endif
   int count = 0;
   int ch = (int) index;
   int loop = 1;
@@ -97,6 +106,7 @@ int search_phrase(jchar index)
   int total = 0;
   /* LOGE("Phrase : %d", sizeof(phraseindex) / sizeof(struct PHRASE_INDEX)); */
 
+#ifdef SQLITE  
   counter = 0;
   phrase_max   = 0;
   snprintf(sql, 1024, "select phrase, frequency, rowid from phrase where key = %d order by frequency desc limit 256", index);
@@ -109,7 +119,9 @@ int search_phrase(jchar index)
   /* LOGE("Total Phrase : %d", phrase_count); */
 
   return phrase_count;
-#if 0
+#endif
+
+#ifndef SQLITE
   while (max > min) {
     if (phraseindex[min].c == index) {
       found = min;
@@ -199,24 +211,35 @@ int get_phrase_max()
 
 jchar* get_phrase(int index)
 {
+#ifndef SQLITE
   /* LOGE("Get Phrase : %d %d %d", index, phrase_index, index - phrase_index); */
-  /* return &phrase[phrase_map[index - phrase_index]][1]; */
+  return &phrase[phrase_map[index - phrase_index]][1];
+#endif
+#ifdef SQLITE
   /* LOGE("Get Phrase : %d %04X", index, phrase_word[index][0] & 0x00FFFF); */
   return phrase_word[index];
+#endif
 }
 
 int get_phrase_length(int index)
 {
-  /* return (int) phrase[index][0]; */
+#ifndef SQLITE
+  return (int) phrase[index][0];
+#endif
   /* LOGE("Phrase Len :  %d %d", index, phrase_length[index]); */
+#ifdef SQLITE
   return phrase_length[index];
+#endif
 }
 
 void update_phrase_frequency(int index)
 {
+#ifndef SQLITE
   /* LOGE("Update Phrase Frequency : %d", index); */
-  /* phrase_saved = 1; */
-  /* phrase_freq[phrase_map[index - phrase_index]]++; */
+  phrase_saved = 1;
+  phrase_freq[phrase_map[index - phrase_index]]++;
+#endif
+#ifdef SQLITE
   int i = 0, count;
   utf[0] = 0;
   for (count = 0; count < phrase_length[index]; count++) {
@@ -246,6 +269,7 @@ void update_phrase_frequency(int index)
   if (rc != 0) {
     LOGE("Sql Error");
   }
+#endif
 }
 
 void load_phrase(char *path)
@@ -253,8 +277,10 @@ void load_phrase(char *path)
   strncpy(phrase_path,          path, sizeof(phrase_path));
   strncat(phrase_path, "/phrase.db", sizeof(phrase_path));
 
+#ifdef SQLITE
   sqlite3_open(phrase_path, &db);
-#if 0
+#endif
+#ifndef SQLITE
   int clear = 1;
   char key[8];
   char buf[8];
@@ -290,7 +316,7 @@ void load_phrase(char *path)
 
 void save_phrase()
 {
-#if 0
+#ifndef SQLITE
   char key[8];
 
   if (phrase_saved == 0) return;
@@ -306,25 +332,36 @@ void save_phrase()
     fclose(file);
   }
 #endif
+#ifdef SQLITE
   sqlite3_close(&db);
   sqlite3_open(phrase_path, &db);
+#endif
 }
 
 void clear_phrase()
 {
+#ifndef SQLITE
   /* LOGE("Clear Phrase"); */
-  // memset(phrase_freq, 0, sizeof(phrase_freq));
+  memset(phrase_freq, 0, sizeof(phrase_freq));
+#endif
+#ifdef SQLITE
   sqlite3_close(&db);
   unlink(phrase_path);
+#endif
 }
 
 jint get_phrase_frequency(int index)
 {
   /* LOGE("Phrase Frequency : %d %d %d", index, phrase_map[index], phrase_freq[phrase_map[index]]); */
-  /* return phrase_freq[phrase_map[index - phrase_index]]; */
+#ifndef SQLITE
+  return phrase_freq[phrase_map[index - phrase_index]];
+#endif
+#ifdef SQLITE
   return phrase_frequency[index];
+#endif
 }
 
+#ifdef SQLITE
 static int count_callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
   int value = atoi(argv[0]);
@@ -333,12 +370,13 @@ static int count_callback(void *NotUsed, int argc, char **argv, char **azColName
 
   return 0;
 }
+#endif
 
 void learn_phrase(jchar key, jchar value)
 {
+#ifdef SQLITE
   int i = 0, count;
 
-  /* LOGE("Learn Phrase 0 : %d %d", key, value); */
   sql[0] = 0;
   utf[0] = 0;
   
@@ -374,4 +412,5 @@ void learn_phrase(jchar key, jchar value)
   }
   
   sqlite3_exec(db, sql, 0, 0, 0);
+#endif
 }

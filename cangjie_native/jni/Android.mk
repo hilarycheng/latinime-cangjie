@@ -19,7 +19,7 @@ include $(CLEAR_VARS)
 # LOCAL_ARM_MODE  := arm
 
 LOCAL_MODULE    := chinese_table
-LOCAL_SRC_FILES := chinese_table.c input_method.c phrase.c sqlite3.c
+LOCAL_SRC_FILES := chinese_table.c input_method.c phrase.c # sqlite3.c
 
 LOCAL_LDLIBS    := -lm -llog 
 
