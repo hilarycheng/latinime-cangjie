@@ -21,7 +21,8 @@ jchar phrase_word[256][10];
 int   phrase_length[256];
 int   phrase_frequency[256];
 int   phrase_rowid[256];
-int counter = 0;
+int   counter = 0;
+int   phrase_exists = 0;
 char sql[1024];
 char utf[1024];
 static sqlite3 *db;
@@ -106,7 +107,7 @@ int search_phrase(jchar index)
   phrase_index = 0;
   phrase_count = counter;
   phrase_last_key = index;
-  LOGE("Total Phrase : %d", phrase_count);
+  /* LOGE("Total Phrase : %d", phrase_count); */
 
   return phrase_count;
 #if 0
@@ -240,7 +241,7 @@ void update_phrase_frequency(int index)
   sql[0] = 0;
   // snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where key = %d and phrase like '%s'", phrase_last_key, utf);
   snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where rowid = %d", phrase_rowid[index]);
-  LOGE("Update Frequency : %s", sql);
+  /* LOGE("Update Frequency : %s", sql); */
   
   int rc = sqlite3_exec(db, sql, 0, 0, 0);
   if (rc != 0) {
@@ -323,7 +324,50 @@ jint get_phrase_frequency(int index)
   return phrase_frequency[index];
 }
 
+static int count_callback(void *NotUsed, int argc, char **argv, char **azColName)
+{
+  int value = atoi(argv[0]);
+  if (argc == 1 && argv[0][0] == '0') phrase_exists = 1;
+  /* LOGE("Count Callback %d %d %s", argc, value, argv[0]); */
+
+  return 0;
+}
+
 void learn_phrase(jchar key, jchar value)
 {
+  int i = 0, count;
+
+  /* LOGE("Learn Phrase 0 : %d %d", key, value); */
   sql[0] = 0;
+  utf[0] = 0;
+  
+  if ((value & 0xFF80) == 0) {
+    utf[i] = value & 0x7F;
+    i += 1;
+  } else if ((value & 0xF800) == 0) {
+    utf[i + 1] = (value & 0x3F) | 0x80;
+    utf[i + 0] = ((value >> 6) & 0x1F) | 0xc0;
+    i += 2;
+  } else {
+    utf[i + 2] = (value         & 0x3F) | 0x80;
+    utf[i + 1] = ((value >>  6) & 0x3F) | 0x80;
+    utf[i + 0] = ((value >> 12) & 0x0F) | 0xe0;
+    i += 3;
+  }
+  utf[i] = 0;
+
+  /* LOGE("Learn Phrase 0 : %d %d", key, value); */
+  phrase_exists = 0;
+  snprintf(sql, 1024, "select count(1) from phrase where key = %d and length = 1 and phrase = '%s'", key, utf);
+  int rc = sqlite3_exec(db, sql, count_callback, 0, 0);
+  /* LOGE("Learn Phrase 1 : %d %d", rc, phrase_exists); */
+  if (rc != 0 || phrase_exists == 0) return;
+
+  /* LOGE("Learn Phrase 2 : %d %d", key, value); */
+  sql[0] = 0;
+  snprintf(sql, 1024, "insert into phrase (key, phrase, length, frequency) values (%d, '%s', 1, 1)",
+	   key, utf);
+  
+  /* LOGE("Learn Phrase 3 : %d %d %s", key, value, sql); */
+  sqlite3_exec(db, sql, 0, 0, 0);
 }
