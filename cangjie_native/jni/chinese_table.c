@@ -451,6 +451,11 @@ jint Java_com_diycircuits_cangjie_TableLoader_getPhraseFrequency(JNIEnv *env, jo
   return get_phrase_frequency(idx);
 }
 
+void Java_com_diycircuits_cangjie_TableLoader_learnPhrase(JNIEnv *env, jobject thiz, jchar key, jchar value)
+{
+  learn_phrase(key, value);
+}
+
 void Java_com_diycircuits_cangjie_TableLoader_setSortingMethod(JNIEnv *env, jobject thiz, jint method)
 {
   /* input_method[QUICK]->setSortingMethod(method); */

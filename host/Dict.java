@@ -67,7 +67,7 @@ public class Dict
 		    String key = phrase.substring(0, 1);
 		    int value = (int) key.charAt(0);
 		    String other = phrase.substring(1);
-		    fo.write((value + "," + other + ",0\n").getBytes("UTF-8"));
+		    fo.write((value + "," + other + ",0," + (phrase.length() - 1) + "\n").getBytes("UTF-8"));
 		}
 		String dw = phrase.substring(0, 2);
 		if (dw.length() >= 2) {

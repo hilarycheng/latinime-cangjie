@@ -9,4 +9,5 @@ void save_phrase();
 void clear_phrase();
 void update_phrase_frequency(int index);
 jint get_phrase_frequency(int index);
+void learn_phrase(jchar key, jchar value);
 #define MAX_PHRASE_LENGTH 9

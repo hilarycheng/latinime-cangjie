@@ -322,3 +322,8 @@ jint get_phrase_frequency(int index)
   /* return phrase_freq[phrase_map[index - phrase_index]]; */
   return phrase_frequency[index];
 }
+
+void learn_phrase(jchar key, jchar value)
+{
+  sql[0] = 0;
+}

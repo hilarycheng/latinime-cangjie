@@ -49,6 +49,7 @@ public class TableLoader {
     public native int  measurePhraseRow(int width, int charwidth, int spacing, int fontSpacing, int[] phraseRow);
     public native void updatePhraseFrequency(int idx);
     public native int getPhraseFrequency(int idx);
+    public native void learnPhrase(char key, char value);
     public native void setSortingMethod(int method);
     public native void setupOnce();
     public native int getInputMethodCount();

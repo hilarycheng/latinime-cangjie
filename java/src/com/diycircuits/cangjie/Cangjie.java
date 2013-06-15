@@ -41,6 +41,7 @@ public class Cangjie implements CandidateListener {
     private CandidateListener mListener = null;
     private StringBuffer mCangjieCode = new StringBuffer();
     private char[] nearestKey = new char[4];
+    private char lastChineseKey = 0;
 
     public Cangjie(Context context) {
 	mContext = context;
@@ -117,6 +118,8 @@ public class Cangjie implements CandidateListener {
 	    char c = (char) 0;
 	    if (mListener != null && mTable.totalMatch() > 0) {
 		c = mTable.getMatchChar(0);
+		if (lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
+		lastChineseKey = c;
 		mListener.characterSelected(mTable.getMatchChar(0), 0);
 	    }
 	    resetState();
@@ -206,6 +209,8 @@ public class Cangjie implements CandidateListener {
     }
     
     public void characterSelected(char c, int idx) {
+	if (lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
+	lastChineseKey = c;
 	mTable.updateFrequency(c);
 	if (mListener != null) mListener.characterSelected(c, idx);
 	resetState();
@@ -213,10 +218,15 @@ public class Cangjie implements CandidateListener {
     }
     
     public void phraseSelected(String phrase, int idx) {
+	lastChineseKey = 0;
 	if (idx > 0) mTable.updatePhraseFrequency(idx);
 	if (mListener != null) mListener.phraseSelected(phrase, idx);
 	resetState();
 	updatePhrase(phrase.charAt(phrase.length() - 1));
+    }
+
+    public void resetLearning() {
+	lastChineseKey = 0;
     }
 
     public void resetState() {

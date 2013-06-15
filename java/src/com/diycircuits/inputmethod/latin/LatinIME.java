@@ -1462,6 +1462,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 		if (isCangjieMode() && mCangjie.hasMatch() && primaryCode == 32) { // Send Key for White Space
 		     mCangjie.sendFirstCharacter();
 		} else {
+		    mCangjie.resetLearning();
 		    didAutoCorrect = handleSeparator(primaryCode, x, y, spaceState);
 		}
             } else {
@@ -1498,6 +1499,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 			if (result) handleCharacter(primaryCode, keyX, keyY, spaceState);
 		    }
 		} else {
+		    mCangjie.resetLearning();
 		    handleCharacter(primaryCode, keyX, keyY, spaceState);
 		}
             }
