@@ -42,6 +42,7 @@ public class Cangjie implements CandidateListener {
     private StringBuffer mCangjieCode = new StringBuffer();
     private char[] nearestKey = new char[4];
     private char lastChineseKey = 0;
+    private String mAppPath = "";
 
     public Cangjie(Context context) {
 	mContext = context;
@@ -59,24 +60,10 @@ public class Cangjie implements CandidateListener {
 	    mTable.setPath(appInfo.dataDir.getBytes("UTF-8"));
 	} catch (UnsupportedEncodingException ex) {
 	}
+	mAppPath = appInfo.dataDir;
 
-	try {
-	    File db = new File(appInfo.dataDir + "/phrase.db");
-	    if (!db.exists()) {
-		InputStream is = context.getAssets().open("phrase.db");
-		OutputStream os = new FileOutputStream(appInfo.dataDir + "/phrase.db");
- 
-		byte[] buffer = new byte[1024];
-		while (is.read(buffer) > 0) {
-		    os.write(buffer);
-		}
-		os.flush();
-		os.close();
-		is.close();
-	    }
-	} catch (Exception ex) {
-	}
- 
+	updateDatabase();
+
 	mTable.initialize();
 
 	// Log.i("Cangjie", "Input Method List " + mTable.getInputMethodCount());
@@ -91,6 +78,25 @@ public class Cangjie implements CandidateListener {
 	loadDayi3Key();
     }
 
+    private void updateDatabase() {
+	try {
+	    File db = new File(mAppPath + "/phrase.db");
+	    if (!db.exists()) {
+		InputStream is = mContext.getAssets().open("phrase.db");
+		OutputStream os = new FileOutputStream(mAppPath + "/phrase.db");
+ 
+		byte[] buffer = new byte[1024];
+		while (is.read(buffer) > 0) {
+		    os.write(buffer);
+		}
+		os.flush();
+		os.close();
+		is.close();
+	    }
+	} catch (Exception ex) {
+	}
+    }
+ 
     public boolean hasMatch() {
 	// if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
 	    return mTable.totalMatch() > 0;
@@ -140,6 +146,8 @@ public class Cangjie implements CandidateListener {
 
     public void resetFrequency() {
 	mTable.clearAllFrequency();
+	updateDatabase();
+	mTable.initialize();
     }
     
     public char getFirstCharacter() {

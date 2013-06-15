@@ -34,7 +34,6 @@ void init_phrase()
   phrase_index = 0;
   phrase_max   = 0;
   phrase_saved = 0;
-  
 }
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
@@ -315,6 +314,8 @@ void clear_phrase()
 {
   /* LOGE("Clear Phrase"); */
   // memset(phrase_freq, 0, sizeof(phrase_freq));
+  sqlite3_close(&db);
+  unlink(phrase_path);
 }
 
 jint get_phrase_frequency(int index)
