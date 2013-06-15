@@ -362,13 +362,16 @@ void learn_phrase(jchar key, jchar value)
   snprintf(sql, 1024, "select count(1) from phrase where key = %d and length = 1 and phrase = '%s'", key, utf);
   int rc = sqlite3_exec(db, sql, count_callback, 0, 0);
   /* LOGE("Learn Phrase 1 : %d %d", rc, phrase_exists); */
-  if (rc != 0 || phrase_exists == 0) return;
-
-  /* LOGE("Learn Phrase 2 : %d %d", key, value); */
-  sql[0] = 0;
-  snprintf(sql, 1024, "insert into phrase (key, phrase, length, frequency) values (%d, '%s', 1, 1)",
-	   key, utf);
+  if (rc != 0) return;
   
-  /* LOGE("Learn Phrase 3 : %d %d %s", key, value, sql); */
+  sql[0] = 0;
+  if (phrase_exists == 0) {
+    snprintf(sql, 1024, "update phrase set frequency = frequency + 1 where key = %d and length = 1 and phrase = '%s'",
+	     key, utf);
+  } else {
+    snprintf(sql, 1024, "insert into phrase (key, phrase, length, frequency) values (%d, '%s', 1, 1)",
+	     key, utf);
+  }
+  
   sqlite3_exec(db, sql, 0, 0, 0);
 }
