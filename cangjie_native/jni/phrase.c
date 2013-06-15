@@ -17,9 +17,16 @@ int phrase_index = 0;
 int phrase_max   = 0;
 int phrase_saved = 0;
 char phrase_path[1024];
+char phrase_user_path[1024];
 #ifndef SQLITE
 int phrase_map[32768];
 int phrase_freq[sizeof(phrase) / sizeof(struct PHRASE_INDEX)];
+#define PHRASE_TOTAL_USER 4096
+jchar phrase_user[PHRASE_TOTAL_USER][4];
+int phrase_user_search_count = 0;
+#define PHRASE_USER_KEY  0
+#define PHRASE_USER_FREQ 1
+#define PHRASE_USER_VAL  2
 #endif
 
 #ifdef SQLITE
@@ -38,7 +45,9 @@ static sqlite3 *db;
 void init_phrase()
 {
 #ifndef SQLITE
-  memset((char *) phrase_map, 0, sizeof(phrase_map));
+  memset((char *) phrase_map,  0, sizeof(phrase_map));
+  memset((char *) phrase_user, 0, sizeof(phrase_user));
+  LOGE("User Phrase Size : %d", sizeof(phrase_user));
 #endif
   phrase_count = 0;
   phrase_index = 0;
@@ -160,14 +169,27 @@ int search_phrase(jchar index)
       /* LOGE("Phrase Map0 : %d %d %d", count, phrase_map[count], phrase_freq[phrase_map[count]]); */
     }
 
+    for (count = 0; count < PHRASE_TOTAL_USER; count++) {
+      if (phrase_user[count][PHRASE_USER_KEY] == index) {
+        phrase_map[phrase_count] = -(count + 1);
+	phrase_count++;
+      }
+    }
+
     int n = phrase_count;
     int swap = 1;
     int temp = 0;
+    int first = 0;
+    int second = 0;
     do {
       swap = 0;
       int i = 0;
       for (i = 0; i < n - 1; i++) {
-    	if (phrase_freq[phrase_map[i]] < phrase_freq[phrase_map[i + 1]]) {
+        first = phrase_map[i];
+	second = phrase_map[i + 1];
+	if (first >=  0)  first = phrase_freq[first];  else first  = phrase_user[-first][PHRASE_USER_FREQ];
+	if (second >= 0) second = phrase_freq[second]; else second = phrase_user[-second - 1][PHRASE_USER_FREQ];
+    	if (first < second) {
     	  temp = phrase_map[i];
     	  phrase_map[i] = phrase_map[i + 1];
     	  phrase_map[i + 1] = temp;
@@ -213,7 +235,11 @@ jchar* get_phrase(int index)
 {
 #ifndef SQLITE
   /* LOGE("Get Phrase : %d %d %d", index, phrase_index, index - phrase_index); */
-  return &phrase[phrase_map[index - phrase_index]][1];
+  int i = phrase_map[index - phrase_index];
+  if (i >= 0) 
+    return &phrase[i][1];
+  else
+    return &phrase_user[-i - 1][PHRASE_USER_VAL];
 #endif
 #ifdef SQLITE
   /* LOGE("Get Phrase : %d %04X", index, phrase_word[index][0] & 0x00FFFF); */
@@ -224,7 +250,11 @@ jchar* get_phrase(int index)
 int get_phrase_length(int index)
 {
 #ifndef SQLITE
-  return (int) phrase[index][0];
+  int i = phrase_map[index - phrase_index];
+  if (i >= 0) 
+    return (int) phrase[i][0];
+  else
+    return 1;
 #endif
   /* LOGE("Phrase Len :  %d %d", index, phrase_length[index]); */
 #ifdef SQLITE
@@ -237,7 +267,11 @@ void update_phrase_frequency(int index)
 #ifndef SQLITE
   /* LOGE("Update Phrase Frequency : %d", index); */
   phrase_saved = 1;
-  phrase_freq[phrase_map[index - phrase_index]]++;
+  int i = phrase_map[index - phrase_index];
+  if (i >= 0)
+    phrase_freq[i]++;
+  else
+    phrase_user[-i - 1][PHRASE_USER_FREQ]++;
 #endif
 #ifdef SQLITE
   int i = 0, count;
@@ -274,8 +308,11 @@ void update_phrase_frequency(int index)
 
 void load_phrase(char *path)
 {
-  strncpy(phrase_path,          path, sizeof(phrase_path));
-  strncat(phrase_path, "/phrase.db", sizeof(phrase_path));
+  strncpy(phrase_path,         path, sizeof(phrase_path));
+  strncat(phrase_path, "/phrase.dat", sizeof(phrase_path));
+
+  strncpy(phrase_user_path,              path, sizeof(phrase_user_path));
+  strncat(phrase_user_path, "/phrase_user.dat", sizeof(phrase_user_path));
 
 #ifdef SQLITE
   sqlite3_open(phrase_path, &db);
@@ -285,31 +322,32 @@ void load_phrase(char *path)
   char key[8];
   char buf[8];
 
-  strncpy(phrase_path,          path, sizeof(phrase_path));
-  strncat(phrase_path, "/phrase.dat", sizeof(phrase_path));
-
   memset(key, 0, 8);
   strcpy(key, "PHRAS0");
 
-  /* LOGE("Load Phrase Path : %s", phrase_path); */
   FILE *file = fopen(phrase_path, "r");
   if (file != 0) {
     int read = fread(buf, 1, sizeof(buf), file);
-    /* LOGE("Load Phrase0 : %d", read); */
-    /* LOGE("Load Phrase0-1 : %02X %02X %02X %02X %02X %02X %02X %02X ", */
-    /* 	 buf[0], buf[1], buf[2], buf[3],  */
-    /* 	 buf[4], buf[5], buf[6], buf[7] */
-    /* 	 ); */
     if (memcmp(buf, key, 8) == 0) {
       int read = fread(phrase_freq, 1, sizeof(phrase_freq), file);
-      /* LOGE("Load Phrase1 : %d %d", read, sizeof(phrase_freq)); */
       fclose(file);
       if (read == sizeof(phrase_freq)) clear = 0;
     }
   }
 
+  file = fopen(phrase_user_path, "r");
+  if (file != 0) {
+    int read = fread(buf, 1, sizeof(buf), file);
+    if (memcmp(buf, key, 8) == 0) {
+      int read = fread(phrase_user, 1, sizeof(phrase_user), file);
+      fclose(file);
+      if (read == sizeof(phrase_user)) clear = 0;
+    }
+  }
+
   if (clear != 0) {
     memset(phrase_freq, 0, sizeof(phrase_freq));
+    memset(phrase_user, 0, sizeof(phrase_user));
   }
 #endif
 }
@@ -328,7 +366,12 @@ void save_phrase()
   if (file != NULL) {
     fwrite(key, 1, sizeof(key), file);
     fwrite(phrase_freq, 1, sizeof(phrase_freq), file);
-    /* LOGE("Save Phrase : %d", sizeof(phrase_freq)); */
+    fclose(file);
+  }
+  file = fopen(phrase_user_path, "w");
+  if (file != NULL) {
+    fwrite(key, 1, sizeof(key), file);
+    fwrite(phrase_user, 1, sizeof(phrase_user), file);
     fclose(file);
   }
 #endif
@@ -354,7 +397,11 @@ jint get_phrase_frequency(int index)
 {
   /* LOGE("Phrase Frequency : %d %d %d", index, phrase_map[index], phrase_freq[phrase_map[index]]); */
 #ifndef SQLITE
-  return phrase_freq[phrase_map[index - phrase_index]];
+  int i = phrase_map[index - phrase_index];
+  if (i >= 0)
+    return phrase_freq[i];
+  else
+    return phrase_user[-i - 1][PHRASE_USER_FREQ];
 #endif
 #ifdef SQLITE
   return phrase_frequency[index];
@@ -395,11 +442,9 @@ void learn_phrase(jchar key, jchar value)
   }
   utf[i] = 0;
 
-  /* LOGE("Learn Phrase 0 : %d %d", key, value); */
   phrase_exists = 0;
   snprintf(sql, 1024, "select count(1) from phrase where key = %d and length = 1 and phrase = '%s'", key, utf);
   int rc = sqlite3_exec(db, sql, count_callback, 0, 0);
-  /* LOGE("Learn Phrase 1 : %d %d", rc, phrase_exists); */
   if (rc != 0) return;
   
   sql[0] = 0;
@@ -412,5 +457,63 @@ void learn_phrase(jchar key, jchar value)
   }
   
   sqlite3_exec(db, sql, 0, 0, 0);
+#endif
+
+#ifndef SQLITE
+  int found = 0;
+  int count = 0;
+  int done  = 0;
+  int min = 0, max = sizeof(phraseindex) / sizeof(struct PHRASE_INDEX), mid = 0;
+
+  while (max > min) {
+    if (phraseindex[min].c == key) {
+      found = min;
+      break;
+    }
+    if (phraseindex[max].c == key) {
+      found = max;
+      break;
+    }
+    if (min == max)
+      break;
+    mid = (min + max) / 2;
+    if (phraseindex[mid].c == key) {
+      found = mid;
+      break;
+    }
+    if (phraseindex[mid].c > key) {
+      max = mid - 1;
+    } else {
+      min = mid + 1;
+    }
+  }
+  done = 0;
+  if (found >= 0) {
+    for (count = 0; count < phraseindex[found].size; count++) {
+      if (phrase[found + count][0] >= 2) continue;
+      if (phrase[found + count][1] != key) continue;
+      phrase_freq[found + count]++;
+      done = 1; 
+    }
+  }
+
+  found = 0;
+  for (count = 0; count < PHRASE_TOTAL_USER; count++) {
+    if (phrase_user[count][PHRASE_USER_KEY] == key &&
+        phrase_user[count][PHRASE_USER_VAL] == value) {
+      found = 1;
+      phrase_user[count][PHRASE_USER_FREQ]++;
+    }
+  }
+  if (found == 0) {
+    for (count = 0; count < PHRASE_TOTAL_USER; count++) {
+      if (phrase_user[count][PHRASE_USER_KEY] == 0 && found == 0) {
+        found = 1;
+        phrase_user[count][PHRASE_USER_KEY]  = key;
+        phrase_user[count][PHRASE_USER_VAL]  = value;
+        phrase_user[count][PHRASE_USER_FREQ] = 1;
+      }
+    }
+  }
 #endif
 }

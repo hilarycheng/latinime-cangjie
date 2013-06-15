@@ -62,7 +62,7 @@ public class Cangjie implements CandidateListener {
 	}
 	mAppPath = appInfo.dataDir;
 
-	updateDatabase();
+	// updateDatabase();
 
 	mTable.initialize();
 
@@ -77,7 +77,7 @@ public class Cangjie implements CandidateListener {
 	loadCangjieKey();
 	loadDayi3Key();
     }
-
+    /*
     private void updateDatabase() {
 	try {
 	    File db = new File(mAppPath + "/phrase.db");
@@ -96,7 +96,8 @@ public class Cangjie implements CandidateListener {
 	} catch (Exception ex) {
 	}
     }
- 
+    */
+
     public boolean hasMatch() {
 	// if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
 	    return mTable.totalMatch() > 0;
@@ -146,7 +147,7 @@ public class Cangjie implements CandidateListener {
 
     public void resetFrequency() {
 	mTable.clearAllFrequency();
-	updateDatabase();
+	// updateDatabase();
 	mTable.initialize();
     }
     
