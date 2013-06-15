@@ -21,7 +21,7 @@ char phrase_user_path[1024];
 #ifndef SQLITE
 int phrase_map[32768];
 int phrase_freq[sizeof(phrase) / sizeof(struct PHRASE_INDEX)];
-#define PHRASE_TOTAL_USER 4096
+#define PHRASE_TOTAL_USER 2048
 jchar phrase_user[PHRASE_TOTAL_USER][4];
 int phrase_user_search_count = 0;
 #define PHRASE_USER_KEY  0
@@ -503,6 +503,7 @@ void learn_phrase(jchar key, jchar value)
         phrase_user[count][PHRASE_USER_VAL] == value) {
       found = 1;
       phrase_user[count][PHRASE_USER_FREQ]++;
+      break;
     }
   }
   if (found == 0) {
@@ -512,6 +513,21 @@ void learn_phrase(jchar key, jchar value)
         phrase_user[count][PHRASE_USER_KEY]  = key;
         phrase_user[count][PHRASE_USER_VAL]  = value;
         phrase_user[count][PHRASE_USER_FREQ] = 1;
+	break;
+      }
+    }
+  }
+  if (found == 0) {
+    int min = 100000000;
+    for (count = 0; count < PHRASE_TOTAL_USER; count++) {
+      if (phrase_user[count][PHRASE_USER_FREQ] < min) min = phrase_user[count][PHRASE_USER_FREQ];
+    }
+    for (count = 0; count < PHRASE_TOTAL_USER; count++) {
+      if (phrase_user[count][PHRASE_USER_FREQ] == min) {
+        phrase_user[count][PHRASE_USER_KEY]  = key;
+        phrase_user[count][PHRASE_USER_VAL]  = value;
+        phrase_user[count][PHRASE_USER_FREQ] = 1;
+	break;
       }
     }
   }
