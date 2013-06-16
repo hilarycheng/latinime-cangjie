@@ -35,6 +35,12 @@
                     latin:keyStyle="shortcutKeyStyle" />
             </case>
             <!-- latin:hasShortcutKey="false" -->
+            <case
+		latin:isCommaExchange="true"
+		>
+              <Key
+		  latin:keyStyle="punctuationKeyStyle" />
+            </case>
             <default>
                 <Key
                     latin:keyLabel="!text/keylabel_for_comma"
@@ -46,8 +52,21 @@
         <include
             latin:keyXPos="25%p"
             latin:keyboardLayout="@xml/key_space" />
-        <Key
-            latin:keyStyle="punctuationKeyStyle" />
+	<switch>
+          <case
+              latin:isCommaExchange="true"
+              >
+            <Key
+                latin:keyLabel="!text/keylabel_for_comma"
+                latin:keyLabelFlags="hasPopupHint"
+                latin:additionalMoreKeys="!text/more_keys_for_comma"
+                latin:keyStyle="f1MoreKeysStyle" />
+          </case>
+          <default>
+            <Key
+		latin:keyStyle="punctuationKeyStyle" />
+          </default>
+	</switch>
         <Key
             latin:keyStyle="enterKeyStyle"
             latin:keyWidth="fillRight" />

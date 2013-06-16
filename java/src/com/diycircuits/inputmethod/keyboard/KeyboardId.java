@@ -30,6 +30,8 @@ import com.diycircuits.inputmethod.latin.SubtypeLocale;
 import java.util.Arrays;
 import java.util.Locale;
 
+import android.util.Log;
+
 /**
  * Unique identifier for each keyboard type.
  */
@@ -84,12 +86,13 @@ public final class KeyboardId {
     public final boolean mHasShortcutKey;
     public final boolean mLanguageSwitchKeyEnabled;
     public final String mCustomActionLabel;
+    public final boolean mIsCommaExchange;
 
     private final int mHashCode;
 
     public KeyboardId(int elementId, InputMethodSubtype subtype, int deviceFormFactor,
             int orientation, int width, int mode, EditorInfo editorInfo, boolean clobberSettingsKey,
-            boolean shortcutKeyEnabled, boolean hasShortcutKey, boolean languageSwitchKeyEnabled) {
+            boolean shortcutKeyEnabled, boolean hasShortcutKey, boolean languageSwitchKeyEnabled, boolean isCommaExchange) {
         mSubtype = subtype;
         mLocale = SubtypeLocale.getSubtypeLocale(subtype);
         mDeviceFormFactor = deviceFormFactor;
@@ -105,6 +108,7 @@ public final class KeyboardId {
         mCustomActionLabel = (editorInfo.actionLabel != null)
                 ? editorInfo.actionLabel.toString() : null;
 
+	mIsCommaExchange = isCommaExchange;
         mHashCode = computeHashCode(this);
     }
 
@@ -125,7 +129,8 @@ public final class KeyboardId {
                 id.mCustomActionLabel,
                 id.navigateNext(),
                 id.navigatePrevious(),
-                id.mSubtype
+                id.mSubtype,
+                id.isCommaExchange()
         });
     }
 
@@ -147,7 +152,8 @@ public final class KeyboardId {
                 && TextUtils.equals(other.mCustomActionLabel, mCustomActionLabel)
                 && other.navigateNext() == navigateNext()
                 && other.navigatePrevious() == navigatePrevious()
-                && other.mSubtype.equals(mSubtype);
+                && other.mSubtype.equals(mSubtype)
+	        && other.isCommaExchange() == mIsCommaExchange;
     }
 
     public boolean isAlphabetKeyboard() {
@@ -173,6 +179,10 @@ public final class KeyboardId {
         final int inputType = mEditorInfo.inputType;
         return InputTypeUtils.isPasswordInputType(inputType)
                 || InputTypeUtils.isVisiblePasswordInputType(inputType);
+    }
+
+    public boolean isCommaExchange() {
+        return mIsCommaExchange;
     }
 
     public boolean isMultiLine() {

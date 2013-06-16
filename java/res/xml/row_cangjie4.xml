@@ -24,18 +24,40 @@
     <Row
         latin:keyWidth="10%p"
     >
-        <Key
-            latin:keyStyle="toSymbolKeyStyle"
-            latin:keyWidth="15%p" />
-        <include
-            latin:keyboardLayout="@xml/key_f1" />
-        <include
-            latin:keyXPos="25%p"
-            latin:keyboardLayout="@xml/key_cangjie_space" />
-        <Key
-            latin:keyStyle="punctuationKeyStyle" />
-        <Key
-            latin:keyStyle="enterKeyStyle"
-            latin:keyWidth="fillRight" />
+      <Key
+          latin:keyStyle="toSymbolKeyStyle"
+          latin:keyWidth="15%p" />
+      <switch>
+        <case
+            latin:isCommaExchange="true"
+            >
+          <Key
+              latin:keyStyle="punctuationKeyStyle" />
+        </case>
+        <default>
+          <include
+              latin:keyboardLayout="@xml/key_f1" />
+        </default>
+      </switch>
+
+      <include
+          latin:keyXPos="25%p"
+          latin:keyboardLayout="@xml/key_cangjie_space" />
+
+      <switch>
+        <case
+            latin:isCommaExchange="true"
+            >
+          <include
+              latin:keyboardLayout="@xml/key_f1" />
+        </case>
+        <default>
+          <Key
+              latin:keyStyle="punctuationKeyStyle" />
+        </default>
+      </switch>
+      <Key
+          latin:keyStyle="enterKeyStyle"
+          latin:keyWidth="fillRight" />
     </Row>
 </merge>

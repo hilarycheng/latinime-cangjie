@@ -107,6 +107,7 @@ public final class KeyboardLayoutSet {
         int mDeviceFormFactor;
         int mOrientation;
         int mWidth;
+	boolean mIsCommaExchange;
         // Sparse array of KeyboardLayoutSet element parameters indexed by element's id.
         final SparseArray<ElementParams> mKeyboardLayoutSetElementIdToParamsMap =
                 CollectionUtils.newSparseArray();
@@ -217,7 +218,7 @@ public final class KeyboardLayoutSet {
         return new KeyboardId(keyboardLayoutSetElementId, params.mSubtype, params.mDeviceFormFactor,
                 params.mOrientation, params.mWidth, params.mMode, params.mEditorInfo,
                 params.mNoSettingsKey, voiceKeyEnabled, hasShortcutKey,
-                params.mLanguageSwitchKeyEnabled);
+                params.mLanguageSwitchKeyEnabled, params.mIsCommaExchange);
     }
 
     public static final class Builder {
@@ -238,11 +239,16 @@ public final class KeyboardLayoutSet {
             final Params params = mParams;
 
             params.mMode = getKeyboardMode(editorInfo);
+	    params.mIsCommaExchange = isCommaExchange(context);
             params.mEditorInfo = (editorInfo != null) ? editorInfo : EMPTY_EDITOR_INFO;
             params.mNoSettingsKey = InputAttributes.inPrivateImeOptions(
                     mPackageName, NO_SETTINGS_KEY, mEditorInfo);
         }
 
+	private boolean isCommaExchange(final Context context) {
+	    return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("comma_exchange", false);
+	}
+	
         public Builder setScreenGeometry(final int deviceFormFactor, final int orientation,
                 final int widthPixels) {
             final Params params = mParams;

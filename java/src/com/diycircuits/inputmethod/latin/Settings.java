@@ -82,6 +82,7 @@ public final class Settings extends InputMethodSettingsFragment
     public static final String PREF_INPUT_LANGUAGE = "input_language";
     public static final String PREF_SELECTED_LANGUAGES = "selected_languages";
     public static final String PREF_DEBUG_SETTINGS = "debug_settings";
+    public static final String PREF_IS_COMMA_EXCHANGE = "comma_exchange";
 
     private PreferenceScreen mKeypressVibrationDurationSettingsPref;
     private PreferenceScreen mKeypressSoundVolumeSettingsPref;
@@ -311,6 +312,12 @@ public final class Settings extends InputMethodSettingsFragment
         //         setPreferenceEnabled(findPreference(PREF_GESTURE_FLOATING_PREVIEW_TEXT),
         //                 false);
 	//     }
+        } else if (key.equals(PREF_IS_COMMA_EXCHANGE)) {
+	    Log.i("Cangjie", "Comma Exchanged");
+	    final Context context = getActivity();
+	    SharedPreferences.Editor edit = context.getSharedPreferences("CangjiePreference", Context.MODE_PRIVATE).edit();
+	    edit.putInt("keyboard_height_change", 1);
+	    edit.commit();
         }
         ensureConsistencyOfAutoCorrectionSettings();
         updateVoiceModeSummary();

@@ -27,20 +27,27 @@
         <Key
             latin:keyStyle="toSymbolKeyStyle"
             latin:keyWidth="15%p" />
-        <include
-            latin:keyboardLayout="@xml/key_f1" />
+	<switch>
+          <case
+              latin:isCommaExchange="true"
+              >
+            <Key
+                latin:keyStyle="punctuationKeyStyle" />
+	  </case>
+	  <default>
+            <include
+		latin:keyboardLayout="@xml/key_f1" />
+	  </default>
+	</switch>
         <include
             latin:keyXPos="25%p"
             latin:keyboardLayout="@xml/key_space" />
         <switch>
             <case
-                latin:languageCode="ar|fa"
+              latin:isCommaExchange="true"
             >
-                <Key
-                    latin:keyHintLabel="!text/keyhintlabel_for_arabic_diacritics"
-                    latin:keyLabelFlags="hasPopupHint|hasShiftedLetterHint"
-                    latin:moreKeys="!text/more_keys_for_arabic_diacritics"
-                    latin:keyStyle="punctuationKeyStyle" />
+              <include
+		  latin:keyboardLayout="@xml/key_f1" />
             </case>
             <default>
                 <Key

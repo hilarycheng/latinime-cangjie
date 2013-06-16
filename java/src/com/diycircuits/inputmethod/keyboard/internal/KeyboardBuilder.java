@@ -718,12 +718,14 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                     R.styleable.Keyboard_Case_languageCode, id.mLocale.getLanguage());
             final boolean countryCodeMatched = matchString(a,
                     R.styleable.Keyboard_Case_countryCode, id.mLocale.getCountry());
+            final boolean commaExchangeMatched = matchBoolean(a,
+                    R.styleable.Keyboard_Case_isCommaExchange, id.isCommaExchange());
             final boolean selected = keyboardLayoutSetElementMatched && modeMatched
                     && navigateNextMatched && navigatePreviousMatched && passwordInputMatched
                     && clobberSettingsKeyMatched && shortcutKeyEnabledMatched
                     && hasShortcutKeyMatched && languageSwitchKeyEnabledMatched
                     && isMultiLineMatched && imeActionMatched && localeCodeMatched
-		    && languageCodeMatched && countryCodeMatched;
+		    && languageCodeMatched && countryCodeMatched && commaExchangeMatched;
 
             if (DEBUG) {
                 startTag("<%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s>%s", TAG_CASE,
@@ -749,6 +751,8 @@ public class KeyboardBuilder<KP extends KeyboardParams> {
                                 "languageSwitchKeyEnabled"),
                         booleanAttr(a, R.styleable.Keyboard_Case_isMultiLine,
                                 "isMultiLine"),
+                        booleanAttr(a, R.styleable.Keyboard_Case_isCommaExchange,
+                                "isCommaExchange"),
                         textAttr(a.getString(R.styleable.Keyboard_Case_localeCode),
                                 "localeCode"),
                         textAttr(a.getString(R.styleable.Keyboard_Case_languageCode),

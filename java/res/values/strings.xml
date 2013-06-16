@@ -43,6 +43,7 @@
     <string name="pref_frequent_character_color">常用字顏色</string>
     <string name="pref_keyboard_key_normal_color">鍵盤主要字顏色</string>
     <string name="pref_keyboard_key_hint_color">鍵盤副字顏色</string>
+    <string name="prefs_comma_exchange">逗號與點互換</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->
