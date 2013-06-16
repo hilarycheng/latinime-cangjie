@@ -109,6 +109,18 @@
 	    android:defaultValue="@integer/COLOR_FREQUENT"
 	    alphaSlider="false"
 	    />
+	<net.margaritov.preference.colorpicker.ColorPickerPreference
+	    android:key="keyboard_key_normal_color"
+	    android:title="@string/pref_keyboard_key_normal_color"
+	    android:defaultValue="@integer/COLOR_NORMAL_KEY"
+	    alphaSlider="false"
+	    />
+	<net.margaritov.preference.colorpicker.ColorPickerPreference
+	    android:key="keyboard_key_hint_color"
+	    android:title="@string/pref_keyboard_key_hint_color"
+	    android:defaultValue="@integer/COLOR_HINT_KEY"
+	    alphaSlider="true"
+	    />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/general_category"

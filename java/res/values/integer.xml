@@ -4,4 +4,6 @@
 	<integer name="COLOR_GREEN">0xff00ff00</integer>
 	<integer name="COLOR_NORMAL">0xff33B5E5</integer>
 	<integer name="COLOR_FREQUENT">0xffff9000</integer>
+	<integer name="COLOR_NORMAL_KEY">0xffffffff</integer>
+	<integer name="COLOR_HINT_KEY">0x80000000</integer>
 </resources>

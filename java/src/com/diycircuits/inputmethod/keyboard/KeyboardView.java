@@ -16,6 +16,7 @@
 
 package com.diycircuits.inputmethod.keyboard;
 
+import android.preference.PreferenceManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -567,7 +568,8 @@ public class KeyboardView extends View implements PointerTracker.DrawingProxy {
                         Math.min(1.0f, (keyWidth * MAX_LABEL_RATIO) / getLabelWidth(label, paint)));
             }
 
-            paint.setColor(key.selectTextColor(params));
+            // paint.setColor(key.selectTextColor(params));
+	    paint.setColor(PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("keyboard_key_normal_color", 0xffffffff));
             if (key.isEnabled()) {
                 // Set a drop shadow for the text
                 paint.setShadowLayer(mKeyTextShadowRadius, 0, 0, params.mTextShadowColor);
@@ -606,6 +608,7 @@ public class KeyboardView extends View implements PointerTracker.DrawingProxy {
             final String hintLabel = key.mHintLabel;
             paint.setTextSize(key.selectHintTextSize(params));
             paint.setColor(key.selectHintTextColor(params));
+	    if (key.selectHintTextColor(params) == 0x80000000) paint.setColor(PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("keyboard_key_hint_color", 0x80000000));
             blendAlpha(paint, params.mAnimAlpha);
             final float hintX, hintY;
             if (key.hasHintLabel()) {
