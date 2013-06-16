@@ -144,6 +144,10 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
     private boolean mHasDistinctMultitouch;
     private int mOldPointerCount = 1;
     private Key mOldKey;
+    private float mLastX = (float) 0.0;
+    private static int mMoveCursor = 0;
+    private long mLastEvent = 0;
+    private int mLastId = 0;
 
     private final KeyTimerHandler mKeyTimerHandler;
 
@@ -178,6 +182,8 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
 
         @Override
         public void handleMessage(final Message msg) {
+	    if (mMoveCursor == 1) return;
+
             final MainKeyboardView keyboardView = getOuterInstance();
             final PointerTracker tracker = (PointerTracker) msg.obj;
             switch (msg.what) {
@@ -704,9 +710,49 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         // If the device does not have distinct multi-touch support panel, ignore all multi-touch
         // events except a transition from/to single-touch.
 
-	// if (pointerCount >= 2) {
-        //     return true;
-	// }
+	if (mMoveCursor == 1 && (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP)) {
+	    mMoveCursor = -1;
+	    mLastEvent = System.currentTimeMillis();
+	}
+	if (mMoveCursor == -1) {
+	    if (System.currentTimeMillis() - mLastEvent > 1000) {
+		mMoveCursor = 0;
+	    }
+	}
+	
+	if (pointerCount >= 2) {
+	    switch (action) {
+	    case MotionEvent.ACTION_CANCEL:
+	    case MotionEvent.ACTION_UP:
+		mLastX = 0;
+		mMoveCursor = -1;
+		mLastEvent = System.currentTimeMillis();
+		break;
+	    case MotionEvent.ACTION_DOWN:
+		cancelAllMessages();
+		mLastX = me.getX();
+		mMoveCursor = 1;
+		break;
+	    case MotionEvent.ACTION_MOVE:
+		if (mMoveCursor == 0) {
+		    mMoveCursor = 1;
+		    cancelAllMessages();
+		    final PointerTracker tracker = PointerTracker.getPointerTracker(mLastId, this);
+		    tracker.clearPressedKey();
+		}
+		if (Math.abs(mLastX - me.getX()) > 30) {
+		    if (mLastX > me.getX()) {
+			mKeyboardActionListener.onMoveCursor(0);
+		    } else {
+			mKeyboardActionListener.onMoveCursor(1);
+		    }
+		    mLastX = me.getX();
+		}
+		break;
+	    }
+	    
+            return true;
+	}
 	
         if (nonDistinctMultitouch && pointerCount > 1 && oldPointerCount > 1) {
             return true;
@@ -716,6 +762,7 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         final int index = me.getActionIndex();
         final int id = me.getPointerId(index);
         final int x, y;
+	mLastId = id;
         if (mMoreKeysPanel != null && id == mMoreKeysPanelPointerTrackerId) {
             x = mMoreKeysPanel.translateX((int)me.getX(index));
             y = mMoreKeysPanel.translateY((int)me.getY(index));

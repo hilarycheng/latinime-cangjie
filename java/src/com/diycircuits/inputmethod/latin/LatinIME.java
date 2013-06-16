@@ -1336,6 +1336,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         }
     }
 
+    @Override
+    public void onMoveCursor(int leftright) {
+	int keycode = leftright == 0 ? KeyEvent.KEYCODE_DPAD_LEFT : KeyEvent.KEYCODE_DPAD_RIGHT;
+	// Log.i("Cangjie", "onMoveCursor " + leftright + " " + keycode);
+	sendDownUpKeyEventForBackwardCompatibility(keycode);
+    }
+
     private void sendDownUpKeyEventForBackwardCompatibility(final int code) {
         final long eventTime = SystemClock.uptimeMillis();
         mConnection.sendKeyEvent(new KeyEvent(eventTime, eventTime,

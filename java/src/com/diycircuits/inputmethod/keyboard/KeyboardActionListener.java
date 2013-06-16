@@ -91,6 +91,8 @@ public interface KeyboardActionListener {
      */
     public boolean onCustomRequest(int requestCode);
 
+    public void onMoveCursor(int leftright);
+
     public static class Adapter implements KeyboardActionListener {
         @Override
         public void onPressKey(int primaryCode) {}
@@ -112,6 +114,7 @@ public interface KeyboardActionListener {
         public boolean onCustomRequest(int requestCode) {
             return false;
         }
+	public void onMoveCursor(int leftright) {}
 
         // TODO: Remove this method when the vertical correction is removed.
         public static boolean isInvalidCoordinate(int coordinate) {
@@ -121,4 +124,5 @@ public interface KeyboardActionListener {
             return coordinate < 0;
         }
     }
+
 }

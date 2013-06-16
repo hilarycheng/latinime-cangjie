@@ -891,6 +891,12 @@ public final class PointerTracker implements PointerTrackerQueue.Element {
         onMoveEventInternal(x, y, eventTime);
     }
 
+    public void clearPressedKey() {
+	final Key oldKey = mCurrentKey;
+	mCurrentKey = null;
+	setReleasedKeyGraphics(oldKey);
+    }
+
     private void onMoveEventInternal(final int x, final int y, final long eventTime) {
         final int lastX = mLastX;
         final int lastY = mLastY;
