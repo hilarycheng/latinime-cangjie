@@ -102,6 +102,15 @@
             android:title="@string/prefs_always_show_suggestions"
 	    android:defaultValue="true"
             android:persistent="true"/>
+        <com.diycircuits.widgets.SeekBarPreference
+            android:defaultValue="30"
+            android:key="swipe_cursor_movement"
+            app:min="10"
+	    app:enable_key="swipe_cursor_movement_enable"
+	    app:default_enabled="false"
+	    app:format="int"
+            android:max="200"
+            android:title="@string/prefs_swipe_cursor_movement" />
 	<net.margaritov.preference.colorpicker.ColorPickerPreference
 	    android:key="normal_character_color"
 	    android:title="@string/pref_normal_character_color"

@@ -39,6 +39,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     private TextView mStatusText;
     private CheckBox mDefault;
     private Context mContext = null;
+    private int format = 0;
+    private String mKey = "";
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -69,12 +71,19 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 	    mDefaultChecked = checked;
 	} else {
-	    mDefaultChecked = (mCurrentValue == mDefaultValue);
+	    if (mKey == null || (mKey != null && mKey.length()  == 0)) {
+		mDefaultChecked = (mCurrentValue == mDefaultValue);
+	    }
 	}
 
 	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
-	if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
-	if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
+	if (mKey == null || (mKey != null && mKey.length()  == 0)) {
+	    if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
+	    if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
+	} else {
+	    if (mStatusText != null) mStatusText.setEnabled(mDefaultChecked);
+	    if (mSeekBar != null) mSeekBar.setEnabled(mDefaultChecked);
+	}
     }
     
     private void initPreference(Context context, AttributeSet attrs) {
@@ -104,20 +113,45 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mCurrentValue = mDefaultValue;
 		persistInt(mCurrentValue);
 
-		mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
+		if (format == 0)
+		    mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
+		else
+		    mStatusText.setText(String.valueOf(mCurrentValue));
 		mSeekBar.setProgress(mCurrentValue - mMinValue);
 	    }
+	}
+	if (mKey.length() > 0) {
+	    SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+	    e.putBoolean(mKey, mDefault.isChecked());
+	    e.commit();
 	}
 
 	mDefaultChecked = mDefault.isChecked();
 	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
-	if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
-	if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
+	if (mKey == null || (mKey != null && mKey.length()  == 0)) {
+	    if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
+	    if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
+	} else {
+	    if (mStatusText != null) mStatusText.setEnabled(mDefaultChecked);
+	    if (mSeekBar != null) mSeekBar.setEnabled(mDefaultChecked);
+	}
     }
 
     private void setValuesFromXml(AttributeSet attrs) {
          mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
          mMinValue = attrs.getAttributeIntValue(FLATWORLDNS, "min", 0);
+         mKey      = attrs.getAttributeValue(FLATWORLDNS, "enable_key");
+
+	 if (mKey != null && mKey.length() > 0) {
+	     boolean mDefaultEnabled = attrs.getAttributeBooleanValue(FLATWORLDNS, "default_enabled", true);
+	     Log.i("Cangjie", "Default Enabled " + mDefaultEnabled);
+	     mDefaultChecked = mDefaultEnabled;
+	     if (mDefault != null) mDefault.setText(R.string.prefs_seek_enable);
+	     if (attrs.getAttributeValue(FLATWORLDNS, "format").compareTo("int") == 0) {
+		 format = 1;
+	     }
+	 }
+
 	 // Log.i("Cangjie", "Set Values " + mMaxValue + " " + mMinValue);
        
     //     try {
@@ -192,18 +226,27 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             LinearLayout layout = (LinearLayout) view;
 
             mStatusText = (TextView) layout.findViewById(R.id.seekBarPrefValue);
-            mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
+	    if (format == 0)
+		mStatusText.setText(String.valueOf(((float) mCurrentValue / (float) 10)) + "%");
+	    else
+		mStatusText.setText(String.valueOf(mCurrentValue));
             mStatusText.setMinimumWidth(30);
             mDefault    = (CheckBox) layout.findViewById(R.id.seekBarDefault);
 	    mDefault.setChecked(mDefaultChecked);
 	    mDefault.setOnClickListener(this);
+	    if (mKey != null && mKey.length() > 0) mDefault.setText(R.string.prefs_seek_enable);
 
             mSeekBar.setProgress(mCurrentValue - mMinValue);
 	    
 	    updateValue();
 
-	    mStatusText.setEnabled(!mDefaultChecked);
-	    mSeekBar.setEnabled(!mDefaultChecked);
+	    if (mKey == null || (mKey != null && mKey.length()  == 0)) {
+		mStatusText.setEnabled(!mDefaultChecked);
+		mSeekBar.setEnabled(!mDefaultChecked);
+	    } else {
+		mStatusText.setEnabled(mDefaultChecked);
+		mSeekBar.setEnabled(mDefaultChecked);
+	    }
         } catch(Exception e) {
             Log.e(TAG, "Error updating seek bar preference", e);
         }
@@ -236,7 +279,10 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
         // change accepted, store it
         mCurrentValue = newValue;
-        mStatusText.setText(String.valueOf(((float) newValue / (float) 10)) + "%");
+	if (format == 0)
+	    mStatusText.setText(String.valueOf(((float) newValue / (float) 10)) + "%");
+	else
+	    mStatusText.setText(String.valueOf(mCurrentValue));
         persistInt(newValue);
 
 	// Log.i("Cangjie", " On Progress Changed " + newValue);

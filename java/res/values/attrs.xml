@@ -459,5 +459,8 @@
 
     <declare-styleable name="SeekBarPreferenceAttrs">
       <attr name="min" format="integer" />
+      <attr name="default_enabled" format="boolean" />
+      <attr name="enable_key" format="string" />
+      <attr name="format" format="string" />
     </declare-styleable>
 </resources>

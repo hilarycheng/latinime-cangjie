@@ -16,6 +16,7 @@
 
 package com.diycircuits.inputmethod.keyboard;
 
+import android.preference.PreferenceManager;
 import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -696,6 +697,14 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         return mTouchScreenRegulator.onTouchEvent(me);
     }
 
+    private boolean isSwipeEnabled() {
+	return PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("swipe_cursor_movement_enable", false);
+    }
+    
+    private int getSwipeStep() {
+	return PreferenceManager.getDefaultSharedPreferences(getContext()).getInt("swipe_cursor_movement", 30);
+    }
+    
     @Override
     public boolean processMotionEvent(final MotionEvent me) {
         final boolean nonDistinctMultitouch = !mHasDistinctMultitouch;
@@ -710,50 +719,52 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         // If the device does not have distinct multi-touch support panel, ignore all multi-touch
         // events except a transition from/to single-touch.
 
-	if (mMoveCursor == 1 && (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP)) {
-	    mMoveCursor = -1;
-	    mLastEvent = System.currentTimeMillis();
-	}
-	if (mMoveCursor == -1) {
-	    if (System.currentTimeMillis() - mLastEvent > 1000) {
-		mMoveCursor = 0;
-	    }
-	}
-	
-	if (pointerCount >= 2) {
-	    switch (action) {
-	    case MotionEvent.ACTION_CANCEL:
-	    case MotionEvent.ACTION_UP:
-		mLastX = 0;
+	if (isSwipeEnabled()) {
+	    if (mMoveCursor == 1 && (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP)) {
 		mMoveCursor = -1;
 		mLastEvent = System.currentTimeMillis();
-		break;
-	    case MotionEvent.ACTION_DOWN:
-		cancelAllMessages();
-		mLastX = me.getX();
-		mMoveCursor = 1;
-		break;
-	    case MotionEvent.ACTION_MOVE:
-		if (mMoveCursor == 0) {
-		    mMoveCursor = 1;
-		    cancelAllMessages();
-		    final PointerTracker tracker = PointerTracker.getPointerTracker(mLastId, this);
-		    tracker.clearPressedKey();
-		}
-		if (Math.abs(mLastX - me.getX()) > 30) {
-		    if (mLastX > me.getX()) {
-			mKeyboardActionListener.onMoveCursor(0);
-		    } else {
-			mKeyboardActionListener.onMoveCursor(1);
-		    }
-		    mLastX = me.getX();
-		}
-		break;
 	    }
-	    
-            return true;
-	}
+	    if (mMoveCursor == -1) {
+		if (System.currentTimeMillis() - mLastEvent > 3000) {
+		    mMoveCursor = 0;
+		}
+	    }
 	
+	    if (pointerCount >= 2) {
+		switch (action) {
+		case MotionEvent.ACTION_CANCEL:
+		case MotionEvent.ACTION_UP:
+		    mLastX = 0;
+		    mMoveCursor = -1;
+		    mLastEvent = System.currentTimeMillis();
+		    break;
+		case MotionEvent.ACTION_DOWN:
+		    cancelAllMessages();
+		    mLastX = me.getX();
+		    mMoveCursor = 1;
+		    break;
+		case MotionEvent.ACTION_MOVE:
+		    if (mMoveCursor == 0) {
+			mMoveCursor = 1;
+			cancelAllMessages();
+			final PointerTracker tracker = PointerTracker.getPointerTracker(mLastId, this);
+			tracker.clearPressedKey();
+		    }
+		    if (Math.abs(mLastX - me.getX()) > getSwipeStep()) {
+			if (mLastX > me.getX()) {
+			    mKeyboardActionListener.onMoveCursor(0);
+			} else {
+			    mKeyboardActionListener.onMoveCursor(1);
+			}
+			mLastX = me.getX();
+		    }
+		    break;
+		}
+	    
+		return true;
+	    }
+	}
+
         if (nonDistinctMultitouch && pointerCount > 1 && oldPointerCount > 1) {
             return true;
         }

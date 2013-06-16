@@ -44,6 +44,8 @@
     <string name="pref_keyboard_key_normal_color">鍵盤主要字顏色</string>
     <string name="pref_keyboard_key_hint_color">鍵盤副字顏色</string>
     <string name="prefs_comma_exchange">逗號與點互換</string>
+    <string name="prefs_seek_enable">使用</string>
+    <string name="prefs_swipe_cursor_movement">光標移動 (需用兩隻手指)</string>
     <!-- Application name for opensource Android keyboard. AOSP(Android Open Source Project) should not be translated. -->
     <string name="aosp_android_keyboard_ime_name">"Jellybean Cangjie"</string>
     <!-- Title for Latin keyboard input options dialog [CHAR LIMIT=25] -->
