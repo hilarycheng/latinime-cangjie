@@ -102,6 +102,11 @@
             android:title="@string/prefs_always_show_suggestions"
 	    android:defaultValue="true"
             android:persistent="true"/>
+	<CheckBoxPreference
+            android:key="auto_learning_phrase"
+            android:title="@string/prefs_auto_learning_phrase"
+	    android:defaultValue="false"
+            android:persistent="true"/>
         <com.diycircuits.widgets.SeekBarPreference
             android:defaultValue="30"
             android:key="swipe_cursor_movement"

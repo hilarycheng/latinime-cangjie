@@ -125,7 +125,7 @@ public class Cangjie implements CandidateListener {
 	    char c = (char) 0;
 	    if (mListener != null && mTable.totalMatch() > 0) {
 		c = mTable.getMatchChar(0);
-		if (lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
+		if (isAutoLearning() && lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
 		lastChineseKey = c;
 		mListener.characterSelected(mTable.getMatchChar(0), 0);
 	    }
@@ -218,7 +218,7 @@ public class Cangjie implements CandidateListener {
     }
     
     public void characterSelected(char c, int idx) {
-	if (lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
+	if (isAutoLearning() && lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
 	lastChineseKey = c;
 	mTable.updateFrequency(c);
 	if (mListener != null) mListener.characterSelected(c, idx);
@@ -236,6 +236,10 @@ public class Cangjie implements CandidateListener {
 
     public void resetLearning() {
 	lastChineseKey = 0;
+    }
+
+    public boolean isAuotLearning() {
+	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("auto_learning_phrase", false);
     }
 
     public void resetState() {
