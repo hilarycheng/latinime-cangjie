@@ -238,7 +238,7 @@ public class Cangjie implements CandidateListener {
 	lastChineseKey = 0;
     }
 
-    public boolean isAuotLearning() {
+    public boolean isAutoLearning() {
 	return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("auto_learning_phrase", false);
     }
 
