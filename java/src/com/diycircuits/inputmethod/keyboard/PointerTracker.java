@@ -891,6 +891,16 @@ public final class PointerTracker implements PointerTrackerQueue.Element {
         onMoveEventInternal(x, y, eventTime);
     }
 
+    public static void clearAllPressedKey() {
+        final ArrayList<PointerTracker> trackers = sTrackers;
+
+        // Create pointer trackers until we can get 'id+1'-th tracker, if needed.
+        for (int i = 0; i < trackers.size(); i++) {
+	    final PointerTracker pt = trackers.get(i);
+	    pt.clearPressedKey();
+	}
+    }
+
     public void clearPressedKey() {
 	final Key oldKey = mCurrentKey;
 	mCurrentKey = null;

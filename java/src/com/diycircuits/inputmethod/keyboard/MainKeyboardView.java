@@ -147,7 +147,7 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
     private Key mOldKey;
     private float mLastX = (float) 0.0;
     private static int mMoveCursor = 0;
-    private long mLastEvent = 0;
+    private long mLastEvent = 0, mHoldMove = 0;
     private int mLastId = 0;
 
     private final KeyTimerHandler mKeyTimerHandler;
@@ -713,55 +713,69 @@ public final class MainKeyboardView extends KeyboardView implements PointerTrack
         final int oldPointerCount = mOldPointerCount;
         mOldPointerCount = pointerCount;
 
-	// Log.i("Cangjie", "processMotionEvent " + pointerCount);
-	
         // TODO: cleanup this code into a multi-touch to single-touch event converter class?
         // If the device does not have distinct multi-touch support panel, ignore all multi-touch
         // events except a transition from/to single-touch.
 
 	if (isSwipeEnabled()) {
-	    if (mMoveCursor == 1 && (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP)) {
-		mMoveCursor = -1;
-		mLastEvent = System.currentTimeMillis();
-	    }
 	    if (mMoveCursor == -1) {
-		if (System.currentTimeMillis() - mLastEvent > 3000) {
+		if (System.currentTimeMillis() - mLastEvent > 500) {
 		    mMoveCursor = 0;
+		} else {
+		    return true;
 		}
-	    }
-	
-	    if (pointerCount >= 2) {
-		switch (action) {
-		case MotionEvent.ACTION_CANCEL:
-		case MotionEvent.ACTION_UP:
-		    mLastX = 0;
-		    mMoveCursor = -1;
-		    mLastEvent = System.currentTimeMillis();
-		    break;
-		case MotionEvent.ACTION_DOWN:
-		    cancelAllMessages();
-		    mLastX = me.getX();
-		    mMoveCursor = 1;
-		    break;
-		case MotionEvent.ACTION_MOVE:
-		    if (mMoveCursor == 0) {
-			mMoveCursor = 1;
-			cancelAllMessages();
-			final PointerTracker tracker = PointerTracker.getPointerTracker(mLastId, this);
-			tracker.clearPressedKey();
-		    }
-		    if (Math.abs(mLastX - me.getX()) > getSwipeStep()) {
-			if (mLastX > me.getX()) {
-			    mKeyboardActionListener.onMoveCursor(0);
+	    } else {
+		boolean leave = false;
+
+		if (pointerCount >= 2) {
+		    switch (action) {
+		    case MotionEvent.ACTION_CANCEL:
+		    case MotionEvent.ACTION_UP:
+		    case MotionEvent.ACTION_POINTER_1_UP:
+			if (mMoveCursor == 2) {
+			    mLastX = 0;
+			    mMoveCursor = -1;
+			    mLastEvent = System.currentTimeMillis();
+			    leave = true;
 			} else {
-			    mKeyboardActionListener.onMoveCursor(1);
+			    leave = false;
 			}
-			mLastX = me.getX();
+			break;
+		    case MotionEvent.ACTION_POINTER_1_DOWN:
+		    case MotionEvent.ACTION_DOWN:
+			mMoveCursor = 0;
+			leave = false;
+			break;
+		    case MotionEvent.ACTION_MOVE:
+			if (mMoveCursor == 0) {
+			    mHoldMove = System.currentTimeMillis();
+			    mMoveCursor = 1;
+			    leave = false;
+			} else if (mMoveCursor == 1) {
+			    if (System.currentTimeMillis() - mHoldMove > 100) {
+				mMoveCursor = 2;
+				cancelAllMessages();
+				PointerTracker.clearAllPressedKey();
+				leave = true;
+			    } else {
+				leave = false;
+			    }
+			} else if (mMoveCursor == 2) {
+			    leave = true;
+			    if (Math.abs(mLastX - me.getX()) > getSwipeStep()) {
+				if (mLastX > me.getX()) {
+				    mKeyboardActionListener.onMoveCursor(0);
+				} else {
+				    mKeyboardActionListener.onMoveCursor(1);
+				}
+				mLastX = me.getX();
+			    }
+			}
+			break;
 		    }
-		    break;
-		}
 	    
-		return true;
+		    if (leave) return true;
+		}
 	    }
 	}
 
