@@ -169,12 +169,14 @@ int search_phrase(jchar index)
       /* LOGE("Phrase Map0 : %d %d %d", count, phrase_map[count], phrase_freq[phrase_map[count]]); */
     }
 
+    /* LOGE("Phrase Count 0 : %d %d", phrase_count, index); */
     for (count = 0; count < PHRASE_TOTAL_USER; count++) {
       if (phrase_user[count][PHRASE_USER_KEY] == index) {
         phrase_map[phrase_count] = -(count + 1);
 	phrase_count++;
       }
     }
+    /* LOGE("Phrase Count 1 : %d", phrase_count); */
 
     int n = phrase_count;
     int swap = 1;
@@ -187,7 +189,7 @@ int search_phrase(jchar index)
       for (i = 0; i < n - 1; i++) {
         first = phrase_map[i];
 	second = phrase_map[i + 1];
-	if (first >=  0)  first = phrase_freq[first];  else first  = phrase_user[-first][PHRASE_USER_FREQ];
+	if (first >=  0)  first = phrase_freq[first];  else first  = phrase_user[-first - 1][PHRASE_USER_FREQ];
 	if (second >= 0) second = phrase_freq[second]; else second = phrase_user[-second - 1][PHRASE_USER_FREQ];
     	if (first < second) {
     	  temp = phrase_map[i];

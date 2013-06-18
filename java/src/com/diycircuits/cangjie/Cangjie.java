@@ -121,7 +121,9 @@ public class Cangjie implements CandidateListener {
     }
 
     public void sendFirstCharacter() {
+	// Log.i("Cangjie", "Send First Character 0 ");
 	if (mSelect.getState() == CandidateSelect.CHARACTER_MODE) {
+	// Log.i("Cangjie", "Send First Character 1 ");
 	    char c = (char) 0;
 	    if (mListener != null && mTable.totalMatch() > 0) {
 		c = mTable.getMatchChar(0);
@@ -130,11 +132,15 @@ public class Cangjie implements CandidateListener {
 		mListener.characterSelected(mTable.getMatchChar(0), 0);
 	    }
 	    resetState();
+	// Log.i("Cangjie", "Send First Character 1-1 ");
 	    if ((int) c != 0) updatePhrase(c);
+	// Log.i("Cangjie", "Send First Character 1-2 ");
 	} else if (mSelect.getState() == CandidateSelect.PHRASE_MODE) {
+	// Log.i("Cangjie", "Send First Character 2 ");
 	    char c = (char) 0;
 	    if (mListener != null && mTable.getPhraseCount() > 0) {
 		int len = mTable.getPhraseArray(mTable.getPhraseIndex(), mPhrase);
+	// Log.i("Cangjie", "Send First Character 3 ");
 		if (len > 0) {
 		    mListener.phraseSelected(new String(mPhrase, 0, len), 0);
 		    c = mPhrase[0];
@@ -160,7 +166,9 @@ public class Cangjie implements CandidateListener {
     }
 
     private void updatePhrase(char c) {
+	// Log.i("Cangjie", "Update Phrase 0");
 	mTable.searchPhrase(c);
+	// Log.i("Cangjie", "Update Phrase 1");
 	// Log.i("Cangjie", "Phrase(Java) " +
 	//       mTable.getPhraseCount() + " " + 
 	//       mTable.getPhraseIndex() + " " + 
@@ -175,7 +183,9 @@ public class Cangjie implements CandidateListener {
 	if (mTable.getPhraseCount() <= 0 || mSelect == null)
 	    return;
 
+	// Log.i("Cangjie", "Update Phrase 2");
 	mSelect.updatePhrase(mTable);
+	// Log.i("Cangjie", "Update Phrase 3");
     }
 
     public boolean isCode(int primaryCode) {

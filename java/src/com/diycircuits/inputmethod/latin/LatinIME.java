@@ -1503,6 +1503,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 			    final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
 			    mCandidateView.setReferenceSize(mainKeyboardView.getWidth(), mainKeyboardView.getHeight());
 			    result = mCangjie.handleCharacter(keyboard.getProximityInfo(), x, y, primaryCode);
+			    // Log.i("Cangjie", "Handle Character : " + result);
 			}
 			if (result) handleCharacter(primaryCode, keyX, keyY, spaceState);
 		    }
