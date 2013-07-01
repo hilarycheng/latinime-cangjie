@@ -76,11 +76,11 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	    }
 	}
 
-	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
 	if (mKey == null || (mKey != null && mKey.length()  == 0)) {
 	    if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
 	    if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
 	} else {
+	    if (mDefault != null) mDefault.setChecked(mDefaultChecked);
 	    if (mStatusText != null) mStatusText.setEnabled(mDefaultChecked);
 	    if (mSeekBar != null) mSeekBar.setEnabled(mDefaultChecked);
 	}
@@ -120,7 +120,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		mSeekBar.setProgress(mCurrentValue - mMinValue);
 	    }
 	}
-	if (mKey.length() > 0) {
+	if (mKey != null && mKey.length() > 0) {
 	    SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
 	    e.putBoolean(mKey, mDefault.isChecked());
 	    e.commit();
@@ -128,7 +128,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
 	mDefaultChecked = mDefault.isChecked();
 	if (mDefault != null) mDefault.setChecked(mDefaultChecked);
-	if (mKey == null || (mKey != null && mKey.length()  == 0)) {
+	if (mKey != null && mKey.length() == 0) {
 	    if (mStatusText != null) mStatusText.setEnabled(!mDefaultChecked);
 	    if (mSeekBar != null) mSeekBar.setEnabled(!mDefaultChecked);
 	} else {
@@ -150,6 +150,9 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	     if (attrs.getAttributeValue(FLATWORLDNS, "format").compareTo("int") == 0) {
 		 format = 1;
 	     }
+	     final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+	     Log.i("Cangjie", "Default Cursor " + prefs.getBoolean(mKey, mDefaultEnabled));
+	     mDefaultChecked = prefs.getBoolean(mKey, mDefaultEnabled);
 	 }
 
 	 // Log.i("Cangjie", "Set Values " + mMaxValue + " " + mMinValue);
