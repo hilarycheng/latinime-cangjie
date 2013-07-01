@@ -228,8 +228,10 @@ public class Cangjie implements CandidateListener {
     }
     
     public void characterSelected(char c, int idx) {
-	if (isAutoLearning() && lastChineseKey != 0) mTable.learnPhrase(lastChineseKey, c);
-	lastChineseKey = c;
+	if (isAutoLearning() && lastChineseKey != 0) {
+	    mTable.learnPhrase(lastChineseKey, c);
+	    lastChineseKey = c;
+	}
 	mTable.updateFrequency(c);
 	if (mListener != null) mListener.characterSelected(c, idx);
 	resetState();
@@ -237,7 +239,11 @@ public class Cangjie implements CandidateListener {
     }
     
     public void phraseSelected(String phrase, int idx) {
-	lastChineseKey = 0;
+	if (isAutoLearning() && lastChineseKey != 0) {
+	    char c = phrase.charAt(phrase.length() - 1);
+	    mTable.learnPhrase(lastChineseKey, c);
+	    lastChineseKey = c;
+	}
 	if (idx > 0) mTable.updatePhraseFrequency(idx);
 	if (mListener != null) mListener.phraseSelected(phrase, idx);
 	resetState();

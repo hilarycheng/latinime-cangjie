@@ -1429,7 +1429,6 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         case Keyboard.CODE_DELETE:
             mSpaceState = SPACE_STATE_NONE;
             handleBackspace(spaceState);
-	    // mCangjie.resetLearning();
             mDeleteCount++;
             mExpectingUpdateSelection = true;
             mShouldSwitchToLastSubtype = true;
