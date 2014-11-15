@@ -194,8 +194,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private StringBuffer mLastSuggestionEngOnly = new StringBuffer();
 
     private boolean mLastSuggestionsShown = false;
-    
+
     public final UIHandler mHandler = new UIHandler(this);
+
+    private boolean mInputStarted = false;
 
     public static final class UIHandler extends StaticInnerHandlerWrapper<LatinIME> {
         private static final int MSG_UPDATE_SHIFT_STATE = 0;
@@ -294,6 +296,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         private EditorInfo mAppliedEditorInfo;
 
         public void startOrientationChanging() {
+            Log.i("Cangjie", "UIHandler - Start Orientation Changing");
             removeMessages(MSG_PENDING_IMS_CALLBACK);
             resetPendingImsCallback();
             mIsOrientationChanging = true;
@@ -311,6 +314,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
         private void executePendingImsCallback(final LatinIME latinIme, final EditorInfo editorInfo,
                 boolean restarting) {
+            Log.i("Cangjie", "UIHandler - executePendingImsCallback");
             if (mHasPendingFinishInputView)
                 latinIme.onFinishInputViewInternal(mHasPendingFinishInput);
             if (mHasPendingFinishInput)
@@ -337,6 +341,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         }
 
         public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
+            Log.i("Cangjie", "UIHandler - onStartInputView");
             if (hasMessages(MSG_PENDING_IMS_CALLBACK)
                     && KeyboardId.equivalentEditorInfoForKeyboard(editorInfo, mAppliedEditorInfo)) {
                 // Typically this is the second onStartInputView after orientation changed.
@@ -357,6 +362,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         }
 
         public void onFinishInputView(final boolean finishingInput) {
+            Log.i("Cangjie", "UIHandler - onFinishInputView");
             if (hasMessages(MSG_PENDING_IMS_CALLBACK)) {
                 // Typically this is the first onFinishInputView after orientation changed.
                 mHasPendingFinishInputView = true;
@@ -368,6 +374,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         }
 
         public void onFinishInput() {
+            Log.i("Cangjie", "UIHandler - onFinishInput");
             if (hasMessages(MSG_PENDING_IMS_CALLBACK)) {
                 // Typically this is the first onFinishInput after orientation changed.
                 mHasPendingFinishInput = true;
@@ -625,7 +632,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private boolean alwaysShowSuggestions() {
         return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("always_show_suggestions", true);
     }
-    
+
     private void checkCangjieFrequency() {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	boolean enabled = prefs.getBoolean("clear_often_used", false);
@@ -636,9 +643,11 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    if (mCangjie != null) mCangjie.resetFrequency();
 	}
     }
-    
+
     @Override
     public void onStartInput(final EditorInfo editorInfo, final boolean restarting) {
+      Log.i("Cangjie", "onStartInput");
+    mInputStarted = true;
 	if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("always_show_english_keyboard", false)) {
 	    if (mKeyboardSwitcher != null) mKeyboardSwitcher.resetKeyboardStateToAlphabet();
 	}
@@ -652,6 +661,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void onStartInputView(final EditorInfo editorInfo, final boolean restarting) {
+      Log.i("Cangjie", "onStartInputView");
+    mInputStarted = true;
 	mCangjie.resetState();
 	checkCangjieFrequency();
 	mLastSuggestionEngOnly.setLength(0);
@@ -660,12 +671,16 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void onFinishInputView(final boolean finishingInput) {
+      Log.i("Cangjie", "onFinishInputView");
+    mInputStarted = false;
 	mKeyboardSwitcher.saveKeyboardState();
         mHandler.onFinishInputView(finishingInput);
     }
 
     @Override
     public void onFinishInput() {
+      Log.i("Cangjie", "onFinishInput");
+    mInputStarted = false;
 	mKeyboardSwitcher.saveKeyboardState();
         mHandler.onFinishInput();
     }
@@ -679,6 +694,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private void onStartInputInternal(final EditorInfo editorInfo, final boolean restarting) {
+      Log.i("Cangjie", "onStartInputInternal");
+    mInputStarted = true;
 	mCangjie.resetState();
 	mLastSuggestionEngOnly.setLength(0);
         super.onStartInput(editorInfo, restarting);
@@ -687,6 +704,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     @SuppressWarnings("deprecation")
     private void onStartInputViewInternal(final EditorInfo editorInfo, final boolean restarting) {
         super.onStartInputView(editorInfo, restarting);
+    mInputStarted = true;
+      Log.i("Cangjie", "onStartInputViewInternal");
 	mCangjie.resetState();
 	mLastSuggestionEngOnly.setLength(0);
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
@@ -819,11 +838,11 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         mainKeyboardView.setMainDictionaryAvailability(mIsMainDictionaryAvailable);
         mainKeyboardView.setKeyPreviewPopupEnabled(mCurrentSettings.mKeyPreviewPopupOn,
                 mCurrentSettings.mKeyPreviewPopupDismissDelay);
-        // mainKeyboardView.setGestureHandlingEnabledByUser(mCurrentSettings.mGestureInputEnabled);
-        // mainKeyboardView.setGesturePreviewMode(mCurrentSettings.mGesturePreviewTrailEnabled,
-        //         mCurrentSettings.mGestureFloatingPreviewTextEnabled);
-        // mainKeyboardView.setGestureHandlingEnabledByUser(true);
-        // mainKeyboardView.setGesturePreviewMode(true, true);
+        mainKeyboardView.setGestureHandlingEnabledByUser(mCurrentSettings.mGestureInputEnabled);
+        mainKeyboardView.setGesturePreviewMode(mCurrentSettings.mGesturePreviewTrailEnabled,
+                mCurrentSettings.mGestureFloatingPreviewTextEnabled);
+        mainKeyboardView.setGestureHandlingEnabledByUser(true);
+        mainKeyboardView.setGesturePreviewMode(true, true);
 
 	String value = PreferenceManager.getDefaultSharedPreferences(this).getString("language_mode", "0");
 	mKeyboardSwitcher.setPreferredLanguage((value.compareTo("0") == 0));
@@ -840,11 +859,13 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void onWindowHidden() {
+      Log.i("Cangjie", "onWindowHidden");
         // if (ProductionFlag.IS_EXPERIMENTAL) {
         //     ResearchLogger.latinIME_onWindowHidden(mLastSelectionStart, mLastSelectionEnd,
         //             getCurrentInputConnection());
         // }
         super.onWindowHidden();
+    mInputStarted = false;
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
         if (mainKeyboardView != null) {
             mainKeyboardView.closing();
@@ -854,8 +875,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     private void onFinishInputInternal() {
         super.onFinishInput();
 
+      Log.i("Cangjie", "onFinishInputInternal");
+    mInputStarted = false;
 	mCangjie.saveMatch();
-	
+
         LatinImeLogger.commit();
         // if (ProductionFlag.IS_EXPERIMENTAL) {
         //     ResearchLogger.getInstance().latinIME_onFinishInputInternal();
@@ -868,8 +891,10 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
     }
 
     private void onFinishInputViewInternal(final boolean finishingInput) {
+      Log.i("Cangjie", "onFinishInputViewInternal");
+    mInputStarted = false;
 	mCangjie.saveMatch();
-	
+
         super.onFinishInputView(finishingInput);
         mKeyboardSwitcher.onFinishInputView();
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
@@ -998,7 +1023,9 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
     @Override
     public void hideWindow() {
+      Log.i("Cangjie", "Hide Window");
         LatinImeLogger.commit();
+    mInputStarted = false;
         mKeyboardSwitcher.onHideWindow();
 
         if (TRACE) Debug.stopMethodTracing();
@@ -1058,7 +1085,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	mLastSuggestionsShown = shown;
 
 	if (alwaysShowSuggestions()) return;
-	
+
         // TODO: Modify this if we support suggestions with hard keyboard
         if (onEvaluateInputViewShown() && mSuggestionsContainer != null) {
             final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
@@ -1387,18 +1414,18 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	    return false;
         final KeyboardSwitcher switcher = mKeyboardSwitcher;
 	return (mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE ||
-		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_ENGLISH ||	
+		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_ENGLISH ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK_ENGLISH ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_NORMAL ||
-		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_ENGLISH_NORMAL ||	
+		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_CANGJIE_ENGLISH_NORMAL ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK_NORMAL ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_QUICK_ENGLISH_NORMAL ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_STROKE ||
 		mKeyboardSwitcher.getMainKeyboardView().getKeyboard().mId.mElementId == KeyboardId.ELEMENT_DAYI3) &&
 	    switcher.isCangjieMode();
     }
-    
+
     // Implementation of {@link KeyboardActionListener}.
     @Override
     public void onCodeInput(final int primaryCode, final int x, final int y) {
@@ -1585,7 +1612,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 	// mSpaceState = SPACE_STATE_PHANTOM;
 	mEnteredText = null;
     }
-    
+
     // Called from PointerTracker through the KeyboardActionListener interface
     @Override
     public void onTextInput(final CharSequence rawText) {
@@ -1691,10 +1718,12 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         // Run in the Handler thread.
         private synchronized void updateBatchInput(final InputPointers batchPointers,
                 final LatinIME latinIme) {
+	    Log.i("Cangjie", "Update Batch Input 0 " + batchPointers.getPointerSize() + " " + mInBatchInput);
             if (!mInBatchInput) {
                 // Batch input has ended while the message was being delivered.
                 return;
             }
+	    Log.i("Cangjie", "Update Batch Input 1 " + batchPointers.getPointerSize() + " " + mInBatchInput);
             final SuggestedWords suggestedWords = getSuggestedWordsGestureLocked(
                     batchPointers, latinIme);
             latinIme.mHandler.showGesturePreviewAndSuggestionStrip(
@@ -2649,5 +2678,57 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         p.println("  mVibrateOn=" + mCurrentSettings.mVibrateOn);
         p.println("  mKeyPreviewPopupOn=" + mCurrentSettings.mKeyPreviewPopupOn);
         p.println("  inputAttributes=" + mCurrentSettings.getInputAttributesDebugString());
+    }
+
+    // 223 - Fast Backward
+    // 222 - Fast Foreward
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("Cangjie", "On Key Down Captured : " + mInputStarted + " " + this);
+      if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+        keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+        keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+        keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+        keyCode == 222 ||
+        keyCode == 223 ||
+        keyCode == KeyEvent.KEYCODE_ENTER) {
+
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        final boolean inputViewShown = (mainKeyboardView != null)
+                    ? mainKeyboardView.isShown() : false;
+
+        Log.i("Cangjie", "onKeyDown " + keyCode + " " + inputViewShown + " " + this);
+        if (inputViewShown) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+        keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+        keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+        keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+        keyCode == 222 ||
+        keyCode == 223 ||
+        keyCode == KeyEvent.KEYCODE_ENTER) {
+
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        final boolean inputViewShown = (mainKeyboardView != null)
+                    ? mainKeyboardView.isShown() : false;
+
+        Log.i("Cangjie", "On Key Up Captured : " + inputViewShown + " " + this);
+        if (inputViewShown) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return super.onKeyUp(keyCode, event);
     }
 }
