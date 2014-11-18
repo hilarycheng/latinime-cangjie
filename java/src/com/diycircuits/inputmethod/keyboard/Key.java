@@ -165,7 +165,7 @@ public class Key implements Comparable<Key> {
     private final int mHashCode;
 
     /** The current pressed state of this key */
-    private boolean mPressed;
+    public boolean mPressed;
     /** Key is enabled and responds on press */
     private boolean mEnabled = true;
 
