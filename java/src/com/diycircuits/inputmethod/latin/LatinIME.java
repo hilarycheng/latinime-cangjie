@@ -76,6 +76,8 @@ import com.diycircuits.inputmethod.latin.Utils.Stats;
 import com.diycircuits.inputmethod.latin.define.ProductionFlag;
 import com.diycircuits.inputmethod.latin.suggestions.SuggestionStripView;
 // import com.diycircuits.inputmethod.research.ResearchLogger;
+import com.diycircuits.inputmethod.keyboard.Key;
+import com.diycircuits.inputmethod.keyboard.Keyboard;
 
 import com.diycircuits.cangjie.Cangjie;
 import com.diycircuits.cangjie.CandidateView;
@@ -2680,6 +2682,59 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         p.println("  inputAttributes=" + mCurrentSettings.getInputAttributesDebugString());
     }
 
+    private void changeKey(final Key original, int newx, int newy) {
+      final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+      final KeyDetector keyDetector = mKeyboardSwitcher.getMainKeyboardView().getKeyDetector();
+      final Key hitted = keyDetector.detectHitKey(newx, newy);
+
+      if (hitted != null) {
+        clearPressed();
+        hitted.mPressed = true;
+
+        mainKeyboardView.invalidateKey(original);
+        mainKeyboardView.invalidateKey(hitted);
+      }
+    }
+
+    private void moveKey(int keyCode) {
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        final Keyboard keyboard = mainKeyboardView.getKeyboard();
+        final Key[] mKeys = keyboard.mKeys;
+        int index = findPressed();
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+          changeKey(mKeys[index], mKeys[index].mX + mKeys[index].mWidth + mKeys[index].mWidth / 2, mKeys[index].mY);
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+          changeKey(mKeys[index], mKeys[index].mX - mKeys[index].mWidth, mKeys[index].mY);
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+          changeKey(mKeys[index], mKeys[index].mX, mKeys[index].mY - mKeys[index].mHeight);
+        } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+          changeKey(mKeys[index], mKeys[index].mX, mKeys[index].mY + mKeys[index].mHeight + mKeys[index].mHeight / 2);
+        }
+    }
+
+    private int findPressed() {
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        final Keyboard keyboard = mainKeyboardView.getKeyboard();
+        final Key[] mKeys = keyboard.mKeys;
+
+        for (int count = 0; count < mKeys.length; count++) {
+          if (mKeys[count].mPressed) return count;
+        }
+
+        return 0;
+    }
+
+    private void clearPressed() {
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        final Keyboard keyboard = mainKeyboardView.getKeyboard();
+        final Key[] mKeys = keyboard.mKeys;
+
+        for (int count = 0; count < mKeys.length; count++) {
+          mKeys[count].mPressed = false;
+        }
+    }
+
     // 223 - Fast Backward
     // 222 - Fast Foreward
     @Override
@@ -2697,15 +2752,24 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         final boolean inputViewShown = (mainKeyboardView != null)
                     ? mainKeyboardView.isShown() : false;
 
-        Log.i("Cangjie", "onKeyDown " + keyCode + " " + inputViewShown + " " + this);
+        if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+          keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+          keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+          keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+
+          moveKey(keyCode);
+        }
+
         if (inputViewShown) {
+          Log.i("Cangjie", "Input View Not Response");
           return true;
         } else {
+          Log.i("Cangjie", "Input View Response");
           return false;
         }
+      } else {
+        return super.onKeyUp(keyCode, event);
       }
-
-      return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -2728,7 +2792,8 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         } else {
           return false;
         }
+      } else {
+        return super.onKeyUp(keyCode, event);
       }
-      return super.onKeyUp(keyCode, event);
     }
 }
