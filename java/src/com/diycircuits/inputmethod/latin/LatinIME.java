@@ -2701,6 +2701,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
         final Keyboard keyboard = mainKeyboardView.getKeyboard();
         final Key[] mKeys = keyboard.mKeys;
         int index = findPressed();
+        if (index < 0) return;
 
         if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
           changeKey(mKeys[index], mKeys[index].mX + mKeys[index].mWidth + mKeys[index].mWidth / 2, mKeys[index].mY);
@@ -2724,6 +2725,7 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
         return 0;
     }
+
 
     private void clearPressed() {
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
@@ -2788,6 +2790,15 @@ public final class LatinIME extends InputMethodService implements KeyboardAction
 
         Log.i("Cangjie", "On Key Up Captured : " + inputViewShown + " " + this);
         if (inputViewShown) {
+          if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            final Keyboard keyboard = mainKeyboardView.getKeyboard();
+            final Key[] mKeys = keyboard.mKeys;
+            int index = findPressed();
+
+            if (index >= 0) {
+              onCodeInput(mKeys[index].mCode, 0, 0);
+            }
+          }
           return true;
         } else {
           return false;
